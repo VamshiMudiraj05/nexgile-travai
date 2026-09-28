@@ -1,0 +1,68 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: nexgile-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - nexgile-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nexgile-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_DATABASE=nexgile_travai
+      - JWT_SECRET=nexgile_travai_jwt_production_secret_key_2026
+      - JWT_ALGORITHM=HS256
+      - JWT_ACCESS_TOKEN_EXPIRE_MINUTES=60
+      - CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,http://localhost,http://localhost:80
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME:-}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY:-}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET:-}
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID:-AeUZfiOiCnkMD9yws8LPCDPAHTH2U1Lg0BIZPVDZofCKkjSi1Av805VMzC8QGw3r2LYfXhYoK4tURZCo}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET:-EIAsQipLcF6_72n5wR6YUi0kLuFVAgboxMPcitD92X59-zAF81WaXVl3Tj6WA0XIrem1p1LOwaDzWTdQ}
+      - PAYPAL_MODE=${PAYPAL_MODE:-sandbox}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - nexgile-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=http://localhost:8000/api/v1
+    container_name: nexgile-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - nexgile-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  nexgile-network:
+    driver: bridge
