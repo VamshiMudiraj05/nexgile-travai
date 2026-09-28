@@ -1,0 +1,234 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream-bg: #FAF6F0;
+  --color-cream-soft: #F4EFE6;
+  --color-cream-dark: #ECE5DA;
+  --color-cream-white: #FFFFFF;
+
+  --color-navy: #13152C;
+  --color-navy-dark: #0D0E20;
+  --color-navy-surface: #1B1E3D;
+  --color-navy-light: #24284F;
+  --color-navy-border: #2C315E;
+
+  --color-gold: #DFB76C;
+  --color-gold-light: #F2D59B;
+  --color-gold-dark: #B88E43;
+  --color-gold-border: rgba(223, 183, 108, 0.35);
+  --color-gold-tint: rgba(223, 183, 108, 0.15);
+
+  --font-cormorant: "Cormorant Garamond", Georgia, serif;
+  --font-playfair: "Playfair Display", Georgia, serif;
+  --font-cinzel: "Cinzel", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+  --cream-background: #FAF6F0;
+  --cream-soft: #F4EFE6;
+  --cream-dark: #ECE5DA;
+  --white: #FFFFFF;
+
+  --navy: #13152C;
+  --navy-dark: #0D0E20;
+  --navy-surface: #1B1E3D;
+  --navy-light: #24284F;
+  --navy-border: #2C315E;
+
+  --gold: #DFB76C;
+  --gold-light: #F2D59B;
+  --gold-dark: #B88E43;
+  --gold-border: rgba(223, 183, 108, 0.35);
+  --gold-tint: rgba(223, 183, 108, 0.15);
+
+  --font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-eyebrow: "Cinzel", Georgia, serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--cream-background);
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Utility Classes */
+.font-editorial {
+  font-family: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+}
+
+.font-cormorant {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.font-cinzel {
+  font-family: "Cinzel", Georgia, serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.eyebrow-label {
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #B88E43;
+  font-weight: 600;
+}
+
+.editorial-heading {
+  font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #13152C;
+}
+
+/* Luxury Card System */
+.luxury-card {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(19, 21, 44, 0.08);
+  border-radius: 4px;
+  box-shadow: 0 4px 20px -2px rgba(19, 21, 44, 0.03), 0 2px 6px -1px rgba(19, 21, 44, 0.02);
+  transition: all 250ms ease;
+}
+
+.luxury-card:hover {
+  border-color: rgba(223, 183, 108, 0.4);
+}
+
+.luxury-card-cream {
+  background-color: #F4EFE6;
+  border: 1px solid rgba(223, 183, 108, 0.25);
+  border-radius: 4px;
+}
+
+.luxury-card-navy {
+  background-color: #13152C;
+  border: 1px solid #2C315E;
+  border-radius: 4px;
+  color: #FAF6F0;
+}
+
+/* Luxury Button System */
+.btn-luxury-primary {
+  background-color: #13152C;
+  color: #DFB76C;
+  border: 1px solid #2C315E;
+  border-radius: 3px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.625rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 200ms ease;
+  cursor: pointer;
+}
+
+.btn-luxury-primary:hover {
+  background-color: #1B1E3D;
+  border-color: #DFB76C;
+  color: #F2D59B;
+  box-shadow: 0 4px 14px rgba(19, 21, 44, 0.2);
+}
+
+.btn-luxury-secondary {
+  background-color: #FFFFFF;
+  color: #13152C;
+  border: 1px solid rgba(19, 21, 44, 0.2);
+  border-radius: 3px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.625rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 200ms ease;
+  cursor: pointer;
+}
+
+.btn-luxury-secondary:hover {
+  background-color: #F4EFE6;
+  border-color: #13152C;
+}
+
+.btn-luxury-gold {
+  background-color: #DFB76C;
+  color: #0D0E20;
+  border: 1px solid #DFB76C;
+  border-radius: 3px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.625rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 200ms ease;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(223, 183, 108, 0.25);
+}
+
+.btn-luxury-gold:hover {
+  background-color: #F2D59B;
+  border-color: #F2D59B;
+  box-shadow: 0 6px 18px rgba(223, 183, 108, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Luxury Input / Select */
+.luxury-input {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(19, 21, 44, 0.16);
+  border-radius: 3px;
+  color: #13152C;
+  font-size: 0.8125rem;
+  padding: 0.625rem 0.875rem;
+  transition: all 200ms ease;
+}
+
+.luxury-input:focus {
+  outline: none;
+  border-color: #DFB76C;
+  box-shadow: 0 0 0 1px #DFB76C, 0 2px 8px rgba(223, 183, 108, 0.15);
+}
+
+/* Custom Luxury Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F4EFE6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ECE5DA;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #DFB76C;
+}
+
+/* Hairline gold rule */
+.gold-hairline {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(223, 183, 108, 0.4) 0%, rgba(223, 183, 108, 0.1) 100%);
+}
