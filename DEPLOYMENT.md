@@ -43,9 +43,6 @@ This guide details step-by-step instructions to deploy the **Nexgile-TravAI** pl
 | `JWT_ALGORITHM` | JWT hashing algorithm | `HS256` |
 | `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | Token validity duration | `60` |
 | `CORS_ORIGINS` | Comma-separated allowed frontend domains | `https://your-frontend-domain.com,https://nexgile-travai.vercel.app` |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary storage cloud name (optional) | `<your_cloud_name>` |
-| `CLOUDINARY_API_KEY` | Cloudinary API key (optional) | `<your_api_key>` |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret (optional) | `<your_api_secret>` |
 | `PAYPAL_CLIENT_ID` | PayPal sandbox/live client ID | `<client_id>` |
 | `PAYPAL_CLIENT_SECRET` | PayPal secret key | `<client_secret>` |
 | `PAYPAL_MODE` | PayPal operational mode | `sandbox` or `live` |
@@ -105,7 +102,7 @@ curl -I http://localhost:5173
 2. **Root Directory**: `backend`
 3. **Build Command**: `pip install -r requirements.txt`
 4. **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-5. **Environment Variables**: Add `MONGODB_URI`, `JWT_SECRET`, `CORS_ORIGINS`, `CLOUDINARY_*`, `PAYPAL_*`.
+5. **Environment Variables**: Add `MONGODB_URI`, `JWT_SECRET`, `CORS_ORIGINS`, `PAYPAL_*`.
 6. Once deployed, note your public backend URL: `https://nexgile-travai-backend.onrender.com`.
 
 ### 4.2 Frontend on Vercel

@@ -23,18 +23,6 @@ class Settings(BaseSettings):
         "http://localhost:3000",
     ]
 
-    # Cloudinary Configuration
-    CLOUDINARY_CLOUD_NAME: Optional[str] = ""
-    CLOUDINARY_API_KEY: Optional[str] = ""
-    CLOUDINARY_API_SECRET: Optional[str] = ""
-    CLOUDINARY_FOLDER: str = "pgmadeeazy"
-    CLOUDINARY_MAX_SIZE: int = 10485760  # 10 MB in bytes
-    CLOUDINARY_ALLOWED_TYPES: Union[List[str], str] = [
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-    ]
-
     # PayPal Configuration
     PAYPAL_CLIENT_ID: Optional[str] = "AeUZfiOiCnkMD9yws8LPCDPAHTH2U1Lg0BIZPVDZofCKkjSi1Av805VMzC8QGw3r2LYfXhYoK4tURZCo"
     PAYPAL_CLIENT_SECRET: Optional[str] = "EIAsQipLcF6_72n5wR6YUi0kLuFVAgboxMPcitD92X59-zAF81WaXVl3Tj6WA0XIrem1p1LOwaDzWTdQ"
@@ -50,15 +38,6 @@ class Settings(BaseSettings):
         elif isinstance(v, list):
             return v
         return ["http://localhost:5173"]
-
-    @field_validator("CLOUDINARY_ALLOWED_TYPES", mode="before")
-    @classmethod
-    def parse_allowed_types(cls, v: Union[str, List[str]]) -> List[str]:
-        if isinstance(v, str):
-            return [i.strip() for i in v.split(",") if i.strip()]
-        elif isinstance(v, list):
-            return v
-        return ["image/jpeg", "image/png", "image/webp"]
 
     model_config = SettingsConfigDict(
         env_file=".env",
