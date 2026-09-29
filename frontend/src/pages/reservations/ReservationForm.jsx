@@ -15,6 +15,7 @@ import { propertyService } from '../../services/propertyService';
 import { guestService } from '../../services/guestService';
 import { roomTypeService } from '../../services/roomTypeService';
 import { reservationService } from '../../services/reservationService';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 export const ReservationForm = () => {
   const navigate = useNavigate();
@@ -447,7 +448,7 @@ export const ReservationForm = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
             <div className="p-4 rounded-[3px] bg-[#1B1E3D] border border-[#2C315E]">
-              <span className="eyebrow-label text-[#DFB76C]/70 block mb-1">Nightly Tariff</span>
+              <span className="eyebrow-label text-[#DFB76C]/70 block mb-1">Nightly Rate</span>
               <span className="text-xl font-editorial font-bold text-[#FFFFFF]">
                 ₹{Number(formData.rate_per_night).toLocaleString('en-IN')}
               </span>

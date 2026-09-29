@@ -260,7 +260,7 @@ export default function PropertyDetail() {
                 {/* Room Pricing & Select Action */}
                 <div className="flex flex-col items-start border-t border-[#DFB76C]/20 pt-4 md:items-end md:border-t-0 md:pt-0">
                   <div className="text-left md:text-right">
-                    <span className="eyebrow-label text-[#13152C]/60">Nightly Tariff</span>
+                    <span className="eyebrow-label text-[#13152C]/60">Nightly Rate</span>
                     <p className="text-3xl font-editorial font-bold text-[#13152C]">
                       ₹{rt.base_rate?.toLocaleString()}
                     </p>

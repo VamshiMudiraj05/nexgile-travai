@@ -155,7 +155,7 @@ export const GuestForm = () => {
                 required
                 value={formData.first_name}
                 onChange={handleChange}
-                placeholder="e.g. John"
+                placeholder="e.g. Aarav"
                 className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
               />
             </div>
@@ -170,7 +170,7 @@ export const GuestForm = () => {
                 required
                 value={formData.last_name}
                 onChange={handleChange}
-                placeholder="e.g. Doe"
+                placeholder="e.g. Sharma"
                 className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
               />
             </div>
@@ -185,7 +185,7 @@ export const GuestForm = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="john@example.com"
+                placeholder="aarav.sharma@example.com"
                 className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
               />
             </div>

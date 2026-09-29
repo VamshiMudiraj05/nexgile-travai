@@ -3,7 +3,6 @@ import {
   Sparkles,
   TrendingUp,
   Percent,
-  DollarSign,
   Calendar,
   AlertTriangle,
   RefreshCw,

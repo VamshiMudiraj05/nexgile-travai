@@ -42,9 +42,9 @@ export default function BookingFlow() {
 
   // Form fields
   const [firstName, setFirstName] = useState(user?.name?.split(' ')[0] || '');
-  const [lastName, setLastName] = useState(user?.name?.split(' ').slice(1).join(' ') || 'Traveler');
+  const [lastName, setLastName] = useState(user?.name?.split(' ').slice(1).join(' ') || 'Resident');
   const [email, setEmail] = useState(user?.email || '');
-  const [phone, setPhone] = useState('+1 (555) 019-2834');
+  const [phone, setPhone] = useState('+91 98765 43210');
   const [specialRequests, setSpecialRequests] = useState('');
 
   useEffect(() => {
@@ -519,11 +519,11 @@ export default function BookingFlow() {
                 <span className="font-semibold text-[#13152C]">₹{baseTotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span className="eyebrow-label text-[#13152C]/60">Taxes &amp; Fees (12%)</span>
+                <span className="eyebrow-label text-[#13152C]/60">GST &amp; Taxes (12%)</span>
                 <span className="font-semibold text-[#13152C]">₹{taxesTotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between py-4 border-t border-[#DFB76C]/30">
-                <span className="eyebrow-label text-[#13152C]">Total Tariff</span>
+                <span className="eyebrow-label text-[#13152C]">Total Stay Amount</span>
                 <span className="text-2xl font-editorial font-bold text-[#13152C]">₹{totalAmount.toLocaleString()}</span>
               </div>
             </div>

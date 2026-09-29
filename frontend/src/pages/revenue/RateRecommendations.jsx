@@ -149,7 +149,7 @@ export default function RateRecommendations() {
           </div>
           <h3 className="font-editorial text-2xl font-normal text-[#13152C]">All Rates Fully Optimized</h3>
           <p className="mt-2 text-xs font-sans text-[#13152C]/60 max-w-md mx-auto leading-relaxed">
-            Current room tariffs precisely mirror market demand velocity, seasonal occupancy pace, and competitive tiering.
+            Current room rates precisely mirror market demand velocity, seasonal occupancy pace, and competitive tiering.
           </p>
         </div>
       ) : (

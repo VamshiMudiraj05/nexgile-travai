@@ -21,17 +21,17 @@ class TravelerProfileService:
         profile_doc = await db.traveler_profiles.find_one({"user_id": str(user_id)})
         if not profile_doc:
             default_preferences = {
-                "favorite_destinations": ["Miami Beach", "New York", "Goa", "Dubai", "Paris"],
+                "favorite_destinations": ["Goa", "Udaipur", "Jaipur", "Kerala", "Mumbai"],
                 "preferred_room_type": "Deluxe Ocean Suite",
                 "budget_range": "LUXURY",
                 "preferred_amenities": ["WiFi", "Swimming Pool", "Spa & Wellness", "Ocean View", "Complimentary Breakfast"],
                 "dietary_preferences": "Vegetarian / Gourmet",
-                "special_interests": ["Beachfront Relaxation", "Fine Dining", "Wellness Retreats"]
+                "special_interests": ["Beachfront Relaxation", "Fine Dining", "Heritage Retreats"]
             }
             profile_doc = {
                 "user_id": str(user_id),
                 "preferences": default_preferences,
-                "phone": user.get("phone", "+1 (555) 019-2834"),
+                "phone": user.get("phone", "+91 98765 43210"),
                 "created_at": datetime.utcnow().isoformat(),
                 "updated_at": datetime.utcnow().isoformat()
             }
@@ -59,7 +59,7 @@ class TravelerProfileService:
             "user_id": str(user_id),
             "name": user.get("name", "Traveler"),
             "email": user.get("email", ""),
-            "phone": profile_doc.get("phone", user.get("phone", "+1 (555) 019-2834")),
+            "phone": profile_doc.get("phone", user.get("phone", "+91 98765 43210")),
             "role": user.get("role", "TRAVELER"),
             "preferences": profile_doc.get("preferences", {}),
             "total_trips": total_trips,

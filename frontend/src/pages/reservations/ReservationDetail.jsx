@@ -11,7 +11,7 @@ import {
   LogOut, 
   LogIn, 
   ArrowLeft,
-  DollarSign,
+  IndianRupee,
   FileText,
   Loader2,
   AlertCircle,
@@ -244,13 +244,13 @@ export const ReservationDetail = () => {
       {/* Financial Folio & Billing Breakdown */}
       <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 sm:p-8 shadow-sm space-y-4">
         <h2 className="font-cinzel text-[10px] font-bold uppercase tracking-[0.22em] text-[#B88E43] border-b border-[#DFB76C]/20 pb-3 flex items-center gap-2">
-          <DollarSign className="w-4 h-4 text-[#DFB76C]" />
+          <IndianRupee className="w-4 h-4 text-[#DFB76C]" />
           <span>Financial Folio & Settlement Ledger</span>
         </h2>
 
         <div className="space-y-3 font-sans text-xs">
           <div className="flex justify-between text-[#13152C]/75">
-            <span>Room Tariff / Night:</span>
+            <span>Room Rate / Night:</span>
             <span className="font-mono font-semibold text-[#13152C]">₹{reservation.rate_per_night?.toLocaleString('en-IN')}</span>
           </div>
 

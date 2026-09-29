@@ -156,7 +156,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
       isOpen={isOpen}
       onClose={onClose}
       title={isEdit ? 'Edit Suite Category' : 'Create Suite Category'}
-      subtitle="Define nightly tariff, guest capacity, and bespoke amenities."
+      subtitle="Define nightly rate, guest capacity, and bespoke amenities."
     >
       {error && (
         <div className="mb-4 p-3 rounded-[2px] bg-[#FDF2F2] border border-[#993A3A]/30 flex items-center gap-2 text-xs text-[#993A3A] font-sans">
@@ -199,7 +199,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
 
           <div>
             <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
-              Base Tariff / Night (₹) *
+              Base Rate / Night (₹) *
             </label>
             <input
               type="number"

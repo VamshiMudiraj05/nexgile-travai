@@ -84,7 +84,7 @@ export const RoomTypeList = () => {
               Suite & Room Categories
             </h1>
             <p className="mt-2 font-sans text-xs sm:text-sm text-[#13152C]/65 max-w-xl leading-relaxed">
-              Design bespoke suite tiers, base tariffs, bedding configurations, and curated room amenity packages.
+              Design bespoke suite tiers, base room rates, bedding configurations, and curated room amenity packages.
             </p>
           </div>
 

@@ -80,14 +80,14 @@ class TravelerBookingService:
         now_iso = datetime.utcnow().isoformat()
         if not guest:
             guest_doc = {
-                "first_name": booking_data.get("guest_first_name", user.get("name", "Traveler").split()[0]),
-                "last_name": booking_data.get("guest_last_name", "User"),
+                "first_name": booking_data.get("guest_first_name", user.get("name", "Resident").split()[0]),
+                "last_name": booking_data.get("guest_last_name", "Resident"),
                 "email": guest_email,
-                "phone": booking_data.get("guest_phone", "+1 555-0100"),
+                "phone": booking_data.get("guest_phone", "+91 98765 43210"),
                 "address": "",
-                "identification_type": "PASSPORT",
+                "identification_type": "AADHAAR",
                 "identification_number": "TRV-" + str(user_id)[-6:].upper(),
-                "nationality": "International",
+                "nationality": "Indian",
                 "vip": False,
                 "special_requests": booking_data.get("special_requests"),
                 "created_at": now_iso,

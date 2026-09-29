@@ -89,7 +89,7 @@ export default function Marketplace() {
         
         <div className="relative z-10 max-w-3xl">
           <span className="eyebrow-label text-[#DFB76C] block mb-2">
-            CURATED HOSPITALITY &middot; GLOBAL EDITORIAL COLLECTION
+            CURATED INDIAN LUXURY HOSPITALITY &middot; EDITORIAL COLLECTION
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-editorial font-bold text-[#FFFFFF] tracking-tight leading-tight">
             Discover Exceptional Estates &amp; Sanctuaries
@@ -111,7 +111,7 @@ export default function Marketplace() {
               <label className="block eyebrow-label text-[#13152C]/60">Destination</label>
               <input
                 type="text"
-                placeholder="Where to next?"
+                placeholder="e.g. Udaipur, Goa, Jaipur..."
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 className="w-full bg-transparent text-xs font-semibold text-[#13152C] placeholder-[#13152C]/40 focus:outline-none"
@@ -281,15 +281,15 @@ export default function Marketplace() {
               }}
               className="rounded-[3px] border border-[#DFB76C]/40 bg-[#FAF6F0] px-3.5 py-2 text-xs font-semibold text-[#13152C] focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF]"
             >
-              <option value="price_asc">Tariff: Low to High</option>
-              <option value="price_desc">Tariff: High to Low</option>
+              <option value="price_asc">Rate: Low to High</option>
+              <option value="price_desc">Rate: High to Low</option>
               <option value="rating">Guest Star Rating</option>
             </select>
           </div>
         </div>
 
         {loading ? (
-          <LoadingSpinner message="Consulting live suite inventory and tariffs..." />
+          <LoadingSpinner message="Consulting live suite inventory and room rates..." />
         ) : properties.length === 0 ? (
           <div className="rounded-[4px] border border-[#DFB76C]/30 bg-[#FFFFFF] p-14 text-center shadow-sm">
             <Building2 size={40} className="mx-auto text-[#B88E43]" />
@@ -359,7 +359,7 @@ export default function Marketplace() {
                 {/* Footer Pricing & CTA */}
                 <div className="flex items-center justify-between border-t border-[#DFB76C]/20 bg-[#FAF6F0]/60 p-6">
                   <div>
-                    <span className="eyebrow-label text-[#13152C]/60 block">Tariff From</span>
+                    <span className="eyebrow-label text-[#13152C]/60 block">Starting From</span>
                     <p className="font-editorial text-2xl font-bold text-[#13152C]">
                       ₹{prop.starting_price?.toLocaleString()}
                       <span className="text-xs font-sans font-normal text-[#13152C]/60"> / night</span>

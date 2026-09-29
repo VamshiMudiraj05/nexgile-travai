@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  DollarSign,
+  IndianRupee,
   TrendingUp,
   Percent,
   BedDouble,
@@ -141,7 +141,7 @@ export default function RevenueAnalytics() {
             <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm">
               <div className="flex items-center justify-between text-[#B88E43]">
                 <span className="eyebrow-label text-[#B88E43]">Gross Revenue</span>
-                <DollarSign size={18} />
+                <IndianRupee size={18} />
               </div>
               <p className="mt-3 text-3xl font-editorial font-bold text-[#13152C]">
                 ₹{data.total_revenue?.toLocaleString()}

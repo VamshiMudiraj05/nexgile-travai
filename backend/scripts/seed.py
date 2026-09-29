@@ -192,12 +192,12 @@ async def seed_database():
     guests_col = db.guests
     guest_data = [
         {
-            "first_name": "Alexander",
-            "last_name": "Wright",
-            "email": "alex.wright@globaltravel.com",
+            "first_name": "Vikram",
+            "last_name": "Malhotra",
+            "email": "vikram.malhotra@luxurytravel.in",
             "phone": "+91 9876543210",
-            "nationality": "British",
-            "preferences": "High floor, extra feather pillows, sparkling water on arrival.",
+            "nationality": "Indian",
+            "preferences": "High floor, extra feather pillows, fresh tender coconut water on arrival.",
             "notes": "VIP corporate traveler",
         },
         {
@@ -238,7 +238,7 @@ async def seed_database():
         {
             "booking_reference": f"NGX-{today.strftime('%Y%m%d')}-10101",
             "property_id": p1_id,
-            "guest_id": guest_ids["alex.wright@globaltravel.com"],
+            "guest_id": guest_ids["vikram.malhotra@luxurytravel.in"],
             "room_id": room_ids["101"],
             "room_type_id": rt1_id,
             "check_in_date": today.isoformat(),

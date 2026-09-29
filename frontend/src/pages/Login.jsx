@@ -96,7 +96,7 @@ export const Login = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="executive@hotelgroup.com"
+                  placeholder="resident@nexgile.in"
                   className="w-full pl-10 pr-4 py-2.5 bg-[#FAF6F0] border border-[#2C315E]/20 rounded-[2px] text-[#13152C] placeholder-[#13152C]/40 text-xs font-sans focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
                 />
               </div>

@@ -257,7 +257,7 @@ export default function TravelerProfile() {
                 type="text"
                 value={favoriteDestinations}
                 onChange={(e) => setFavoriteDestinations(e.target.value)}
-                placeholder="e.g. Udaipur, Goa, Paris, Swiss Alps, Kyoto, Dubai"
+                placeholder="e.g. Udaipur, Goa, Jaipur, Kerala, Mumbai, Bengaluru"
                 className="w-full rounded-[2px] border border-[#2C315E]/20 bg-[#FAF6F0] px-4 py-2.5 font-sans text-xs text-[#13152C] focus:border-[#DFB76C] focus:bg-[#FFFFFF] focus:outline-none transition-all"
               />
             </div>

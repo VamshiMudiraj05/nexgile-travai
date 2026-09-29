@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 
 
 class TravelerPreferences(BaseModel):
-    favorite_destinations: List[str] = ["Goa", "Miami", "Paris", "Bali"]
+    favorite_destinations: List[str] = ["Goa", "Udaipur", "Jaipur", "Kerala", "Mumbai"]
     preferred_room_type: Optional[str] = "Deluxe Ocean Suite"
     budget_range: Optional[str] = "MODERATE"  # BUDGET, MODERATE, LUXURY, ULTRA_LUXURY
     preferred_amenities: List[str] = ["WiFi", "Pool", "Breakfast", "Spa"]

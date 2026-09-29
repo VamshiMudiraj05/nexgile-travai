@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  DollarSign,
+  IndianRupee,
   TrendingUp,
   CreditCard,
   Receipt,
@@ -89,7 +89,7 @@ export const FinanceOverview = () => {
 
   // Export CSV
   const handleExportCSV = () => {
-    const headers = ['Booking Ref', 'Guest', 'Property', 'Check In', 'Check Out', 'Subtotal ($)', 'Taxes ($)', 'Total Amount ($)', 'Payment Status', 'Reservation Status'];
+    const headers = ['Booking Ref', 'Guest', 'Property', 'Check In', 'Check Out', 'Subtotal (₹)', 'GST (₹)', 'Total Amount (₹)', 'Payment Status', 'Reservation Status'];
     const rows = filteredReservations.map((r) => [
       r.booking_reference || r.id,
       `"${r.guest_name || 'Guest'}"`,
@@ -163,7 +163,7 @@ export const FinanceOverview = () => {
             <Receipt className="w-3.5 h-3.5 text-[#B88E43]" /> Gross Billed
           </span>
           <p className="text-3xl font-editorial font-bold text-[#13152C] mt-1">
-            ${grossBilled.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            ₹{grossBilled.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
           <span className="text-[11px] text-[#13152C]/60">{totalFolios} total folios</span>
         </div>
@@ -173,7 +173,7 @@ export const FinanceOverview = () => {
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Settled Revenue
           </span>
           <p className="text-3xl font-editorial font-bold text-emerald-900 mt-1">
-            ${totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            ₹{totalPaid.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
           <span className="text-[11px] text-emerald-800/80">{collectionRate}% collection rate</span>
         </div>
@@ -183,19 +183,19 @@ export const FinanceOverview = () => {
             <Clock className="w-3.5 h-3.5 text-amber-600" /> Accounts Receivable
           </span>
           <p className="text-3xl font-editorial font-bold text-amber-900 mt-1">
-            ${totalPending.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            ₹{totalPending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
           <span className="text-[11px] text-amber-800/80">Pending checkout / desk bill</span>
         </div>
 
         <div className="bg-[#FFFFFF] border border-[#2C315E]/40 rounded-[4px] p-5 shadow-sm">
           <span className="eyebrow-label text-[#13152C]/80 flex items-center gap-1.5">
-            <DollarSign className="w-3.5 h-3.5 text-[#B88E43]" /> Tax Accruals (12%)
+            <IndianRupee className="w-3.5 h-3.5 text-[#B88E43]" /> GST Accruals (12%)
           </span>
           <p className="text-3xl font-editorial font-bold text-[#13152C] mt-1">
-            ${totalTaxes.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            ₹{totalTaxes.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <span className="text-[11px] text-[#13152C]/60">GST / Luxury hospitality levy</span>
+          <span className="text-[11px] text-[#13152C]/60">GST (Goods &amp; Services Tax)</span>
         </div>
       </div>
 
@@ -318,15 +318,15 @@ export const FinanceOverview = () => {
                       </td>
 
                       <td className="py-3.5 px-4 text-right font-medium text-[#13152C]/80">
-                        ${sub.toFixed(2)}
+                        ₹{sub.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
 
                       <td className="py-3.5 px-4 text-right font-medium text-[#13152C]/70">
-                        ${tax.toFixed(2)}
+                        ₹{tax.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
 
                       <td className="py-3.5 px-4 text-right font-editorial font-bold text-base text-[#13152C]">
-                        ${total.toFixed(2)}
+                        ₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
 
                       <td className="py-3.5 px-4 text-center">
@@ -414,15 +414,15 @@ export const FinanceOverview = () => {
               <div className="space-y-2 p-4 rounded-[3px] bg-[#FFFFFF] border border-[#DFB76C]/30">
                 <div className="flex justify-between text-[#13152C]/80">
                   <span>Suite Accommodation ({activeFolio.number_of_nights || 1} nights)</span>
-                  <span>${((Number(activeFolio.total_amount) || 0) * 0.88).toFixed(2)}</span>
+                  <span>₹{((Number(activeFolio.total_amount) || 0) * 0.88).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between text-[#13152C]/70">
-                  <span>State &amp; Hotel Occupancy Tax (12%)</span>
-                  <span>${((Number(activeFolio.total_amount) || 0) * 0.12).toFixed(2)}</span>
+                  <span>Hospitality GST (12%)</span>
+                  <span>₹{((Number(activeFolio.total_amount) || 0) * 0.12).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between text-[#13152C] font-editorial font-bold pt-3 border-t border-[#DFB76C]/20 text-base">
                   <span>Net Folio Total</span>
-                  <span>${(Number(activeFolio.total_amount) || 0).toFixed(2)}</span>
+                  <span>₹{(Number(activeFolio.total_amount) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </div>

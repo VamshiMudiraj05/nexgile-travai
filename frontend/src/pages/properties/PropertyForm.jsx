@@ -15,11 +15,11 @@ import {
   Hash,
   ChevronDown,
   ChevronUp,
-  Wand2,
-  DollarSign
+  Wand2
 } from 'lucide-react';
 import { propertyService } from '../../services/propertyService';
 import { ImageUploader } from '../../components/ImageUploader';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 const AMENITY_OPTIONS = [
   'Free WiFi',
@@ -787,7 +787,7 @@ export const PropertyForm = () => {
                       {/* Price / Night */}
                       <div>
                         <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
-                          Base Tariff (₹) *
+                          Base Room Rate (₹) *
                         </label>
                         <input
                           type="number"
