@@ -22,7 +22,7 @@ router = APIRouter(prefix="/guests", tags=["Guests"])
 )
 async def create_guest(
     guest_in: GuestCreate,
-    current_user: UserResponse = Depends(require_role([UserRole.ADMIN, UserRole.FRONT_DESK]))
+    current_user: UserResponse = Depends(get_current_user)
 ):
     return await guest_service.create_guest(guest_in)
 

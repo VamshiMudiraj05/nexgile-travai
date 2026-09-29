@@ -73,16 +73,19 @@ export const ReservationForm = () => {
         ]);
 
         const props = pData.items || [];
+        const gList = gData.items || [];
         setProperties(props);
-        setGuests(gData.items || []);
+        setGuests(gList);
 
-        if (props.length > 0) {
-          const defaultPropId = props[0].id || props[0]._id;
-          setFormData((prev) => ({
+        setFormData((prev) => {
+          const defaultPropId = props.length > 0 ? (props[0].id || props[0]._id) : '';
+          const defaultGuestId = gList.length > 0 ? (gList[0].id || gList[0]._id) : '';
+          return {
             ...prev,
             property_id: prev.property_id || defaultPropId,
-          }));
-        }
+            guest_id: prev.guest_id || defaultGuestId,
+          };
+        });
       } catch (err) {
         console.error('Failed to load initial data:', err);
       } finally {
@@ -173,8 +176,20 @@ export const ReservationForm = () => {
     e.preventDefault();
     setError('');
 
-    if (!formData.property_id || !formData.guest_id || !formData.room_type_id || !formData.room_id) {
-      setError('Please select a property, guest, room category, and an available room unit.');
+    if (!formData.property_id) {
+      setError('Please select an estate property.');
+      return;
+    }
+    if (!formData.guest_id) {
+      setError('Please select a guest folio or create a new guest.');
+      return;
+    }
+    if (!formData.room_type_id) {
+      setError('Please select a suite category.');
+      return;
+    }
+    if (!formData.room_id || availableRooms.length === 0) {
+      setError('No suites are available for the selected dates. Please adjust dates or select another suite category.');
       return;
     }
 

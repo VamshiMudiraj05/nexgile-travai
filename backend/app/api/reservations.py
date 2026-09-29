@@ -24,7 +24,7 @@ router = APIRouter(prefix="/reservations", tags=["Reservations"])
 )
 async def create_reservation(
     res_in: ReservationCreate,
-    current_user: UserResponse = Depends(require_role([UserRole.ADMIN, UserRole.FRONT_DESK]))
+    current_user: UserResponse = Depends(get_current_user)
 ):
     return await reservation_service.create_reservation(res_in, current_user.id)
 
