@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   Building2,
@@ -175,6 +175,7 @@ export const AdminLayout = () => {
     {
       group: 'TRAVELER CONCIERGE',
       items: [
+        { name: 'AI Concierge', path: '/concierge', icon: Sparkles },
         { name: 'Marketplace & Stays', path: '/marketplace', icon: ShoppingBag },
         { name: 'My Trips & Folios', path: '/my-trips', icon: Luggage },
         { name: 'Loyalty Privilege', path: '/loyalty', icon: Crown },
@@ -201,6 +202,20 @@ export const AdminLayout = () => {
     ? ROLE_BADGE_COLORS[user.role]
     : 'bg-[#13152C] text-[#DFB76C] border-[#DFB76C]/30';
 
+  const homePath = isTraveler
+    ? '/marketplace'
+    : isRevenueManager
+    ? '/revenue/recommendations'
+    : isFinance
+    ? '/finance'
+    : isHousekeeping
+    ? '/housekeeping'
+    : isMaintenance
+    ? '/maintenance'
+    : isFrontDesk
+    ? '/frontdesk/dashboard'
+    : '/dashboard';
+
   // Compute editorial breadcrumb
   const currentPath = location.pathname;
   const pathSegments = currentPath.split('/').filter(Boolean);
@@ -213,15 +228,15 @@ export const AdminLayout = () => {
     <div className="min-h-screen bg-[#FAF6F0] text-[#13152C] flex flex-col md:flex-row antialiased">
       {/* Mobile Topbar */}
       <div className="md:hidden flex items-center justify-between px-5 py-3.5 bg-[#0D0E20] border-b border-[#2C315E]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-[2px] bg-[#1B1E3D] border border-[#DFB76C]/40 flex items-center justify-center text-[#DFB76C]">
-            <Compass className="w-4 h-4 stroke-[1.5]" />
+        <Link to={homePath} className="flex items-center gap-2.5 group cursor-pointer" title="Return to Home">
+          <div className="w-8 h-8 rounded-[2px] bg-[#1B1E3D] border border-[#DFB76C]/40 group-hover:border-[#DFB76C] flex items-center justify-center text-[#DFB76C] transition-colors">
+            <Compass className="w-4 h-4 stroke-[1.5] group-hover:rotate-45 transition-transform duration-500 ease-out" />
           </div>
           <div>
-            <span className="font-cinzel text-sm font-bold tracking-[0.18em] text-white">NEXGILE</span>
+            <span className="font-cinzel text-sm font-bold tracking-[0.18em] text-white group-hover:text-[#DFB76C] transition-colors">NEXGILE</span>
             <span className="font-cinzel text-[10px] tracking-[0.14em] text-[#DFB76C] ml-1">TRAVAI</span>
           </div>
-        </div>
+        </Link>
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="p-2 text-[#DFB76C] hover:text-white focus:outline-none cursor-pointer"
@@ -238,16 +253,20 @@ export const AdminLayout = () => {
       >
         {/* Brand Header */}
         <div className="p-6 border-b border-[#2C315E]/60 bg-[#0D0E20]">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[2px] bg-[#13152C] border border-[#DFB76C]/40 flex items-center justify-center text-[#DFB76C] shadow-[0_2px_12px_rgba(223,183,108,0.15)] flex-shrink-0">
-              <Compass className="w-5 h-5 stroke-[1.5]" />
+          <Link
+            to={homePath}
+            title="Return to Home"
+            className="flex items-center gap-3 group cursor-pointer transition-all duration-200"
+          >
+            <div className="w-10 h-10 rounded-[2px] bg-[#13152C] border border-[#DFB76C]/40 group-hover:border-[#DFB76C] flex items-center justify-center text-[#DFB76C] shadow-[0_2px_12px_rgba(223,183,108,0.15)] group-hover:shadow-[0_2px_16px_rgba(223,183,108,0.35)] flex-shrink-0 transition-all">
+              <Compass className="w-5 h-5 stroke-[1.5] group-hover:rotate-45 transition-transform duration-500 ease-out" />
             </div>
             <div className="min-w-0">
               <div className="flex items-baseline gap-1">
-                <span className="font-cinzel font-bold text-sm tracking-[0.22em] text-white">NEXGILE</span>
+                <span className="font-cinzel font-bold text-sm tracking-[0.22em] text-white group-hover:text-[#DFB76C] transition-colors">NEXGILE</span>
                 <span className="font-cinzel font-medium text-[11px] tracking-[0.18em] text-[#DFB76C]">TRAVAI</span>
               </div>
-              <div className="font-cinzel text-[8.5px] uppercase font-semibold tracking-[0.24em] text-[#DFB76C]/70 truncate mt-0.5">
+              <div className="font-cinzel text-[8.5px] uppercase font-semibold tracking-[0.24em] text-[#DFB76C]/70 group-hover:text-[#DFB76C] truncate mt-0.5 transition-colors">
                 {isTraveler
                   ? 'Traveler Concierge'
                   : isRevenueManager
@@ -263,7 +282,7 @@ export const AdminLayout = () => {
                   : 'Hospitality & Travel'}
               </div>
             </div>
-          </div>
+          </Link>
           {/* Hairline gold accent rule */}
           <div className="mt-4 h-[1px] bg-gradient-to-r from-[#DFB76C]/50 via-[#DFB76C]/20 to-transparent"></div>
         </div>
@@ -366,6 +385,17 @@ export const AdminLayout = () => {
         <div className="flex-1 p-6 md:p-10 max-w-7xl w-full mx-auto">
           <Outlet />
         </div>
+
+        {/* Floating AI Concierge Launcher for Travelers */}
+        {isTraveler && location.pathname !== '/concierge' && (
+          <Link
+            to="/concierge"
+            className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#13152C] border border-[#DFB76C] text-[#F2D59B] shadow-2xl hover:scale-105 hover:bg-[#1B1E3D] transition-all group"
+          >
+            <Sparkles size={16} className="text-[#DFB76C] animate-spin" />
+            <span className="font-cinzel text-xs font-bold tracking-wider">AI CONCIERGE</span>
+          </Link>
+        )}
       </main>
     </div>
   );

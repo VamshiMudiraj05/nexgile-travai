@@ -18,6 +18,8 @@ from app.api.marketplace import router as marketplace_router
 from app.api.traveler import router as traveler_router
 from app.api.loyalty import router as loyalty_router
 from app.api.payments import router as payments_router
+from app.api.service_requests import router as service_requests_router
+from app.api.concierge import router as concierge_router
 from app.core.config import settings
 from app.core.logging import logger
 from app.database.mongodb import connect_to_mongo, close_mongo_connection
@@ -96,6 +98,8 @@ app.include_router(marketplace_router, prefix=settings.API_V1_STR)
 app.include_router(traveler_router, prefix=settings.API_V1_STR)
 app.include_router(loyalty_router, prefix=settings.API_V1_STR)
 app.include_router(payments_router, prefix=settings.API_V1_STR)
+app.include_router(service_requests_router, prefix=settings.API_V1_STR)
+app.include_router(concierge_router, prefix=settings.API_V1_STR)
 
 
 

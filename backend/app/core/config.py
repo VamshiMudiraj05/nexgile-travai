@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     PAYPAL_MODE: str = "sandbox"
     PAYPAL_BASE_URL: str = "https://api-m.sandbox.paypal.com"
 
+    # AI Concierge & LLM Configuration
+    LLM_API_KEY: Optional[str] = None
+    LLM_MODEL: str = "gpt-4o-mini"
+    LLM_BASE_URL: str = "https://api.openai.com/v1"
+
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod

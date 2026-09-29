@@ -90,12 +90,22 @@ export default function TripDetail() {
           <ArrowLeft size={14} className="text-[#B88E43]" /> Back to Itineraries
         </Link>
 
-        <button
-          onClick={() => window.print()}
-          className="flex items-center gap-2 rounded-[2px] border border-[#2C315E]/20 bg-[#FFFFFF] px-4 py-2 font-cinzel text-[11px] tracking-wider uppercase text-[#13152C] hover:bg-[#F4EFE6] transition-all cursor-pointer shadow-sm"
-        >
-          <Printer size={14} className="text-[#B88E43]" /> Print Folio Receipt
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            to={`/concierge?reservation_id=${trip.id}`}
+            className="btn-luxury-primary text-[11px] py-2 px-3.5 inline-flex items-center gap-1.5"
+          >
+            <Sparkles size={13} className="text-[#DFB76C]" />
+            <span>Ask AI Concierge</span>
+          </Link>
+
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-2 rounded-[2px] border border-[#2C315E]/20 bg-[#FFFFFF] px-4 py-2 font-cinzel text-[11px] tracking-wider uppercase text-[#13152C] hover:bg-[#F4EFE6] transition-all cursor-pointer shadow-sm"
+          >
+            <Printer size={14} className="text-[#B88E43]" /> Print Folio Receipt
+          </button>
+        </div>
       </div>
 
       {/* Main Folio Card */}

@@ -39,6 +39,7 @@ import MyTrips from '../pages/traveler/MyTrips';
 import TripDetail from '../pages/traveler/TripDetail';
 import Loyalty from '../pages/traveler/Loyalty';
 import TravelerProfile from '../pages/traveler/TravelerProfile';
+import Concierge from '../pages/traveler/Concierge';
 
 const RoleIndexRedirect = () => {
   const { user } = useAuth();
@@ -107,6 +108,7 @@ export const AppRoutes = () => {
         <Route path="my-trips/:reservation_id" element={<TripDetail />} />
         <Route path="loyalty" element={<Loyalty />} />
         <Route path="profile" element={<TravelerProfile />} />
+        <Route path="concierge" element={<Concierge />} />
       </Route>
 
       {/* Catch-all */}
