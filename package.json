@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "backend": "cd backend && ./start.sh",
+    "backend": "cd backend && npm run dev",
     "frontend": "cd frontend && npm run dev",
     "dev": "./start.sh"
   }

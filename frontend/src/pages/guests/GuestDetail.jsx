@@ -52,12 +52,12 @@ export const GuestDetail = () => {
   return (
     <div className="space-y-8 pb-20">
       {/* Header */}
-      <div className="flex items-center justify-between pb-6 border-b border-[#DFB76C]/30">
+      <div className="flex items-center justify-between pb-6 border-b border-[#2C315E]">
         <Link
           to="/guests"
-          className="inline-flex items-center gap-2 text-xs font-cinzel tracking-wider text-[#13152C]/70 hover:text-[#13152C] transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-cinzel tracking-wider text-white/70 hover:text-white transition-colors"
         >
-          <ArrowLeft className="w-4 h-4 text-[#B88E43]" />
+          <ArrowLeft className="w-4 h-4 text-[#DFB76C]" />
           <span>Back to Guests Directory</span>
         </Link>
 
@@ -66,7 +66,7 @@ export const GuestDetail = () => {
             to={`/guests/${gId}/edit`}
             className="btn-luxury-secondary text-xs"
           >
-            <Edit3 className="w-3.5 h-3.5 inline mr-1.5 text-[#B88E43]" />
+            <Edit3 className="w-3.5 h-3.5 inline mr-1.5 text-[#DFB76C]" />
             <span>Edit Profile</span>
           </Link>
 
@@ -74,46 +74,46 @@ export const GuestDetail = () => {
             to={`/reservations/new?guest_id=${gId}`}
             className="btn-luxury-gold text-xs"
           >
-            <Plus className="w-3.5 h-3.5 inline mr-1.5 text-[#13152C]" />
+            <Plus className="w-3.5 h-3.5 inline mr-1.5 text-white" />
             <span>New Reservation</span>
           </Link>
         </div>
       </div>
 
       {/* Profile Overview Card */}
-      <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-8 shadow-sm">
+      <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-8 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
             <div className="w-16 h-16 rounded-[4px] bg-[#13152C] border border-[#DFB76C]/50 flex items-center justify-center text-2xl font-editorial font-bold text-[#F2D59B] shadow-sm">
               {guest.first_name?.[0]?.toUpperCase()}{guest.last_name?.[0]?.toUpperCase()}
             </div>
             <div>
-              <span className="eyebrow-label text-[#B88E43]">VIP GUEST FOLIO</span>
-              <h1 className="text-3xl font-editorial font-bold text-[#13152C] tracking-tight">
+              <span className="eyebrow-label text-[#DFB76C]">VIP GUEST FOLIO</span>
+              <h1 className="text-3xl font-editorial font-bold text-white tracking-tight">
                 {guest.first_name} {guest.last_name}
               </h1>
-              <p className="text-xs text-[#13152C]/60 mt-1">
+              <p className="text-xs text-white/60 mt-1">
                 {guest.nationality || 'International'} Resident &bull; {guest.city || 'Location unspecified'}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="px-6 py-3 rounded-[3px] bg-[#FAF6F0] border border-[#DFB76C]/30 text-center">
-              <span className="text-2xl font-editorial font-bold text-[#13152C] block">{reservations.length}</span>
-              <span className="eyebrow-label text-[#B88E43] block mt-0.5">Total Stays</span>
+            <div className="px-6 py-3 rounded-[3px] bg-[#1B1E3D] border border-[#2C315E] text-center">
+              <span className="text-2xl font-editorial font-bold text-white block">{reservations.length}</span>
+              <span className="eyebrow-label text-[#DFB76C] block mt-0.5">Total Stays</span>
             </div>
           </div>
         </div>
 
         {/* Contact details grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-[#DFB76C]/20 text-xs text-[#13152C]/80">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-[#2C315E] text-xs text-white/80">
           <div className="flex items-center gap-2">
-            <Mail className="w-4 h-4 text-[#B88E43]" />
+            <Mail className="w-4 h-4 text-[#DFB76C]" />
             <span>{guest.email}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-[#B88E43]" />
+            <Phone className="w-4 h-4 text-[#DFB76C]" />
             <span>{guest.phone}</span>
           </div>
           <div className="flex items-center gap-2">
@@ -125,26 +125,26 @@ export const GuestDetail = () => {
 
       {/* Preferences and Notes */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm space-y-2">
-          <div className="border-b border-[#DFB76C]/20 pb-2 flex items-center gap-2">
-            <Heart className="w-4 h-4 text-[#B88E43]" />
-            <h2 className="eyebrow-label text-[#B88E43]">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 shadow-sm space-y-2">
+          <div className="border-b border-[#2C315E] pb-2 flex items-center gap-2">
+            <Heart className="w-4 h-4 text-[#DFB76C]" />
+            <h2 className="eyebrow-label text-[#DFB76C]">
               Bespoke Stay Preferences
             </h2>
           </div>
-          <p className="text-xs text-[#13152C]/80 leading-relaxed pt-1">
+          <p className="text-xs text-white/80 leading-relaxed pt-1">
             {guest.preferences || 'No specific preferences recorded for this guest.'}
           </p>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm space-y-2">
-          <div className="border-b border-[#DFB76C]/20 pb-2 flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[#B88E43]" />
-            <h2 className="eyebrow-label text-[#B88E43]">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 shadow-sm space-y-2">
+          <div className="border-b border-[#2C315E] pb-2 flex items-center gap-2">
+            <FileText className="w-4 h-4 text-[#DFB76C]" />
+            <h2 className="eyebrow-label text-[#DFB76C]">
               Concierge & CRM Notes
             </h2>
           </div>
-          <p className="text-xs text-[#13152C]/80 leading-relaxed pt-1">
+          <p className="text-xs text-white/80 leading-relaxed pt-1">
             {guest.notes || 'No internal staff notes on record.'}
           </p>
         </div>
@@ -153,8 +153,8 @@ export const GuestDetail = () => {
       {/* Stay History Table */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-editorial font-bold text-[#13152C] tracking-tight flex items-center gap-2">
-            <CalendarCheck className="w-5 h-5 text-[#B88E43]" />
+          <h2 className="text-xl font-editorial font-bold text-white tracking-tight flex items-center gap-2">
+            <CalendarCheck className="w-5 h-5 text-[#DFB76C]" />
             <span>Historical Stay Folios</span>
           </h2>
         </div>
@@ -166,9 +166,9 @@ export const GuestDetail = () => {
             description="Create a reservation for this guest to track their booking lifecycle and room preferences."
           />
         ) : (
-          <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] overflow-hidden shadow-sm">
+          <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden shadow-sm">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#FAF6F0] border-b border-[#DFB76C]/30 text-[#13152C]/70">
+              <thead className="bg-[#1B1E3D] border-b border-[#2C315E] text-white/70">
                 <tr>
                   <th className="py-3.5 px-4 eyebrow-label">Booking Ref</th>
                   <th className="py-3.5 px-4 eyebrow-label">Estate</th>
@@ -181,18 +181,18 @@ export const GuestDetail = () => {
               </thead>
               <tbody className="divide-y divide-[#ECE5DA]/60">
                 {reservations.map((res) => (
-                  <tr key={res.id || res._id} className="hover:bg-[#FAF6F0]/60 transition-colors">
-                    <td className="py-3.5 px-4 font-cinzel font-bold text-[#13152C]">
+                  <tr key={res.id || res._id} className="hover:bg-[#1B1E3D]/60 transition-colors">
+                    <td className="py-3.5 px-4 font-cinzel font-bold text-white">
                       {res.booking_reference}
                     </td>
-                    <td className="py-3.5 px-4 text-[#13152C] font-semibold">{res.property_name || 'Property'}</td>
-                    <td className="py-3.5 px-4 text-[#13152C]/80">
+                    <td className="py-3.5 px-4 text-white font-semibold">{res.property_name || 'Property'}</td>
+                    <td className="py-3.5 px-4 text-white/80">
                       Suite #{res.room_number} &bull; {res.room_type_name}
                     </td>
-                    <td className="py-3.5 px-4 text-[#13152C]/70 font-mono text-[11px]">
+                    <td className="py-3.5 px-4 text-white/70 font-mono text-[11px]">
                       {res.check_in_date} &rarr; {res.check_out_date}
                     </td>
-                    <td className="py-3.5 px-4 font-editorial font-bold text-base text-[#13152C]">
+                    <td className="py-3.5 px-4 font-editorial font-bold text-base text-white">
                       ₹{res.total_amount?.toLocaleString('en-IN')}
                     </td>
                     <td className="py-3.5 px-4">
@@ -201,7 +201,7 @@ export const GuestDetail = () => {
                     <td className="py-3.5 px-4 text-right">
                       <Link
                         to={`/reservations/${res.id || res._id}`}
-                        className="text-xs font-cinzel font-semibold text-[#B88E43] hover:underline"
+                        className="text-xs font-cinzel font-semibold text-[#DFB76C] hover:underline"
                       >
                         View &rarr;
                       </Link>

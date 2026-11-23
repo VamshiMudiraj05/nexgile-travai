@@ -17,6 +17,9 @@ from app.schemas.reservation import (
     AvailabilityResponse,
 )
 from app.schemas.room import RoomStatus
+from app.services.folio_service import FolioService
+from app.services.rate_plan_service import RatePlanService
+from app.services.corporate_service import CorporateService
 
 
 class ReservationService:
@@ -116,6 +119,20 @@ class ReservationService:
         # Check overlapping active reservations
         c_in_str = res_in.check_in_date.isoformat()
         c_out_str = res_in.check_out_date.isoformat()
+
+        # Validate Rate Plan Stay Restrictions (MinLOS, MaxLOS, CTA, CTD)
+        if res_in.rate_plan_id:
+            val_res = await RatePlanService.validate_stay_and_calculate(
+                rate_plan_id=res_in.rate_plan_id,
+                check_in_str=c_in_str,
+                check_out_str=c_out_str,
+                base_nightly_rate=res_in.rate_per_night,
+            )
+            if not val_res["is_valid"]:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Stay restriction violation: {'; '.join(val_res['violations'])}"
+                )
         
         overlap = await db.reservations.find_one({
             "room_id": res_in.room_id,
@@ -138,8 +155,26 @@ class ReservationService:
         doc["updated_at"] = now
         doc["created_by"] = user_id
 
+        # Record group block pickup if booking under group code
+        if res_in.group_code:
+            await CorporateService.record_pickup(res_in.group_code)
+
+        # Apply corporate discount if contracted code supplied
+        if res_in.corporate_code:
+            corp_ver = await CorporateService.verify_corporate_code(res_in.corporate_code)
+            if corp_ver["is_valid"] and corp_ver["contracted_discount_pct"] > 0:
+                disc_pct = corp_ver["contracted_discount_pct"] / 100.0
+                doc["discounts"] = round(doc.get("subtotal", 0.0) * disc_pct, 2)
+                doc["total_amount"] = round((doc.get("subtotal", 0.0) - doc["discounts"]) + doc.get("taxes", 0.0), 2)
+
         res = await db.reservations.insert_one(doc)
         doc["_id"] = res.inserted_id
+        
+        # Instantiate guest billing folio for new reservation
+        try:
+            await FolioService.get_or_create_folio_for_reservation(str(res.inserted_id))
+        except Exception as folio_err:
+            logger.warning(f"Failed to auto-create folio for reservation {res.inserted_id}: {folio_err}")
         
         # If reservation is confirmed, sync room status to RESERVED if currently AVAILABLE
         if res_in.status == ReservationStatus.CONFIRMED and room.get("status") == RoomStatus.AVAILABLE.value:

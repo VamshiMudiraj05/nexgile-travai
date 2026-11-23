@@ -80,7 +80,7 @@ export const RoomModal = ({ isOpen, onClose, propertyId, roomTypes = [], room, o
       maxWidth="max-w-md"
     >
       {error && (
-        <div className="mb-4 p-3 rounded-[2px] bg-[#FDF2F2] border border-[#993A3A]/30 flex items-center gap-2 text-xs text-[#993A3A] font-sans">
+        <div className="mb-4 p-3 rounded-[2px] bg-[#1B1E3D] border border-rose-500/40 flex items-center gap-2 text-xs text-rose-400 font-sans">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
         </div>
@@ -88,7 +88,7 @@ export const RoomModal = ({ isOpen, onClose, propertyId, roomTypes = [], room, o
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
             Suite Number / Identifier *
           </label>
           <input
@@ -103,7 +103,7 @@ export const RoomModal = ({ isOpen, onClose, propertyId, roomTypes = [], room, o
         </div>
 
         <div>
-          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
             Suite Category *
           </label>
           <select
@@ -111,7 +111,7 @@ export const RoomModal = ({ isOpen, onClose, propertyId, roomTypes = [], room, o
             required
             value={formData.room_type_id}
             onChange={handleChange}
-            className="w-full luxury-input text-xs font-semibold bg-[#FFFFFF]"
+            className="w-full luxury-input text-xs font-semibold bg-[#13152C]"
           >
             <option value="">-- Select Category --</option>
             {roomTypes.map((rt) => (
@@ -124,7 +124,7 @@ export const RoomModal = ({ isOpen, onClose, propertyId, roomTypes = [], room, o
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Floor Level
             </label>
             <input
@@ -139,14 +139,14 @@ export const RoomModal = ({ isOpen, onClose, propertyId, roomTypes = [], room, o
 
           {!isEdit && (
             <div>
-              <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+              <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
                 Initial State
               </label>
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="w-full luxury-input text-xs font-semibold bg-[#FFFFFF]"
+                className="w-full luxury-input text-xs font-semibold bg-[#13152C]"
               >
                 <option value="AVAILABLE">Available</option>
                 <option value="CLEANING">Cleaning</option>
@@ -158,7 +158,7 @@ export const RoomModal = ({ isOpen, onClose, propertyId, roomTypes = [], room, o
         </div>
 
         <div>
-          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
             Curated Notes / Distinct Features
           </label>
           <textarea
@@ -171,7 +171,7 @@ export const RoomModal = ({ isOpen, onClose, propertyId, roomTypes = [], room, o
           ></textarea>
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#DFB76C]/20">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#2C315E]">
           <button
             type="button"
             onClick={onClose}

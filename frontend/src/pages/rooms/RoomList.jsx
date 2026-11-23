@@ -114,16 +114,16 @@ export const RoomList = () => {
   return (
     <div className="space-y-8">
       {/* Editorial Header */}
-      <div className="rounded-[4px] border border-[#DFB76C]/35 bg-[#FFFFFF] p-8 md:p-10 shadow-[0_4px_24px_rgba(19,21,44,0.03)]">
+      <div className="rounded-[4px] border border-[#2C315E] bg-[#13152C] p-8 md:p-10 shadow-md">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div>
-            <div className="flex items-center gap-2 mb-2 font-cinzel text-[10px] font-bold uppercase tracking-[0.26em] text-[#B88E43]">
-              <Sparkles size={14} className="text-[#DFB76C]" /> 01 / OPERATIONS
+            <div className="flex items-center gap-2 mb-2 font-cinzel text-[10px] font-bold uppercase tracking-[0.26em] text-[#DFB76C]">
+              <Sparkles size={14} className="text-[#DFB76C]" /> OPERATIONS
             </div>
-            <h1 className="font-editorial text-3xl sm:text-4xl text-[#13152C] font-normal tracking-tight">
+            <h1 className="font-editorial text-3xl sm:text-4xl text-white font-normal tracking-tight">
               Suites & Unit Inventory
             </h1>
-            <p className="mt-2 font-sans text-xs sm:text-sm text-[#13152C]/65 max-w-xl leading-relaxed">
+            <p className="mt-2 font-sans text-xs sm:text-sm text-white/65 max-w-xl leading-relaxed">
               Track live occupancy, guest assignments, turn-down cleanliness, and room maintenance status in real time.
             </p>
           </div>
@@ -145,7 +145,7 @@ export const RoomList = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 p-4 rounded-[4px] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-[#13152C] border border-[#2C315E] p-4 rounded-[4px] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
           {/* Property Selector */}
           <div className="flex items-center gap-2">
@@ -156,7 +156,7 @@ export const RoomList = () => {
                 setSelectedPropertyId(e.target.value);
                 setPage(1);
               }}
-              className="luxury-input text-xs font-semibold bg-[#FAF6F0] cursor-pointer"
+              className="luxury-input text-xs font-semibold bg-[#1B1E3D] cursor-pointer"
             >
               <option value="">All Managed Properties</option>
               {properties.map((p) => (
@@ -176,7 +176,7 @@ export const RoomList = () => {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="luxury-input text-xs font-semibold bg-[#FAF6F0] cursor-pointer"
+              className="luxury-input text-xs font-semibold bg-[#1B1E3D] cursor-pointer"
             >
               <option value="">All Statuses</option>
               <option value="AVAILABLE">Available</option>
@@ -197,22 +197,22 @@ export const RoomList = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search suite #..."
-              className="w-full pl-9 pr-3 py-1.5 luxury-input text-xs font-sans placeholder-[#13152C]/40"
+              className="w-full pl-9 pr-3 py-1.5 luxury-input text-xs font-sans placeholder-white/40"
             />
           </form>
 
           {/* View toggle */}
-          <div className="flex items-center rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/30 p-0.5">
+          <div className="flex items-center rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] p-0.5">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-[2px] cursor-pointer transition-all ${viewMode === 'grid' ? 'bg-[#13152C] text-[#DFB76C]' : 'text-[#13152C]/50 hover:text-[#13152C]'}`}
+              className={`p-1.5 rounded-[2px] cursor-pointer transition-all ${viewMode === 'grid' ? 'bg-[#13152C] text-[#DFB76C]' : 'text-white/50 hover:text-white'}`}
               title="Grid View"
             >
               <LayoutGrid className="w-4 h-4 stroke-[1.5]" />
             </button>
             <button
               onClick={() => setViewMode('table')}
-              className={`p-1.5 rounded-[2px] cursor-pointer transition-all ${viewMode === 'table' ? 'bg-[#13152C] text-[#DFB76C]' : 'text-[#13152C]/50 hover:text-[#13152C]'}`}
+              className={`p-1.5 rounded-[2px] cursor-pointer transition-all ${viewMode === 'table' ? 'bg-[#13152C] text-[#DFB76C]' : 'text-white/50 hover:text-white'}`}
               title="Table View"
             >
               <ListIcon className="w-4 h-4 stroke-[1.5]" />
@@ -249,16 +249,16 @@ export const RoomList = () => {
           {rooms.map((room) => (
             <div
               key={room.id || room._id}
-              className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-5 shadow-sm hover:border-[#DFB76C] transition-all flex flex-col justify-between"
+              className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm hover:border-[#DFB76C] transition-all flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <span className="font-cinzel text-[8.5px] text-[#13152C]/50 uppercase tracking-widest font-semibold block">
+                    <span className="font-cinzel text-[8.5px] text-white/50 uppercase tracking-widest font-semibold block">
                       Floor {room.floor} • {room.property_name || 'Estate'}
                     </span>
-                    <h3 className="font-editorial text-2xl font-normal text-[#13152C] tracking-tight">Suite #{room.room_number}</h3>
-                    <p className="font-sans text-xs text-[#13152C]/70 mt-0.5">{room.room_type_name || 'Category'}</p>
+                    <h3 className="font-editorial text-2xl font-normal text-white tracking-tight">Suite #{room.room_number}</h3>
+                    <p className="font-sans text-xs text-white/70 mt-0.5">{room.room_type_name || 'Category'}</p>
                   </div>
 
                   <button
@@ -271,21 +271,21 @@ export const RoomList = () => {
                 </div>
 
                 {room.current_guest_name ? (
-                  <div className="p-2.5 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/25 mb-3 text-xs font-sans">
-                    <span className="font-cinzel text-[8px] text-[#B88E43] uppercase tracking-wider block font-bold">Occupied By</span>
-                    <span className="font-semibold text-[#13152C] truncate block">{room.current_guest_name}</span>
+                  <div className="p-2.5 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] mb-3 text-xs font-sans">
+                    <span className="font-cinzel text-[8px] text-[#DFB76C] uppercase tracking-wider block font-bold">Occupied By</span>
+                    <span className="font-semibold text-white truncate block">{room.current_guest_name}</span>
                   </div>
                 ) : (
-                  <div className="p-2.5 rounded-[2px] bg-[#FAF6F0]/50 border border-[#DFB76C]/15 mb-3 text-[11px] font-sans text-[#13152C]/40 italic">
+                  <div className="p-2.5 rounded-[2px] bg-[#1B1E3D]/50 border border-[#2C315E] mb-3 text-[11px] font-sans text-white/40 italic">
                     Ready for assignment
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-[#DFB76C]/20 text-xs">
+              <div className="flex items-center justify-between pt-3 border-t border-[#2C315E] text-xs">
                 <button
                   onClick={() => setStatusModalRoom(room)}
-                  className="inline-flex items-center gap-1.5 font-cinzel text-[9.5px] uppercase tracking-wider text-[#B88E43] hover:text-[#13152C] font-semibold cursor-pointer"
+                  className="inline-flex items-center gap-1.5 font-cinzel text-[9.5px] uppercase tracking-wider text-[#DFB76C] hover:text-white font-semibold cursor-pointer"
                 >
                   <RefreshCw className="w-3 h-3" />
                   <span>Update Status</span>
@@ -298,14 +298,14 @@ export const RoomList = () => {
                         setSelectedRoom(room);
                         setIsRoomModalOpen(true);
                       }}
-                      className="p-1 rounded-[2px] text-[#13152C]/60 hover:text-[#13152C] hover:bg-[#FAF6F0] transition-colors cursor-pointer"
+                      className="p-1 rounded-[2px] text-white/60 hover:text-white hover:bg-[#1B1E3D] transition-colors cursor-pointer"
                       title="Edit Room"
                     >
                       <Edit3 className="w-3.5 h-3.5 stroke-[1.5]" />
                     </button>
                     <button
                       onClick={() => setDeleteId(room.id || room._id)}
-                      className="p-1 rounded-[2px] text-[#13152C]/60 hover:text-[#993A3A] hover:bg-[#FAF6F0] transition-colors cursor-pointer"
+                      className="p-1 rounded-[2px] text-white/60 hover:text-rose-400 hover:bg-[#1B1E3D] transition-colors cursor-pointer"
                       title="Delete Room"
                     >
                       <Trash2 className="w-3.5 h-3.5 stroke-[1.5]" />
@@ -318,9 +318,9 @@ export const RoomList = () => {
         </div>
       ) : (
         /* Table View */
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] overflow-hidden shadow-sm">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden shadow-sm">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#FAF6F0] font-cinzel text-[9px] uppercase font-bold text-[#13152C]/70 border-b border-[#DFB76C]/25 tracking-wider">
+            <thead className="bg-[#1B1E3D] font-cinzel text-[9px] uppercase font-bold text-white/70 border-b border-[#2C315E] tracking-wider">
               <tr>
                 <th className="py-3.5 px-4">Suite #</th>
                 <th className="py-3.5 px-4">Category</th>
@@ -333,17 +333,17 @@ export const RoomList = () => {
             </thead>
             <tbody className="divide-y divide-[#DFB76C]/15 font-sans">
               {rooms.map((room) => (
-                <tr key={room.id || room._id} className="hover:bg-[#FAF6F0]/60">
-                  <td className="py-3.5 px-4 font-editorial text-base font-normal text-[#13152C]">Suite #{room.room_number}</td>
-                  <td className="py-3.5 px-4 text-[#13152C]/80 font-medium">{room.room_type_name}</td>
-                  <td className="py-3.5 px-4 text-[#13152C]/60">Floor {room.floor}</td>
-                  <td className="py-3.5 px-4 text-[#13152C]">{room.property_name}</td>
+                <tr key={room.id || room._id} className="hover:bg-[#1B1E3D]/60">
+                  <td className="py-3.5 px-4 font-editorial text-base font-normal text-white">Suite #{room.room_number}</td>
+                  <td className="py-3.5 px-4 text-white/80 font-medium">{room.room_type_name}</td>
+                  <td className="py-3.5 px-4 text-white/60">Floor {room.floor}</td>
+                  <td className="py-3.5 px-4 text-white">{room.property_name}</td>
                   <td className="py-3.5 px-4">
                     <button onClick={() => setStatusModalRoom(room)} className="cursor-pointer">
                       <StatusBadge status={room.status} size="sm" />
                     </button>
                   </td>
-                  <td className="py-3.5 px-4 text-[#13152C]/70">{room.current_guest_name || '—'}</td>
+                  <td className="py-3.5 px-4 text-white/70">{room.current_guest_name || '—'}</td>
                   <td className="py-3.5 px-4 text-right">
                     <button
                       onClick={() => setStatusModalRoom(room)}

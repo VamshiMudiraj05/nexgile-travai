@@ -19,6 +19,8 @@ import { roomService } from '../../services/roomService';
 import { propertyService } from '../../services/propertyService';
 import { StatusBadge } from '../../components/StatusBadge';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { FolioModal } from '../../components/FolioModal';
+import { Receipt } from 'lucide-react';
 
 export const FrontDeskDashboard = () => {
   const [properties, setProperties] = useState([]);
@@ -29,6 +31,7 @@ export const FrontDeskDashboard = () => {
   const [actionLoadingId, setActionLoadingId] = useState(null);
   const [notification, setNotification] = useState(null);
   const [search, setSearch] = useState('');
+  const [folioReservationId, setFolioReservationId] = useState(null);
 
   const todayStr = new Date().toISOString().split('T')[0];
 
@@ -292,14 +295,25 @@ export const FrontDeskDashboard = () => {
                         </div>
                       </div>
 
-                      <button
-                        onClick={() => handleCheckIn(res.id || res._id, res.guest_name)}
-                        disabled={isActionLoading}
-                        className="btn-luxury-primary text-[10px] py-1.5 px-3 flex-shrink-0"
-                      >
-                        <LogInIcon className="w-3 h-3" />
-                        <span>{isActionLoading ? 'Processing...' : 'Check In'}</span>
-                      </button>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <button
+                          onClick={() => setFolioReservationId(res.id || res._id)}
+                          className="btn-luxury-secondary text-[10px] py-1.5 px-2.5 flex items-center gap-1 cursor-pointer"
+                          title="View Guest Billing & Folio"
+                        >
+                          <Receipt className="w-3 h-3 text-[#B88E43]" />
+                          <span>Folio</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleCheckIn(res.id || res._id, res.guest_name)}
+                          disabled={isActionLoading}
+                          className="btn-luxury-primary text-[10px] py-1.5 px-3 flex-shrink-0"
+                        >
+                          <LogInIcon className="w-3 h-3" />
+                          <span>{isActionLoading ? 'Processing...' : 'Check In'}</span>
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
@@ -351,14 +365,25 @@ export const FrontDeskDashboard = () => {
                         </div>
                       </div>
 
-                      <button
-                        onClick={() => handleCheckOut(res.id || res._id, res.guest_name)}
-                        disabled={isActionLoading}
-                        className="btn-luxury-secondary text-[10px] py-1.5 px-3 flex-shrink-0"
-                      >
-                        <LogOutIcon className="w-3 h-3" />
-                        <span>{isActionLoading ? 'Processing...' : 'Check Out'}</span>
-                      </button>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <button
+                          onClick={() => setFolioReservationId(res.id || res._id)}
+                          className="btn-luxury-secondary text-[10px] py-1.5 px-2.5 flex items-center gap-1 cursor-pointer"
+                          title="View Guest Billing & Folio"
+                        >
+                          <Receipt className="w-3 h-3 text-[#B88E43]" />
+                          <span>Folio</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleCheckOut(res.id || res._id, res.guest_name)}
+                          disabled={isActionLoading}
+                          className="btn-luxury-secondary text-[10px] py-1.5 px-3 flex-shrink-0"
+                        >
+                          <LogOutIcon className="w-3 h-3" />
+                          <span>{isActionLoading ? 'Processing...' : 'Check Out'}</span>
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
@@ -366,6 +391,16 @@ export const FrontDeskDashboard = () => {
             )}
           </div>
         </div>
+      )}
+
+      {/* Guest Billing & Folio Modal */}
+      {folioReservationId && (
+        <FolioModal
+          isOpen={!!folioReservationId}
+          onClose={() => setFolioReservationId(null)}
+          reservationId={folioReservationId}
+          onFolioUpdated={() => loadDashboardData()}
+        />
       )}
     </div>
   );

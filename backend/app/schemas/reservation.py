@@ -40,6 +40,10 @@ class ReservationBase(BaseModel):
     discounts: Optional[float] = Field(default=0.0, ge=0)
     total_amount: Optional[float] = None
     special_requests: Optional[str] = None
+    rate_plan_id: Optional[str] = None
+    rate_plan_name: Optional[str] = None
+    corporate_code: Optional[str] = None
+    group_code: Optional[str] = None
     source: ReservationSource = ReservationSource.DIRECT
     status: ReservationStatus = ReservationStatus.CONFIRMED
 

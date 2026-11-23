@@ -16,7 +16,7 @@ export default function StarRating({ rating = 5, maxStars = 5, size = 16, intera
         <Star
           size={size}
           className={`${
-            isFilled ? 'fill-amber-400 text-amber-400' : 'text-slate-600'
+            isFilled ? 'fill-amber-400 text-amber-400' : 'text-[#DFB76C]/30'
           }`}
         />
       </button>

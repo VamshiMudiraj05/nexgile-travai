@@ -12,11 +12,9 @@ import {
   Percent,
   Calendar,
   Compass,
-  UserCircle,
   Luggage,
   Crown,
   User,
-  LogOut,
   Menu,
   X,
   Sparkle,
@@ -24,11 +22,17 @@ import {
   Wrench,
   Wallet,
   Receipt,
-  Bell,
   ChevronRight,
+  Tag,
+  Briefcase,
+  Radio,
+  MessageSquare,
+  Smartphone,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { ROLE_BADGE_COLORS } from '../utils/constants';
+import { DynamicIsland } from '@/components/ui/dynamic-island';
+import { RainbowButton } from '@/components/ui/rainbow-button';
+import { motion } from 'framer-motion';
 
 export const AdminLayout = () => {
   const { user, logout } = useAuth();
@@ -57,9 +61,12 @@ export const AdminLayout = () => {
       ],
     },
     {
-      group: 'PORTFOLIO',
+      group: 'PORTFOLIO & DISTRIBUTION',
       items: [
         { name: 'Properties', path: '/properties', icon: Building2 },
+        { name: 'Channel Manager (ARI)', path: '/distribution/channels', icon: Radio },
+        { name: 'Multimodal Travel Hub', path: '/marketplace/multimodal', icon: Compass },
+        { name: 'Super App & Multi-Tenancy', path: '/superapp', icon: Smartphone },
       ],
     },
     {
@@ -69,6 +76,9 @@ export const AdminLayout = () => {
         { name: 'Housekeeping Board', path: '/housekeeping', icon: Sparkles },
         { name: 'Maintenance Board', path: '/maintenance', icon: Wrench },
         { name: 'Guests Directory', path: '/guests', icon: Users },
+        { name: 'Corporate & Groups', path: '/corporate/accounts', icon: Briefcase },
+        { name: 'Corporate Travel & Expense', path: '/corporate/expenses', icon: Receipt },
+        { name: 'Omnichannel Dispatch', path: '/operations/omnichannel', icon: MessageSquare },
       ],
     },
     {
@@ -85,6 +95,7 @@ export const AdminLayout = () => {
       group: 'INTELLIGENCE',
       items: [
         { name: 'Rate Recommendations', path: '/revenue/recommendations', icon: Sparkle },
+        { name: 'Rate Plans & Stay Rules', path: '/revenue/rate-plans', icon: Tag },
       ],
     },
   ];
@@ -95,6 +106,7 @@ export const AdminLayout = () => {
       items: [
         { name: 'Financial Overview', path: '/finance', icon: Wallet },
         { name: 'Reservations & Folios', path: '/reservations', icon: Receipt },
+        { name: 'Corporate Travel & Expense', path: '/corporate/expenses', icon: Briefcase },
       ],
     },
     {
@@ -127,7 +139,12 @@ export const AdminLayout = () => {
     {
       group: 'PORTFOLIO & RATES',
       items: [
-        { name: 'Properties & Rate Plans', path: '/properties', icon: Building2 },
+        { name: 'Properties', path: '/properties', icon: Building2 },
+        { name: 'Rate Plans & Restrictions', path: '/revenue/rate-plans', icon: Tag },
+        { name: 'Channel Manager (ARI)', path: '/distribution/channels', icon: Radio },
+        { name: 'Corporate Contracts', path: '/corporate/accounts', icon: Briefcase },
+        { name: 'Corporate Travel & Expense', path: '/corporate/expenses', icon: Receipt },
+        { name: 'Multimodal Travel Hub', path: '/marketplace/multimodal', icon: Compass },
       ],
     },
   ];
@@ -146,6 +163,8 @@ export const AdminLayout = () => {
         { name: 'Housekeeping Board', path: '/housekeeping', icon: Sparkles },
         { name: 'Maintenance Board', path: '/maintenance', icon: Wrench },
         { name: 'Guests Directory', path: '/guests', icon: Users },
+        { name: 'Corporate & Groups', path: '/corporate/accounts', icon: Briefcase },
+        { name: 'Omnichannel Dispatch', path: '/operations/omnichannel', icon: MessageSquare },
         { name: 'Rooms & Units', path: '/rooms', icon: BedDouble },
       ],
     },
@@ -173,13 +192,18 @@ export const AdminLayout = () => {
 
   const travelerNavGroups = [
     {
-      group: 'TRAVELER CONCIERGE',
+      group: 'GUEST SERVICES',
       items: [
+        { name: 'Guest Dashboard', path: '/traveler/dashboard', icon: LayoutDashboard },
         { name: 'AI Concierge', path: '/concierge', icon: Sparkles },
-        { name: 'Marketplace & Stays', path: '/marketplace', icon: ShoppingBag },
-        { name: 'My Trips & Folios', path: '/my-trips', icon: Luggage },
-        { name: 'Loyalty Privilege', path: '/loyalty', icon: Crown },
-        { name: 'Traveler Profile', path: '/profile', icon: User },
+        { name: 'Book Hotels', path: '/marketplace', icon: ShoppingBag },
+        { name: 'Flights & Taxis', path: '/marketplace/multimodal', icon: Compass },
+        { name: 'Support & Chat', path: '/operations/omnichannel', icon: MessageSquare },
+        { name: 'Travel Wallet', path: '/superapp', icon: Smartphone },
+        { name: 'Business Expenses', path: '/corporate/expenses', icon: Briefcase },
+        { name: 'My Trips & Bookings', path: '/my-trips', icon: Luggage },
+        { name: 'Loyalty Rewards', path: '/loyalty', icon: Crown },
+        { name: 'Profile & Preferences', path: '/profile', icon: User },
       ],
     },
   ];
@@ -198,12 +222,12 @@ export const AdminLayout = () => {
     ? frontDeskNavGroups
     : adminNavGroups;
 
-  const roleBadgeClass = user?.role && ROLE_BADGE_COLORS[user.role]
-    ? ROLE_BADGE_COLORS[user.role]
-    : 'bg-[#13152C] text-[#DFB76C] border-[#DFB76C]/30';
+  const displayName = user?.name
+    ? user.name.replace(/\s*\(.*?\)\s*/g, '').trim() || user.name
+    : 'Eleanor Vance';
 
   const homePath = isTraveler
-    ? '/marketplace'
+    ? '/traveler/dashboard'
     : isRevenueManager
     ? '/revenue/recommendations'
     : isFinance
@@ -225,7 +249,7 @@ export const AdminLayout = () => {
     : 'OVERVIEW';
 
   return (
-    <div className="min-h-screen bg-[#FAF6F0] text-[#13152C] flex flex-col md:flex-row antialiased">
+    <div className="min-h-screen bg-[#0B0C1E] text-[#FAF6F0] flex flex-col md:flex-row antialiased">
       {/* Mobile Topbar */}
       <div className="md:hidden flex items-center justify-between px-5 py-3.5 bg-[#0D0E20] border-b border-[#2C315E]">
         <Link to={homePath} className="flex items-center gap-2.5 group cursor-pointer" title="Return to Home">
@@ -237,12 +261,19 @@ export const AdminLayout = () => {
             <span className="font-cinzel text-[10px] tracking-[0.14em] text-[#DFB76C] ml-1">TRAVAI</span>
           </div>
         </Link>
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 text-[#DFB76C] hover:text-white focus:outline-none cursor-pointer"
-        >
-          {isMobileMenuOpen ? <X className="w-5 h-5 stroke-[1.5]" /> : <Menu className="w-5 h-5 stroke-[1.5]" />}
-        </button>
+        <div className="flex items-center gap-3">
+          <DynamicIsland
+            name={displayName}
+            role={user?.role || 'TRAVELER'}
+            onLogout={handleLogout}
+          />
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 text-[#DFB76C] hover:text-white focus:outline-none cursor-pointer"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5 stroke-[1.5]" /> : <Menu className="w-5 h-5 stroke-[1.5]" />}
+          </button>
+        </div>
       </div>
 
       {/* Luxury Editorial Sidebar */}
@@ -324,60 +355,32 @@ export const AdminLayout = () => {
             </div>
           ))}
         </nav>
-
-        {/* User Profile & Logout in Sidebar Footer */}
-        <div className="p-4 border-t border-[#2C315E]/70 bg-[#0D0E20]">
-          <div className="flex items-center gap-3 mb-3 p-2 rounded-[2px] bg-[#13152C]/60 border border-[#2C315E]/40">
-            <div className="w-8 h-8 rounded-[2px] bg-[#1B1E3D] border border-[#DFB76C]/30 flex items-center justify-center text-[#DFB76C] font-cinzel text-xs font-bold flex-shrink-0">
-              {user?.name ? user.name.charAt(0).toUpperCase() : <UserCircle className="w-4 h-4 stroke-[1.5]" />}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-white truncate font-sans">{user?.name || 'Authorized Member'}</p>
-              <p className="text-[10px] text-[#FAF6F0]/50 truncate font-sans">{user?.email || 'pms@nexgile.com'}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between pt-1">
-            <span className={`font-cinzel text-[8.5px] px-2 py-0.5 rounded-[2px] border font-bold tracking-[0.16em] uppercase ${roleBadgeClass}`}>
-              {user?.role || 'GUEST'}
-            </span>
-            <button
-              onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 text-xs text-[#DFB76C] hover:text-[#F2D59B] font-sans font-medium px-2 py-1 rounded-[2px] hover:bg-[#13152C] transition-all cursor-pointer"
-            >
-              <LogOut className="w-3.5 h-3.5 stroke-[1.5]" />
-              <span className="tracking-wide">Sign Out</span>
-            </button>
-          </div>
-        </div>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[#FAF6F0]">
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[#0B0C1E] text-[#FAF6F0]">
         {/* Top Header */}
-        <header className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-[#DFB76C]/20 bg-[#FFFFFF]/90 backdrop-blur-md sticky top-0 z-30">
+        <header className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-[#2C315E] bg-[#0B0C1E]/95 backdrop-blur-md sticky top-0 z-30">
           <div className="flex items-center gap-2">
-            <span className="font-cinzel text-[10px] font-bold tracking-[0.24em] text-[#B88E43] uppercase">
+            <span className="font-cinzel text-[10px] font-bold tracking-[0.24em] text-[#DFB76C] uppercase">
               {breadcrumbSection}
             </span>
-            <ChevronRight className="w-3.5 h-3.5 text-[#13152C]/30" />
-            <span className="font-cinzel text-[10px] font-semibold tracking-[0.2em] text-[#13152C] uppercase">
+            <ChevronRight className="w-3.5 h-3.5 text-[#DFB76C]/40" />
+            <span className="font-cinzel text-[10px] font-semibold tracking-[0.2em] text-white uppercase">
               {breadcrumbPage}
             </span>
-            <span className="mx-2 text-[#13152C]/20 font-light">|</span>
-            <span className="font-cinzel text-[9px] tracking-[0.16em] text-[#2D5A40] bg-[#F2F8F4] px-2 py-0.5 rounded-[2px] border border-[#2D5A40]/25 uppercase font-semibold">
+            <span className="mx-2 text-[#2C315E] font-light">|</span>
+            <span className="font-cinzel text-[9px] tracking-[0.16em] text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded-[2px] border border-emerald-500/25 uppercase font-semibold">
               Atlas DB Active
             </span>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="text-right">
-              <div className="text-xs font-semibold text-[#13152C] font-sans">{user?.name}</div>
-              <div className="text-[11px] text-[#13152C]/50 font-sans">{user?.email}</div>
-            </div>
-            <div className={`px-2.5 py-0.5 rounded-[2px] border text-[9.5px] font-bold font-cinzel tracking-[0.16em] uppercase ${roleBadgeClass}`}>
-              {user?.role}
-            </div>
+            <DynamicIsland
+              name={displayName}
+              role={user?.role || 'TRAVELER'}
+              onLogout={handleLogout}
+            />
           </div>
         </header>
 
@@ -386,15 +389,28 @@ export const AdminLayout = () => {
           <Outlet />
         </div>
 
-        {/* Floating AI Concierge Launcher for Travelers */}
-        {isTraveler && location.pathname !== '/concierge' && (
-          <Link
-            to="/concierge"
-            className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#13152C] border border-[#DFB76C] text-[#F2D59B] shadow-2xl hover:scale-105 hover:bg-[#1B1E3D] transition-all group"
+        {/* Movable Floating AI Concierge Launcher */}
+        {location.pathname !== '/concierge' && (
+          <motion.div
+            drag
+            dragMomentum={false}
+            dragElastic={0.08}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="fixed bottom-6 right-6 z-50 cursor-grab active:cursor-grabbing touch-none select-none"
+            title="Drag to move across screen · Click to open AI Concierge"
           >
-            <Sparkles size={16} className="text-[#DFB76C] animate-spin" />
-            <span className="font-cinzel text-xs font-bold tracking-wider">AI CONCIERGE</span>
-          </Link>
+            <RainbowButton
+              onClick={() => navigate('/concierge')}
+              glow={true}
+              speed={3}
+              size="default"
+              className="rounded-full shadow-2xl"
+            >
+              <Sparkles className="w-4 h-4 text-[#DFB76C] animate-pulse" />
+              <span>AI CONCIERGE</span>
+            </RainbowButton>
+          </motion.div>
         )}
       </main>
     </div>

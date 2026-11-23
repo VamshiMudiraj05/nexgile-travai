@@ -97,7 +97,7 @@ export const GuestForm = () => {
 
   if (loading) {
     return (
-      <div className="py-20 text-center text-[#13152C]">
+      <div className="py-20 text-center text-white">
         <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#DFB76C] mb-2" />
         <p className="font-editorial text-sm">Consulting guest archives...</p>
       </div>
@@ -107,20 +107,20 @@ export const GuestForm = () => {
   return (
     <div className="max-w-3xl mx-auto space-y-8 pb-20">
       {/* Header */}
-      <div className="flex items-center justify-between pb-6 border-b border-[#DFB76C]/30">
+      <div className="flex items-center justify-between pb-6 border-b border-[#2C315E]">
         <div className="flex items-center gap-4">
           <Link
             to="/guests"
-            className="p-2.5 rounded-[3px] border border-[#DFB76C]/40 bg-[#FAF6F0] text-[#13152C] hover:bg-[#F4EFE6] transition-colors"
+            className="p-2.5 rounded-[3px] border border-[#2C315E] bg-[#1B1E3D] text-white hover:bg-[#1B1E3D] transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 text-[#B88E43]" />
+            <ArrowLeft className="w-5 h-5 text-[#DFB76C]" />
           </Link>
           <div>
-            <span className="eyebrow-label text-[#B88E43]">01 / OPERATIONS &middot; GUEST REGISTRY</span>
-            <h1 className="text-3xl font-editorial font-bold text-[#13152C] tracking-tight">
+            <span className="eyebrow-label text-[#DFB76C]">OPERATIONS &middot; GUEST REGISTRY</span>
+            <h1 className="text-3xl font-editorial font-bold text-white tracking-tight">
               {isEdit ? 'Edit Guest Profile' : 'Register VIP Guest'}
             </h1>
-            <p className="text-xs text-[#13152C]/70 mt-1">
+            <p className="text-xs text-white/70 mt-1">
               Maintain guest CRM preferences, identity records, and contact details.
             </p>
           </div>
@@ -136,17 +136,17 @@ export const GuestForm = () => {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Personal Details */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-7 shadow-sm space-y-5">
-          <div className="border-b border-[#DFB76C]/20 pb-3">
-            <span className="eyebrow-label text-[#B88E43]">Section 01</span>
-            <h2 className="text-lg font-editorial font-semibold text-[#13152C]">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-7 shadow-sm space-y-5">
+          <div className="border-b border-[#2C315E] pb-3">
+            <span className="eyebrow-label text-[#DFB76C]">Section 01</span>
+            <h2 className="text-lg font-editorial font-semibold text-white">
               Personal & Communication Records
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 First Name *
               </label>
               <input
@@ -156,12 +156,12 @@ export const GuestForm = () => {
                 value={formData.first_name}
                 onChange={handleChange}
                 placeholder="e.g. Aarav"
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Last Name *
               </label>
               <input
@@ -171,12 +171,12 @@ export const GuestForm = () => {
                 value={formData.last_name}
                 onChange={handleChange}
                 placeholder="e.g. Sharma"
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Email Address *
               </label>
               <input
@@ -186,12 +186,12 @@ export const GuestForm = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="aarav.sharma@example.com"
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Phone Number *
               </label>
               <input
@@ -201,12 +201,12 @@ export const GuestForm = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="+91 9876543210"
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Nationality
               </label>
               <input
@@ -215,12 +215,12 @@ export const GuestForm = () => {
                 value={formData.nationality}
                 onChange={handleChange}
                 placeholder="Indian"
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Date of Birth
               </label>
               <input
@@ -228,31 +228,31 @@ export const GuestForm = () => {
                 name="date_of_birth"
                 value={formData.date_of_birth}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
           </div>
         </div>
 
         {/* Identification & Address */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-7 shadow-sm space-y-5">
-          <div className="border-b border-[#DFB76C]/20 pb-3">
-            <span className="eyebrow-label text-[#B88E43]">Section 02</span>
-            <h2 className="text-lg font-editorial font-semibold text-[#13152C]">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-7 shadow-sm space-y-5">
+          <div className="border-b border-[#2C315E] pb-3">
+            <span className="eyebrow-label text-[#DFB76C]">Section 02</span>
+            <h2 className="text-lg font-editorial font-semibold text-white">
               Identity & Address Verification
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Identity Document Type
               </label>
               <select
                 name="identity_type"
                 value={formData.identity_type}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               >
                 <option value="PASSPORT">Passport</option>
                 <option value="NATIONAL_ID">National ID / Aadhaar</option>
@@ -262,7 +262,7 @@ export const GuestForm = () => {
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Identity Document Number
               </label>
               <input
@@ -271,12 +271,12 @@ export const GuestForm = () => {
                 value={formData.identity_number}
                 onChange={handleChange}
                 placeholder="e.g. Z1234567"
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all font-mono"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all font-mono"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 City / Region
               </label>
               <input
@@ -285,12 +285,12 @@ export const GuestForm = () => {
                 value={formData.city}
                 onChange={handleChange}
                 placeholder="e.g. Mumbai"
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Country
               </label>
               <input
@@ -299,24 +299,24 @@ export const GuestForm = () => {
                 value={formData.country}
                 onChange={handleChange}
                 placeholder="e.g. India"
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
           </div>
         </div>
 
         {/* Preferences & Notes */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-7 shadow-sm space-y-5">
-          <div className="border-b border-[#DFB76C]/20 pb-3">
-            <span className="eyebrow-label text-[#B88E43]">Section 03</span>
-            <h2 className="text-lg font-editorial font-semibold text-[#13152C]">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-7 shadow-sm space-y-5">
+          <div className="border-b border-[#2C315E] pb-3">
+            <span className="eyebrow-label text-[#DFB76C]">Section 03</span>
+            <h2 className="text-lg font-editorial font-semibold text-white">
               Guest Preferences & Concierge Notes
             </h2>
           </div>
 
           <div className="space-y-5">
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Stay Preferences
               </label>
               <textarea
@@ -325,12 +325,12 @@ export const GuestForm = () => {
                 value={formData.preferences}
                 onChange={handleChange}
                 placeholder="e.g. Quiet wing, king bed, vegetarian cuisine, late departure..."
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               ></textarea>
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Internal Concierge Notes
               </label>
               <textarea
@@ -339,14 +339,14 @@ export const GuestForm = () => {
                 value={formData.notes}
                 onChange={handleChange}
                 placeholder="VIP status, executive corporate affiliation, historical preferences..."
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-sm text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               ></textarea>
             </div>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-4 pt-4 border-t border-[#DFB76C]/30">
+        <div className="flex items-center justify-end gap-4 pt-4 border-t border-[#2C315E]">
           <Link
             to="/guests"
             className="btn-luxury-secondary text-xs"

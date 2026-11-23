@@ -28,6 +28,7 @@ import { propertyService } from '../../services/propertyService';
 import { analyticsService } from '../../services/analyticsService';
 import { StatusBadge } from '../../components/StatusBadge';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { FolioModal } from '../../components/FolioModal';
 
 export const FinanceOverview = () => {
   const [reservations, setReservations] = useState([]);
@@ -119,13 +120,13 @@ export const FinanceOverview = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-20">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#DFB76C]/30">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#2C315E]">
         <div>
-          <span className="eyebrow-label text-[#B88E43]">03 / REVENUE &amp; FINANCE &middot; TREASURY LEDGER</span>
-          <h1 className="text-3xl font-editorial font-bold text-[#13152C] tracking-tight mt-1">
+          <span className="eyebrow-label text-[#DFB76C]">REVENUE &amp; FINANCE &middot; TREASURY LEDGER</span>
+          <h1 className="text-3xl font-editorial font-bold text-white tracking-tight mt-1">
             Financial Folios &amp; Ledger Audit
           </h1>
-          <p className="text-xs text-[#13152C]/70 mt-1">
+          <p className="text-xs text-white/70 mt-1">
             Audit settled payments, outstanding receivables, tax accruals, and guest folio statements.
           </p>
         </div>
@@ -135,7 +136,7 @@ export const FinanceOverview = () => {
             onClick={loadInitialData}
             className="btn-luxury-secondary text-xs inline-flex items-center gap-1.5 cursor-pointer"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-[#B88E43]" />
+            <RefreshCw className="w-3.5 h-3.5 text-[#DFB76C]" />
             <span>Sync Ledger</span>
           </button>
           <button
@@ -150,25 +151,25 @@ export const FinanceOverview = () => {
 
       {/* Notification Toast */}
       {notification && (
-        <div className="p-4 rounded-[4px] bg-[#FAF6F0] border border-[#DFB76C]/60 flex items-center gap-2 text-xs font-cinzel text-[#13152C] shadow-sm">
-          <CheckCircle2 className="w-4 h-4 text-[#B88E43] shrink-0" />
+        <div className="p-4 rounded-[4px] bg-[#1B1E3D] border border-[#DFB76C]/60 flex items-center gap-2 text-xs font-cinzel text-white shadow-sm">
+          <CheckCircle2 className="w-4 h-4 text-[#DFB76C] shrink-0" />
           <span>{notification}</span>
         </div>
       )}
 
       {/* KPI Stats Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-5 shadow-sm">
-          <span className="eyebrow-label text-[#13152C]/70 flex items-center gap-1.5">
-            <Receipt className="w-3.5 h-3.5 text-[#B88E43]" /> Gross Billed
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm">
+          <span className="eyebrow-label text-white/70 flex items-center gap-1.5">
+            <Receipt className="w-3.5 h-3.5 text-[#DFB76C]" /> Gross Billed
           </span>
-          <p className="text-3xl font-editorial font-bold text-[#13152C] mt-1">
+          <p className="text-3xl font-editorial font-bold text-white mt-1">
             ₹{grossBilled.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <span className="text-[11px] text-[#13152C]/60">{totalFolios} total folios</span>
+          <span className="text-[11px] text-white/60">{totalFolios} total folios</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-emerald-300 rounded-[4px] p-5 shadow-sm">
+        <div className="bg-[#13152C] border border-emerald-300 rounded-[4px] p-5 shadow-sm">
           <span className="eyebrow-label text-emerald-800 flex items-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Settled Revenue
           </span>
@@ -178,7 +179,7 @@ export const FinanceOverview = () => {
           <span className="text-[11px] text-emerald-800/80">{collectionRate}% collection rate</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-amber-300 rounded-[4px] p-5 shadow-sm">
+        <div className="bg-[#13152C] border border-amber-300 rounded-[4px] p-5 shadow-sm">
           <span className="eyebrow-label text-amber-800 flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5 text-amber-600" /> Accounts Receivable
           </span>
@@ -188,27 +189,27 @@ export const FinanceOverview = () => {
           <span className="text-[11px] text-amber-800/80">Pending checkout / desk bill</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-[#2C315E]/40 rounded-[4px] p-5 shadow-sm">
-          <span className="eyebrow-label text-[#13152C]/80 flex items-center gap-1.5">
-            <IndianRupee className="w-3.5 h-3.5 text-[#B88E43]" /> GST Accruals (12%)
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm">
+          <span className="eyebrow-label text-white/80 flex items-center gap-1.5">
+            <IndianRupee className="w-3.5 h-3.5 text-[#DFB76C]" /> GST Accruals (12%)
           </span>
-          <p className="text-3xl font-editorial font-bold text-[#13152C] mt-1">
+          <p className="text-3xl font-editorial font-bold text-white mt-1">
             ₹{totalTaxes.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <span className="text-[11px] text-[#13152C]/60">GST (Goods &amp; Services Tax)</span>
+          <span className="text-[11px] text-white/60">GST (Goods &amp; Services Tax)</span>
         </div>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 p-5 rounded-[4px] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-[#13152C] border border-[#2C315E] p-5 rounded-[4px] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
           {/* Property Selector */}
           <div className="flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-[#B88E43]" />
+            <Building2 className="w-4 h-4 text-[#DFB76C]" />
             <select
               value={selectedPropertyId}
               onChange={(e) => setSelectedPropertyId(e.target.value)}
-              className="px-3.5 py-2 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-xs font-semibold text-[#13152C] focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF]"
+              className="px-3.5 py-2 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs font-semibold text-white focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C]"
             >
               <option value="ALL">All Hotel Estates</option>
               {properties.map((p) => (
@@ -221,13 +222,13 @@ export const FinanceOverview = () => {
 
           {/* Search Input */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-[#B88E43] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#DFB76C] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search reference, guest, suite..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-2 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-xs text-[#13152C] placeholder-[#13152C]/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] w-64"
+              className="pl-8 pr-3 py-2 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] w-64"
             />
           </div>
         </div>
@@ -245,11 +246,11 @@ export const FinanceOverview = () => {
               className={`px-3 py-1.5 rounded-[3px] text-xs font-cinzel tracking-wider transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
                 paymentFilter === tab.id
                   ? 'bg-[#13152C] text-[#FAF6F0] border border-[#DFB76C]'
-                  : 'bg-[#FAF6F0] border border-[#DFB76C]/30 text-[#13152C]/70 hover:text-[#13152C]'
+                  : 'bg-[#1B1E3D] border border-[#2C315E] text-white/70 hover:text-white'
               }`}
             >
               <span>{tab.label}</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${paymentFilter === tab.id ? 'bg-[#DFB76C] text-[#13152C]' : 'bg-[#ECE5DA] text-[#13152C]'}`}>
+              <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${paymentFilter === tab.id ? 'bg-[#DFB76C] text-white' : 'bg-[#2C315E] text-white'}`}>
                 {tab.count}
               </span>
             </button>
@@ -261,18 +262,18 @@ export const FinanceOverview = () => {
       {loading ? (
         <LoadingSpinner message="Auditing financial folios and ledger entries..." />
       ) : filteredReservations.length === 0 ? (
-        <div className="rounded-[4px] border border-[#DFB76C]/30 bg-[#FFFFFF] p-12 text-center shadow-sm">
-          <Receipt className="w-12 h-12 text-[#B88E43] mx-auto" />
-          <h3 className="font-editorial text-xl font-bold text-[#13152C] mt-3">No Folios Matching Query</h3>
-          <p className="text-xs text-[#13152C]/70 mt-1">
+        <div className="rounded-[4px] border border-[#2C315E] bg-[#13152C] p-12 text-center shadow-sm">
+          <Receipt className="w-12 h-12 text-[#DFB76C] mx-auto" />
+          <h3 className="font-editorial text-xl font-bold text-white mt-3">No Folios Matching Query</h3>
+          <p className="text-xs text-white/70 mt-1">
             Try adjusting your property selector or search term.
           </p>
         </div>
       ) : (
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] overflow-hidden shadow-sm">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#FAF6F0] border-b border-[#DFB76C]/30 text-[#13152C]/70">
+              <thead className="bg-[#1B1E3D] border-b border-[#2C315E] text-white/70">
                 <tr>
                   <th className="py-3.5 px-4 eyebrow-label">Booking Ref / Invoice</th>
                   <th className="py-3.5 px-4 eyebrow-label">Guest &amp; Suite</th>
@@ -293,39 +294,39 @@ export const FinanceOverview = () => {
                   const sub = Number(res.subtotal) || (total - tax);
 
                   return (
-                    <tr key={res.id || res._id} className="hover:bg-[#FAF6F0]/60 transition-colors">
-                      <td className="py-3.5 px-4 font-cinzel font-bold text-[#13152C]">
+                    <tr key={res.id || res._id} className="hover:bg-[#1B1E3D]/60 transition-colors">
+                      <td className="py-3.5 px-4 font-cinzel font-bold text-white">
                         {res.booking_reference || (res.id || res._id).substring(0, 8)}
-                        <span className="block text-[10px] font-sans font-normal text-[#13152C]/60">
+                        <span className="block text-[10px] font-sans font-normal text-white/60">
                           {res.property_name || 'Property Unit'}
                         </span>
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className="font-semibold text-[#13152C] block">
+                        <span className="font-semibold text-white block">
                           {res.guest_name || 'Guest User'}
                         </span>
-                        <span className="text-[11px] text-[#13152C]/60">
+                        <span className="text-[11px] text-white/60">
                           Suite #{res.room_number || 'TBD'} &bull; {res.room_type_name || 'Standard'}
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4 text-[#13152C]/80 font-mono text-[11px]">
+                      <td className="py-3.5 px-4 text-white/80 font-mono text-[11px]">
                         <span>{res.check_in_date} &rarr; {res.check_out_date}</span>
-                        <span className="block text-[10px] text-[#13152C]/50 font-sans">
+                        <span className="block text-[10px] text-white/50 font-sans">
                           {res.number_of_nights || 1} Night(s)
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4 text-right font-medium text-[#13152C]/80">
+                      <td className="py-3.5 px-4 text-right font-medium text-white/80">
                         ₹{sub.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
 
-                      <td className="py-3.5 px-4 text-right font-medium text-[#13152C]/70">
+                      <td className="py-3.5 px-4 text-right font-medium text-white/70">
                         ₹{tax.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
 
-                      <td className="py-3.5 px-4 text-right font-editorial font-bold text-base text-[#13152C]">
+                      <td className="py-3.5 px-4 text-right font-editorial font-bold text-base text-white">
                         ₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
 
@@ -348,7 +349,7 @@ export const FinanceOverview = () => {
                           onClick={() => setActiveFolio(res)}
                           className="btn-luxury-secondary text-xs py-1 px-2.5 inline-flex items-center gap-1 cursor-pointer"
                         >
-                          <Eye className="w-3.5 h-3.5 text-[#B88E43]" />
+                          <Eye className="w-3.5 h-3.5 text-[#DFB76C]" />
                           <span>Folio</span>
                         </button>
                       </td>
@@ -361,109 +362,14 @@ export const FinanceOverview = () => {
         </div>
       )}
 
-      {/* Itemized Folio / Invoice Modal */}
+      {/* Dynamic Itemized Folio / Invoice Modal */}
       {activeFolio && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D0E20]/80 backdrop-blur-md animate-fadeIn">
-          <div className="bg-[#FAF6F0] border border-[#DFB76C]/50 rounded-[4px] p-7 max-w-lg w-full shadow-2xl space-y-6">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#DFB76C]/30">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-[3px] bg-[#13152C] border border-[#DFB76C]/40 flex items-center justify-center text-[#F2D59B]">
-                  <Receipt className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="eyebrow-label text-[#B88E43]">OFFICIAL STATEMENT</span>
-                  <h3 className="font-editorial text-xl font-bold text-[#13152C]">Guest Folio &amp; Invoice</h3>
-                  <p className="text-[11px] text-[#13152C]/60 font-cinzel">
-                    REF: #{activeFolio.booking_reference || (activeFolio.id || activeFolio._id)}
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setActiveFolio(null)}
-                className="p-1.5 text-[#13152C]/60 hover:text-[#13152C] rounded-[3px] hover:bg-[#ECE5DA] cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Folio Info */}
-            <div className="grid grid-cols-2 gap-3 p-4 rounded-[3px] bg-[#FFFFFF] border border-[#DFB76C]/30 text-xs">
-              <div>
-                <span className="eyebrow-label text-[#13152C]/60 block">Guest Name</span>
-                <span className="font-editorial text-base font-bold text-[#13152C]">{activeFolio.guest_name || 'Guest'}</span>
-              </div>
-              <div>
-                <span className="eyebrow-label text-[#13152C]/60 block">Suite Unit</span>
-                <span className="font-editorial text-base font-bold text-[#13152C]">Suite #{activeFolio.room_number || 'N/A'}</span>
-              </div>
-              <div>
-                <span className="eyebrow-label text-[#13152C]/60 block">Arrival</span>
-                <span className="font-mono text-xs text-[#13152C]">{activeFolio.check_in_date}</span>
-              </div>
-              <div>
-                <span className="eyebrow-label text-[#13152C]/60 block">Departure</span>
-                <span className="font-mono text-xs text-[#13152C]">{activeFolio.check_out_date}</span>
-              </div>
-            </div>
-
-            {/* Billing Breakdown */}
-            <div className="space-y-2 text-xs">
-              <span className="eyebrow-label text-[#B88E43] block">Itemized Charges</span>
-              <div className="space-y-2 p-4 rounded-[3px] bg-[#FFFFFF] border border-[#DFB76C]/30">
-                <div className="flex justify-between text-[#13152C]/80">
-                  <span>Suite Accommodation ({activeFolio.number_of_nights || 1} nights)</span>
-                  <span>₹{((Number(activeFolio.total_amount) || 0) * 0.88).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-                <div className="flex justify-between text-[#13152C]/70">
-                  <span>Hospitality GST (12%)</span>
-                  <span>₹{((Number(activeFolio.total_amount) || 0) * 0.12).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-                <div className="flex justify-between text-[#13152C] font-editorial font-bold pt-3 border-t border-[#DFB76C]/20 text-base">
-                  <span>Net Folio Total</span>
-                  <span>₹{(Number(activeFolio.total_amount) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Payment Record */}
-            <div className="p-4 rounded-[3px] bg-[#FFFFFF] border border-[#DFB76C]/30 text-xs flex items-center justify-between">
-              <div>
-                <span className="eyebrow-label text-[#13152C]/60 block">Settlement Method</span>
-                <span className="font-semibold text-[#13152C]">
-                  {activeFolio.payment_details?.gateway === 'PAYPAL' ? 'PayPal Checkout Gateway' : 'Front Desk Direct Settlement'}
-                </span>
-              </div>
-              <div>
-                <span className={`px-2.5 py-1 rounded-[3px] text-[10px] font-cinzel font-bold border ${
-                  activeFolio.payment_status === 'PAID'
-                    ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                    : 'bg-amber-50 text-amber-800 border-amber-300'
-                }`}>
-                  {activeFolio.payment_status === 'PAID' ? 'SETTLED IN FULL' : 'PAYMENT PENDING'}
-                </span>
-              </div>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#DFB76C]/30">
-              <button
-                onClick={() => window.print()}
-                className="btn-luxury-secondary text-xs inline-flex items-center gap-1.5 cursor-pointer"
-              >
-                <Printer className="w-3.5 h-3.5 text-[#B88E43]" />
-                <span>Print Folio</span>
-              </button>
-              <button
-                onClick={() => setActiveFolio(null)}
-                className="btn-luxury-primary text-xs cursor-pointer"
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        </div>
+        <FolioModal
+          isOpen={!!activeFolio}
+          onClose={() => setActiveFolio(null)}
+          reservationId={activeFolio.id || activeFolio._id}
+          onFolioUpdated={() => loadInitialData()}
+        />
       )}
     </div>
   );

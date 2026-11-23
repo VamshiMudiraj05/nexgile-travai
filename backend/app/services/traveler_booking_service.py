@@ -5,6 +5,7 @@ from app.database.mongodb import get_database
 from app.core.logging import logger
 from app.services.reservation_service import ReservationService
 from app.services.loyalty_service import LoyaltyService
+from app.services.folio_service import FolioService
 from fastapi import HTTPException, status
 
 
@@ -150,6 +151,12 @@ class TravelerBookingService:
 
         # Automatically credit initial loyalty points for traveler
         await LoyaltyService.award_points_for_booking(user_id, booking_ref, total_amount)
+
+        # Auto-create guest billing folio
+        try:
+            await FolioService.get_or_create_folio_for_reservation(str(res_id))
+        except Exception as folio_err:
+            logger.warning(f"Failed to auto-create folio for traveler booking {res_id}: {folio_err}")
 
         logger.info(f"Traveler booking created successfully: {booking_ref} by user {user.get('email')}")
 

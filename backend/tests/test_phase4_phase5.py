@@ -2,6 +2,7 @@ import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from datetime import date, timedelta
+import time
 from app.main import app
 from app.database.mongodb import connect_to_mongo, close_mongo_connection, get_database
 
@@ -18,7 +19,7 @@ async def test_analytics_and_bi_endpoints():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         # Register and login admin
-        admin_email = f"admin_bi_{date.today().strftime('%s')}@example.com"
+        admin_email = f"admin_bi_{int(time.time() * 1000)}@example.com"
         reg_resp = await client.post("/api/v1/auth/register", json={
             "name": "BI Admin",
             "email": admin_email,
@@ -88,7 +89,7 @@ async def test_traveler_marketplace_and_booking_flow():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         # Register and login traveler
-        traveler_email = f"traveler_{date.today().strftime('%s')}@example.com"
+        traveler_email = f"traveler_{int(time.time() * 1000)}@example.com"
         reg_resp = await client.post("/api/v1/auth/register", json={
             "name": "Sarah Jenkins",
             "email": traveler_email,

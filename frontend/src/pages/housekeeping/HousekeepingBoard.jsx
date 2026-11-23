@@ -115,13 +115,13 @@ export const HousekeepingBoard = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-20">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#DFB76C]/30">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#2C315E]">
         <div>
-          <span className="eyebrow-label text-[#B88E43]">01 / OPERATIONS &middot; HOUSEKEEPING & LOGISTICS</span>
-          <h1 className="text-3xl font-editorial font-bold text-[#13152C] tracking-tight mt-1">
+          <span className="eyebrow-label text-[#DFB76C]">OPERATIONS &middot; HOUSEKEEPING & LOGISTICS</span>
+          <h1 className="text-3xl font-editorial font-bold text-white tracking-tight mt-1">
             Housekeeping &amp; Suite Turnaround
           </h1>
-          <p className="text-xs text-[#13152C]/70 mt-1">
+          <p className="text-xs text-white/70 mt-1">
             Real-time suite readiness, turnarounds, inspection controls, and maintenance reporting.
           </p>
         </div>
@@ -130,20 +130,20 @@ export const HousekeepingBoard = () => {
           onClick={fetchRooms}
           className="btn-luxury-secondary text-xs inline-flex items-center gap-2 self-start cursor-pointer"
         >
-          <RefreshCw className="w-3.5 h-3.5 text-[#B88E43]" />
+          <RefreshCw className="w-3.5 h-3.5 text-[#DFB76C]" />
           <span>Refresh Operations</span>
         </button>
       </div>
 
       {/* KPI Stats Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-5 shadow-sm">
-          <span className="eyebrow-label text-[#13152C]/70">Total Inventory</span>
-          <p className="text-3xl font-editorial font-bold text-[#13152C] mt-1">{totalRooms}</p>
-          <span className="text-[11px] text-[#13152C]/60">Physical units</span>
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm">
+          <span className="eyebrow-label text-white/70">Total Inventory</span>
+          <p className="text-3xl font-editorial font-bold text-white mt-1">{totalRooms}</p>
+          <span className="text-[11px] text-white/60">Physical units</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-amber-300 rounded-[4px] p-5 shadow-sm">
+        <div className="bg-[#13152C] border border-amber-300 rounded-[4px] p-5 shadow-sm">
           <span className="eyebrow-label text-amber-800 flex items-center gap-1.5">
             <Clock className="w-3 h-3 text-amber-600" /> Turnaround
           </span>
@@ -151,7 +151,7 @@ export const HousekeepingBoard = () => {
           <span className="text-[11px] text-amber-800/80">Pending sanitization</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-emerald-300 rounded-[4px] p-5 shadow-sm">
+        <div className="bg-[#13152C] border border-emerald-300 rounded-[4px] p-5 shadow-sm">
           <span className="eyebrow-label text-emerald-800 flex items-center gap-1.5">
             <CheckCircle className="w-3 h-3 text-emerald-600" /> Ready Suites
           </span>
@@ -159,13 +159,13 @@ export const HousekeepingBoard = () => {
           <span className="text-[11px] text-emerald-800/80">{cleanRate}% floor readiness</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-[#2C315E]/40 rounded-[4px] p-5 shadow-sm">
-          <span className="eyebrow-label text-[#13152C]/80">Occupied Stays</span>
-          <p className="text-3xl font-editorial font-bold text-[#13152C] mt-1">{occupiedRooms}</p>
-          <span className="text-[11px] text-[#13152C]/60">Stayover servicing</span>
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm">
+          <span className="eyebrow-label text-white/80">Occupied Stays</span>
+          <p className="text-3xl font-editorial font-bold text-white mt-1">{occupiedRooms}</p>
+          <span className="text-[11px] text-white/60">Stayover servicing</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-rose-300 rounded-[4px] p-5 shadow-sm">
+        <div className="bg-[#13152C] border border-rose-300 rounded-[4px] p-5 shadow-sm">
           <span className="eyebrow-label text-rose-800 flex items-center gap-1.5">
             <AlertTriangle className="w-3 h-3 text-rose-600" /> Maintenance
           </span>
@@ -176,22 +176,22 @@ export const HousekeepingBoard = () => {
 
       {/* Notification Banner */}
       {notification && (
-        <div className="p-4 rounded-[4px] bg-[#FAF6F0] border border-[#DFB76C]/60 flex items-center gap-2 text-xs font-cinzel text-[#13152C] shadow-sm">
-          <CheckCircle className="w-4 h-4 text-[#B88E43] shrink-0" />
+        <div className="p-4 rounded-[4px] bg-[#1B1E3D] border border-[#DFB76C]/60 flex items-center gap-2 text-xs font-cinzel text-white shadow-sm">
+          <CheckCircle className="w-4 h-4 text-[#DFB76C] shrink-0" />
           <span>{notification}</span>
         </div>
       )}
 
       {/* Filter & Property Bar */}
-      <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 p-5 rounded-[4px] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-[#13152C] border border-[#2C315E] p-5 rounded-[4px] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
           {/* Property Selector */}
           <div className="flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-[#B88E43]" />
+            <Building2 className="w-4 h-4 text-[#DFB76C]" />
             <select
               value={selectedPropertyId}
               onChange={(e) => setSelectedPropertyId(e.target.value)}
-              className="px-3.5 py-2 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-xs font-semibold text-[#13152C] focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF]"
+              className="px-3.5 py-2 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs font-semibold text-white focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C]"
             >
               {properties.map((p) => (
                 <option key={p.id || p._id} value={p.id || p._id}>
@@ -203,11 +203,11 @@ export const HousekeepingBoard = () => {
 
           {/* Floor Selector */}
           <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-[#B88E43]" />
+            <Layers className="w-4 h-4 text-[#DFB76C]" />
             <select
               value={selectedFloor}
               onChange={(e) => setSelectedFloor(e.target.value)}
-              className="px-3.5 py-2 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-xs font-semibold text-[#13152C] focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF]"
+              className="px-3.5 py-2 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs font-semibold text-white focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C]"
             >
               <option value="ALL">All Levels</option>
               {availableFloors.map((fl) => (
@@ -234,11 +234,11 @@ export const HousekeepingBoard = () => {
               className={`px-3 py-1.5 rounded-[3px] text-xs font-cinzel tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
                 statusFilter === tab.id
                   ? 'bg-[#13152C] text-[#FAF6F0] border border-[#DFB76C]'
-                  : 'bg-[#FAF6F0] border border-[#DFB76C]/30 text-[#13152C]/70 hover:text-[#13152C]'
+                  : 'bg-[#1B1E3D] border border-[#2C315E] text-white/70 hover:text-white'
               }`}
             >
               <span>{tab.label}</span>
-              <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${statusFilter === tab.id ? 'bg-[#DFB76C] text-[#13152C]' : 'bg-[#ECE5DA] text-[#13152C]'}`}>
+              <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${statusFilter === tab.id ? 'bg-[#DFB76C] text-white' : 'bg-[#2C315E] text-white'}`}>
                 {tab.count}
               </span>
             </button>
@@ -267,15 +267,15 @@ export const HousekeepingBoard = () => {
             return (
               <div
                 key={room.id || room._id}
-                className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-all"
+                className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-all"
               >
                 <div>
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <span className="eyebrow-label text-[#B88E43]">
+                      <span className="eyebrow-label text-[#DFB76C]">
                         Level {room.floor || 1} &bull; {room.room_type_name || 'Standard'}
                       </span>
-                      <h3 className="text-3xl font-editorial font-bold text-[#13152C] tracking-tight">
+                      <h3 className="text-3xl font-editorial font-bold text-white tracking-tight">
                         #{room.room_number}
                       </h3>
                     </div>
@@ -285,19 +285,19 @@ export const HousekeepingBoard = () => {
 
                   {/* Occupant / Turnaround status */}
                   {room.current_guest_name ? (
-                    <div className="p-3 rounded-[3px] bg-[#FAF6F0] border border-[#DFB76C]/30 mb-5 text-xs">
-                      <span className="eyebrow-label text-[#B88E43] block">Resident In-House</span>
-                      <span className="font-editorial text-base font-bold text-[#13152C] truncate block">{room.current_guest_name}</span>
+                    <div className="p-3 rounded-[3px] bg-[#1B1E3D] border border-[#2C315E] mb-5 text-xs">
+                      <span className="eyebrow-label text-[#DFB76C] block">Resident In-House</span>
+                      <span className="font-editorial text-base font-bold text-white truncate block">{room.current_guest_name}</span>
                     </div>
                   ) : (
-                    <div className="p-3 rounded-[3px] bg-[#FAF6F0]/50 border border-[#ECE5DA] mb-5 text-xs text-[#13152C]/60 italic font-editorial">
+                    <div className="p-3 rounded-[3px] bg-[#1B1E3D]/50 border border-[#ECE5DA] mb-5 text-xs text-white/60 italic font-editorial">
                       Vacant &bull; Ready for turnaround
                     </div>
                   )}
                 </div>
 
                 {/* 1-Click Fast Housekeeping Actions */}
-                <div className="space-y-2 pt-4 border-t border-[#DFB76C]/20">
+                <div className="space-y-2 pt-4 border-t border-[#2C315E]">
                   {isDirty && (
                     <button
                       type="button"
@@ -305,7 +305,7 @@ export const HousekeepingBoard = () => {
                       onClick={() => handleQuickStatusChange(room, 'AVAILABLE', 'Cleaned and sanitized by housekeeping')}
                       className="btn-luxury-gold w-full text-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-[#13152C]" />
+                      <Sparkles className="w-3.5 h-3.5 text-white" />
                       <span>{isUpdating ? 'Updating...' : 'Mark Clean & Ready'}</span>
                     </button>
                   )}
@@ -317,7 +317,7 @@ export const HousekeepingBoard = () => {
                       onClick={() => handleQuickStatusChange(room, 'CLEANING', 'Housekeeping turnaround initiated')}
                       className="btn-luxury-secondary w-full text-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
-                      <Clock className="w-3.5 h-3.5 text-[#B88E43]" />
+                      <Clock className="w-3.5 h-3.5 text-[#DFB76C]" />
                       <span>{isUpdating ? 'Updating...' : 'Initiate Turnaround'}</span>
                     </button>
                   )}
@@ -329,7 +329,7 @@ export const HousekeepingBoard = () => {
                       onClick={() => handleQuickStatusChange(room, 'CLEANING', 'Maintenance cleared; cleaning needed')}
                       className="btn-luxury-secondary w-full text-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
-                      <Check className="w-3.5 h-3.5 text-[#B88E43]" />
+                      <Check className="w-3.5 h-3.5 text-[#DFB76C]" />
                       <span>{isUpdating ? 'Updating...' : 'Repairs Cleared &rarr; Turnaround'}</span>
                     </button>
                   )}

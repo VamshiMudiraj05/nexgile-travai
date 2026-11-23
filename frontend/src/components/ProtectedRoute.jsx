@@ -8,9 +8,11 @@ export const ProtectedRoute = ({ children }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-200">
-        <div className="w-12 h-12 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mb-4"></div>
-        <p className="text-sm font-medium text-slate-400">Verifying security credentials...</p>
+      <div className="min-h-screen bg-[#FAF6F0] flex flex-col items-center justify-center text-[#13152C]">
+        <div className="w-12 h-12 border-4 border-[#DFB76C]/30 border-t-[#B88E43] rounded-full animate-spin mb-4"></div>
+        <p className="font-cinzel text-xs tracking-[0.2em] font-bold text-[#B88E43] uppercase">
+          Verifying security credentials...
+        </p>
       </div>
     );
   }

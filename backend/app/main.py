@@ -20,6 +20,13 @@ from app.api.loyalty import router as loyalty_router
 from app.api.payments import router as payments_router
 from app.api.service_requests import router as service_requests_router
 from app.api.concierge import router as concierge_router
+from app.api.folios import router as folios_router
+from app.api.rate_plans import router as rate_plans_router
+from app.api.corporate import router as corporate_router
+from app.api.channels import router as channels_router
+from app.api.multimodal import router as multimodal_router
+from app.api.omnichannel import router as omnichannel_router
+from app.api.superapp import router as superapp_router
 from app.core.config import settings
 from app.core.logging import logger
 from app.database.mongodb import connect_to_mongo, close_mongo_connection
@@ -100,6 +107,13 @@ app.include_router(loyalty_router, prefix=settings.API_V1_STR)
 app.include_router(payments_router, prefix=settings.API_V1_STR)
 app.include_router(service_requests_router, prefix=settings.API_V1_STR)
 app.include_router(concierge_router, prefix=settings.API_V1_STR)
+app.include_router(folios_router, prefix=settings.API_V1_STR)
+app.include_router(rate_plans_router, prefix=settings.API_V1_STR)
+app.include_router(corporate_router, prefix=settings.API_V1_STR)
+app.include_router(channels_router, prefix=settings.API_V1_STR)
+app.include_router(multimodal_router, prefix=settings.API_V1_STR)
+app.include_router(omnichannel_router, prefix=settings.API_V1_STR)
+app.include_router(superapp_router, prefix=settings.API_V1_STR)
 
 
 

@@ -53,7 +53,7 @@ export const RoomStatusModal = ({ isOpen, onClose, room, onSuccess }) => {
       maxWidth="max-w-md"
     >
       {error && (
-        <div className="mb-4 p-3 rounded-[2px] bg-[#FDF2F2] border border-[#993A3A]/30 flex items-center gap-2 text-xs text-[#993A3A] font-sans">
+        <div className="mb-4 p-3 rounded-[2px] bg-[#1B1E3D] border border-rose-500/40 flex items-center gap-2 text-xs text-rose-400 font-sans">
           <AlertCircle className="w-4 h-4" />
           <span>{error}</span>
         </div>
@@ -61,15 +61,15 @@ export const RoomStatusModal = ({ isOpen, onClose, room, onSuccess }) => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Current status display */}
-        <div className="p-3.5 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/30 flex items-center justify-between">
-          <span className="font-cinzel text-[9px] uppercase tracking-wider text-[#13152C]/60 font-semibold">
+        <div className="p-3.5 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] flex items-center justify-between">
+          <span className="font-cinzel text-[9px] uppercase tracking-wider text-white/60 font-semibold">
             Current Operational State:
           </span>
           <StatusBadge status={currentStatus} size="sm" />
         </div>
 
         <div>
-          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-2">
+          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-2">
             Target State *
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -83,7 +83,7 @@ export const RoomStatusModal = ({ isOpen, onClose, room, onSuccess }) => {
                   className={`p-2.5 rounded-[2px] border text-xs font-cinzel tracking-wider uppercase font-semibold transition-all text-center cursor-pointer ${
                     selected
                       ? 'bg-[#13152C] border-[#DFB76C] text-[#DFB76C] shadow-sm'
-                      : 'bg-[#FFFFFF] border-[#13152C]/15 text-[#13152C]/70 hover:border-[#DFB76C]/50 hover:bg-[#FAF6F0]'
+                      : 'bg-[#13152C] border-[#2C315E] text-white/70 hover:border-[#DFB76C]/50 hover:bg-[#1B1E3D]'
                   }`}
                 >
                   {st.replace(/_/g, ' ')}
@@ -94,7 +94,7 @@ export const RoomStatusModal = ({ isOpen, onClose, room, onSuccess }) => {
         </div>
 
         <div>
-          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
             Reason / Operational Log Note
           </label>
           <input
@@ -106,7 +106,7 @@ export const RoomStatusModal = ({ isOpen, onClose, room, onSuccess }) => {
           />
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#DFB76C]/20">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#2C315E]">
           <button
             type="button"
             onClick={onClose}

@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 
 export default function SvgAreaChart({
   data = [],
   xKey = 'date',
   yKey = 'value',
-  label = 'Value',
-  color = '#13152C', // Deep navy primary line
-  secondaryColor = '#DFB76C', // Antique gold accent
+  _label = 'Value',
+  color = '#DFB76C', // Antique gold accent line
+  _secondaryColor = '#13152C',
   unit = '',
   height = 200,
+  className = '',
 }) {
   const [hoveredIdx, setHoveredIdx] = useState(null);
+  const reactId = useId().replace(/:/g, '');
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex h-48 items-center justify-center rounded-[3px] bg-[#FAF6F0] border border-[#DFB76C]/20 text-xs font-cinzel tracking-wider text-[#13152C]/50 uppercase">
+      <div className={`flex h-48 items-center justify-center rounded-[3px] bg-[#0D0E20]/80 border border-[#2C315E] text-xs font-cinzel tracking-wider text-white/50 uppercase ${className}`}>
         No metric timeline recorded
       </div>
     );
@@ -50,10 +52,10 @@ export default function SvgAreaChart({
 
   const areaD = `${pathD} L ${points[points.length - 1].x},${height - padding} L ${points[0].x},${height - padding} Z`;
 
-  const gradientId = `area-grad-${xKey}-${yKey}-${Math.random().toString(36).substr(2, 5)}`;
+  const gradientId = `area-grad-${xKey}-${yKey}-${reactId}`;
 
   return (
-    <div className="relative w-full overflow-hidden bg-[#FFFFFF] p-2 rounded-[3px] border border-[#DFB76C]/20">
+    <div className={`relative w-full overflow-hidden bg-[#0D0E20]/80 p-2 rounded-[3px] border border-[#2C315E] ${className}`}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="h-full w-full overflow-visible"
@@ -61,9 +63,9 @@ export default function SvgAreaChart({
       >
         <defs>
           <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#DFB76C" stopOpacity="0.25" />
-            <stop offset="60%" stopColor="#FAF6F0" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#FAF6F0" stopOpacity="0" />
+            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+            <stop offset="60%" stopColor={color} stopOpacity="0.08" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -77,7 +79,7 @@ export default function SvgAreaChart({
               y1={y}
               x2={width - padding}
               y2={y}
-              stroke="#ECE5DA"
+              stroke="#2C315E"
               strokeDasharray="2 3"
               strokeWidth="0.75"
             />
@@ -87,11 +89,11 @@ export default function SvgAreaChart({
         {/* Filled Area */}
         <path d={areaD} fill={`url(#${gradientId})`} />
 
-        {/* Smooth Navy/Gold Line */}
+        {/* Smooth Colored Line */}
         <path
           d={pathD}
           fill="none"
-          stroke="#13152C"
+          stroke={color}
           strokeWidth="2"
           strokeLinecap="round"
         />
@@ -105,8 +107,8 @@ export default function SvgAreaChart({
                 cx={pt.x}
                 cy={pt.y}
                 r={isHovered ? 5 : 2.5}
-                fill={isHovered ? '#DFB76C' : '#13152C'}
-                stroke="#FFFFFF"
+                fill={isHovered ? '#FFFFFF' : color}
+                stroke="#0D0E20"
                 strokeWidth="1.5"
                 className="transition-all duration-150"
               />
@@ -127,7 +129,7 @@ export default function SvgAreaChart({
       {/* Floating editorial tooltip */}
       {hoveredIdx !== null && points[hoveredIdx] && (
         <div
-          className="pointer-events-none absolute -top-1 z-20 -translate-x-1/2 rounded-[2px] border border-[#DFB76C]/40 bg-[#13152C] px-3 py-1.5 shadow-xl text-[#FAF6F0] transition-all duration-100"
+          className="pointer-events-none absolute -top-1 z-20 -translate-x-1/2 rounded-[2px] border border-[#DFB76C]/60 bg-[#13152C] px-3 py-1.5 shadow-xl text-[#FAF6F0] transition-all duration-100"
           style={{
             left: `${(points[hoveredIdx].x / width) * 100}%`,
           }}
@@ -135,7 +137,7 @@ export default function SvgAreaChart({
           <p className="font-cinzel text-[9px] font-semibold text-[#DFB76C] tracking-widest uppercase">
             {points[hoveredIdx].item[xKey]}
           </p>
-          <p className="font-editorial text-sm font-normal text-white">
+          <p className="font-editorial text-sm font-bold text-white">
             {unit}
             {typeof points[hoveredIdx].val === 'number'
               ? points[hoveredIdx].val.toLocaleString()

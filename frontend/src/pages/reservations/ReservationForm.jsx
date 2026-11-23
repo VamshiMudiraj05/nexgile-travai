@@ -225,18 +225,18 @@ export const ReservationForm = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
       {/* Header */}
-      <div className="flex items-center justify-between pb-6 border-b border-[#DFB76C]/30">
+      <div className="flex items-center justify-between pb-6 border-b border-[#2C315E]">
         <div className="flex items-center gap-4">
           <Link
             to="/reservations"
-            className="p-2.5 rounded-[3px] border border-[#DFB76C]/40 bg-[#FAF6F0] text-[#13152C] hover:bg-[#F4EFE6] transition-colors"
+            className="p-2.5 rounded-[3px] border border-[#2C315E] bg-[#1B1E3D] text-white hover:bg-[#1B1E3D] transition-colors"
           >
-            <ArrowLeft className="w-5 h-5 text-[#B88E43]" />
+            <ArrowLeft className="w-5 h-5 text-[#DFB76C]" />
           </Link>
           <div>
-            <span className="eyebrow-label text-[#B88E43]">01 / OPERATIONS &middot; RESERVATIONS</span>
-            <h1 className="text-3xl font-editorial font-bold text-[#13152C] tracking-tight">Create Reservation</h1>
-            <p className="text-xs text-[#13152C]/70 mt-1">
+            <span className="eyebrow-label text-[#DFB76C]">OPERATIONS &middot; RESERVATIONS</span>
+            <h1 className="text-3xl font-editorial font-bold text-white tracking-tight">Create Reservation</h1>
+            <p className="text-xs text-white/70 mt-1">
               Live date availability verification, pricing computation, and room reservation.
             </p>
           </div>
@@ -252,17 +252,17 @@ export const ReservationForm = () => {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Section 1: Property & Guest */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-7 shadow-sm space-y-5">
-          <div className="border-b border-[#DFB76C]/20 pb-3">
-            <span className="eyebrow-label text-[#B88E43]">Section 01</span>
-            <h2 className="text-lg font-editorial font-semibold text-[#13152C]">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-7 shadow-sm space-y-5">
+          <div className="border-b border-[#2C315E] pb-3">
+            <span className="eyebrow-label text-[#DFB76C]">Section 01</span>
+            <h2 className="text-lg font-editorial font-semibold text-white">
               Hotel Estate & Guest Selection
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Hotel Estate *
               </label>
               <select
@@ -270,7 +270,7 @@ export const ReservationForm = () => {
                 required
                 value={formData.property_id}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-[#13152C] text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               >
                 {properties.map((p) => (
                   <option key={p.id || p._id} value={p.id || p._id}>
@@ -282,10 +282,10 @@ export const ReservationForm = () => {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="block eyebrow-label text-[#13152C]/80">
+                <label className="block eyebrow-label text-white/80">
                   Guest Folio *
                 </label>
-                <Link to="/guests/new" className="text-xs font-medium text-[#B88E43] hover:underline">
+                <Link to="/guests/new" className="text-xs font-medium text-[#DFB76C] hover:underline">
                   + New Guest
                 </Link>
               </div>
@@ -294,7 +294,7 @@ export const ReservationForm = () => {
                 required
                 value={formData.guest_id}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-[#13152C] text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               >
                 <option value="">-- Select Guest --</option>
                 {guests.map((g) => (
@@ -308,17 +308,17 @@ export const ReservationForm = () => {
         </div>
 
         {/* Section 2: Dates & Room Category */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-7 shadow-sm space-y-5">
-          <div className="border-b border-[#DFB76C]/20 pb-3">
-            <span className="eyebrow-label text-[#B88E43]">Section 02</span>
-            <h2 className="text-lg font-editorial font-semibold text-[#13152C]">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-7 shadow-sm space-y-5">
+          <div className="border-b border-[#2C315E] pb-3">
+            <span className="eyebrow-label text-[#DFB76C]">Section 02</span>
+            <h2 className="text-lg font-editorial font-semibold text-white">
               Stay Schedule & Suite Assignment
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Arrival Date *
               </label>
               <input
@@ -327,12 +327,12 @@ export const ReservationForm = () => {
                 required
                 value={formData.check_in_date}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-[#13152C] text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Departure Date *
               </label>
               <input
@@ -341,12 +341,12 @@ export const ReservationForm = () => {
                 required
                 value={formData.check_out_date}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-[#13152C] text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Suite Category *
               </label>
               <select
@@ -354,7 +354,7 @@ export const ReservationForm = () => {
                 required
                 value={formData.room_type_id}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-[#13152C] text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               >
                 {roomTypes.map((rt) => (
                   <option key={rt.id || rt._id} value={rt.id || rt._id}>
@@ -365,7 +365,7 @@ export const ReservationForm = () => {
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Available Physical Suite Unit *
               </label>
               <select
@@ -374,7 +374,7 @@ export const ReservationForm = () => {
                 value={formData.room_id}
                 onChange={handleChange}
                 disabled={isCheckingAvailability || availableRooms.length === 0}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-[#13152C] text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] disabled:opacity-50 transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] disabled:opacity-50 transition-all"
               >
                 {isCheckingAvailability ? (
                   <option>Verifying suite availability...</option>
@@ -391,7 +391,7 @@ export const ReservationForm = () => {
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Adults
               </label>
               <input
@@ -400,12 +400,12 @@ export const ReservationForm = () => {
                 min={1}
                 value={formData.number_of_adults}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-[#13152C] text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div>
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Children
               </label>
               <input
@@ -414,12 +414,12 @@ export const ReservationForm = () => {
                 min={0}
                 value={formData.number_of_children}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-[#13152C] text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               />
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block eyebrow-label text-[#13152C]/80 mb-2">
+              <label className="block eyebrow-label text-white/80 mb-2">
                 Bespoke Guest Requests / Notes
               </label>
               <textarea
@@ -428,14 +428,14 @@ export const ReservationForm = () => {
                 value={formData.special_requests}
                 onChange={handleChange}
                 placeholder="e.g. Chauffeur pickup at 2 PM, high level suite, extra fine linen..."
-                className="w-full px-3.5 py-2.5 bg-[#FAF6F0] border border-[#DFB76C]/40 rounded-[3px] text-[#13152C] text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF] transition-all"
+                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
               ></textarea>
             </div>
           </div>
         </div>
 
         {/* Section 3: Pricing Summary Calculation */}
-        <div className="bg-[#13152C] text-[#FAF6F0] border border-[#DFB76C]/30 rounded-[4px] p-7 shadow-md space-y-5">
+        <div className="bg-[#13152C] text-[#FAF6F0] border border-[#2C315E] rounded-[4px] p-7 shadow-md space-y-5">
           <div className="border-b border-[#2C315E] pb-3 flex items-center justify-between">
             <div>
               <span className="eyebrow-label text-[#DFB76C]">Section 03</span>
@@ -468,7 +468,7 @@ export const ReservationForm = () => {
               </span>
             </div>
 
-            <div className="p-4 rounded-[3px] bg-[#DFB76C]/10 border border-[#DFB76C]/40">
+            <div className="p-4 rounded-[3px] bg-[#DFB76C]/10 border border-[#2C315E]">
               <span className="eyebrow-label text-[#DFB76C] block mb-1">Total Estimated Bill</span>
               <span className="text-2xl font-editorial font-extrabold text-[#F2D59B]">
                 ₹{totalAmount.toLocaleString('en-IN')}
@@ -478,7 +478,7 @@ export const ReservationForm = () => {
         </div>
 
         {/* Action Button */}
-        <div className="flex items-center justify-end gap-4 pt-4 border-t border-[#DFB76C]/30">
+        <div className="flex items-center justify-end gap-4 pt-4 border-t border-[#2C315E]">
           <Link
             to="/reservations"
             className="btn-luxury-secondary"
@@ -493,12 +493,12 @@ export const ReservationForm = () => {
           >
             {submitting ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin text-[#13152C]" />
+                <Loader2 className="w-4 h-4 animate-spin text-white" />
                 <span>Confirming Folio...</span>
               </>
             ) : (
               <>
-                <CalendarCheck className="w-4 h-4 text-[#13152C]" />
+                <CalendarCheck className="w-4 h-4 text-white" />
                 <span>Confirm & Reserve Suite</span>
               </>
             )}

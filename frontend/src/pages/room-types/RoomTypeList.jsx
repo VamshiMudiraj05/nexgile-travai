@@ -74,16 +74,16 @@ export const RoomTypeList = () => {
   return (
     <div className="space-y-8">
       {/* Editorial Header */}
-      <div className="rounded-[4px] border border-[#DFB76C]/35 bg-[#FFFFFF] p-8 md:p-10 shadow-[0_4px_24px_rgba(19,21,44,0.03)]">
+      <div className="rounded-[4px] border border-[#2C315E] bg-[#13152C] p-8 md:p-10 shadow-md">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div>
-            <div className="flex items-center gap-2 mb-2 font-cinzel text-[10px] font-bold uppercase tracking-[0.26em] text-[#B88E43]">
-              <Sparkles size={14} className="text-[#DFB76C]" /> 01 / PORTFOLIO CONFIGURATION
+            <div className="flex items-center gap-2 mb-2 font-cinzel text-[10px] font-bold uppercase tracking-[0.26em] text-[#DFB76C]">
+              <Sparkles size={14} className="text-[#DFB76C]" /> PORTFOLIO CONFIGURATION
             </div>
-            <h1 className="font-editorial text-3xl sm:text-4xl text-[#13152C] font-normal tracking-tight">
+            <h1 className="font-editorial text-3xl sm:text-4xl text-white font-normal tracking-tight">
               Suite & Room Categories
             </h1>
-            <p className="mt-2 font-sans text-xs sm:text-sm text-[#13152C]/65 max-w-xl leading-relaxed">
+            <p className="mt-2 font-sans text-xs sm:text-sm text-white/65 max-w-xl leading-relaxed">
               Design bespoke suite tiers, base room rates, bedding configurations, and curated room amenity packages.
             </p>
           </div>
@@ -105,15 +105,15 @@ export const RoomTypeList = () => {
       </div>
 
       {/* Property Selector */}
-      <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 p-4 rounded-[4px] shadow-sm flex flex-col sm:flex-row items-center gap-4">
-        <label className="font-cinzel text-[9.5px] font-bold uppercase tracking-wider text-[#B88E43] flex items-center gap-2">
+      <div className="bg-[#13152C] border border-[#2C315E] p-4 rounded-[4px] shadow-sm flex flex-col sm:flex-row items-center gap-4">
+        <label className="font-cinzel text-[9.5px] font-bold uppercase tracking-wider text-[#DFB76C] flex items-center gap-2">
           <Building2 className="w-4 h-4 text-[#DFB76C]" />
           <span>Selected Estate:</span>
         </label>
         <select
           value={selectedPropertyId}
           onChange={(e) => setSelectedPropertyId(e.target.value)}
-          className="luxury-input text-xs font-semibold bg-[#FAF6F0] min-w-[280px] cursor-pointer"
+          className="luxury-input text-xs font-semibold bg-[#1B1E3D] min-w-[280px] cursor-pointer"
         >
           {properties.map((p) => (
             <option key={p.id || p._id} value={p.id || p._id}>
@@ -153,9 +153,9 @@ export const RoomTypeList = () => {
             return (
               <div
                 key={rt.id || rt._id}
-                className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] overflow-hidden shadow-sm flex flex-col justify-between group hover:border-[#DFB76C] transition-all"
+                className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden shadow-sm flex flex-col justify-between group hover:border-[#DFB76C] transition-all"
               >
-                <div className="h-48 bg-[#FAF6F0] relative overflow-hidden">
+                <div className="h-48 bg-[#1B1E3D] relative overflow-hidden">
                   {rtImg ? (
                     <img
                       src={rtImg}
@@ -163,11 +163,11 @@ export const RoomTypeList = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[#13152C]/30">
+                    <div className="w-full h-full flex items-center justify-center text-white/30">
                       <BedDouble className="w-8 h-8 stroke-[1.25]" />
                     </div>
                   )}
-                  <div className="absolute top-3 right-3 px-3 py-1 rounded-[2px] bg-[#13152C]/90 text-xs font-semibold text-[#DFB76C] border border-[#DFB76C]/40">
+                  <div className="absolute top-3 right-3 px-3 py-1 rounded-[2px] bg-[#13152C]/90 text-xs font-semibold text-[#DFB76C] border border-[#2C315E]">
                     ₹{rt.base_price?.toLocaleString('en-IN')} <span className="text-[10px] text-[#FAF6F0]/70 font-normal">/ night</span>
                   </div>
                 </div>
@@ -175,18 +175,18 @@ export const RoomTypeList = () => {
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <h3 className="font-editorial text-xl font-normal text-[#13152C]">{rt.name}</h3>
-                      <span className="font-cinzel text-[8.5px] text-[#B88E43] bg-[#FAF6F0] px-1.5 py-0.5 rounded-[2px] border border-[#DFB76C]/30 tracking-widest uppercase">
+                      <h3 className="font-editorial text-xl font-normal text-white">{rt.name}</h3>
+                      <span className="font-cinzel text-[8.5px] text-[#DFB76C] bg-[#1B1E3D] px-1.5 py-0.5 rounded-[2px] border border-[#2C315E] tracking-widest uppercase">
                         {rt.code}
                       </span>
                     </div>
-                    <p className="font-sans text-xs text-[#13152C]/65 line-clamp-2 mb-4 leading-relaxed">{rt.description}</p>
+                    <p className="font-sans text-xs text-white/65 line-clamp-2 mb-4 leading-relaxed">{rt.description}</p>
 
-                    <div className="grid grid-cols-2 gap-2 font-sans text-xs text-[#13152C]/75 py-3 border-y border-[#DFB76C]/20 mb-4">
-                      <div>Max Capacity: <strong className="text-[#13152C]">{rt.max_occupancy} Guests</strong></div>
-                      <div>Bedding: <strong className="text-[#13152C]">{rt.bed_type}</strong></div>
-                      <div>Inventory: <strong className="text-[#13152C]">{rt.total_rooms || 0} Units</strong></div>
-                      <div>Suite Size: <strong className="text-[#13152C]">{rt.size || '450 sq ft'}</strong></div>
+                    <div className="grid grid-cols-2 gap-2 font-sans text-xs text-white/75 py-3 border-y border-[#2C315E] mb-4">
+                      <div>Max Capacity: <strong className="text-white">{rt.max_occupancy} Guests</strong></div>
+                      <div>Bedding: <strong className="text-white">{rt.bed_type}</strong></div>
+                      <div>Inventory: <strong className="text-white">{rt.total_rooms || 0} Units</strong></div>
+                      <div>Suite Size: <strong className="text-white">{rt.size || '450 sq ft'}</strong></div>
                     </div>
                   </div>
 
@@ -197,7 +197,7 @@ export const RoomTypeList = () => {
                           setSelectedRoomType(rt);
                           setIsModalOpen(true);
                         }}
-                        className="p-1.5 rounded-[2px] text-[#13152C]/60 hover:text-[#13152C] hover:bg-[#FAF6F0] transition-colors cursor-pointer"
+                        className="p-1.5 rounded-[2px] text-white/60 hover:text-white hover:bg-[#1B1E3D] transition-colors cursor-pointer"
                         title="Edit Room Type"
                       >
                         <Edit3 className="w-4 h-4 stroke-[1.5]" />
@@ -205,7 +205,7 @@ export const RoomTypeList = () => {
 
                       <button
                         onClick={() => setDeleteId(rt.id || rt._id)}
-                        className="p-1.5 rounded-[2px] text-[#13152C]/60 hover:text-[#993A3A] hover:bg-[#FAF6F0] transition-colors cursor-pointer"
+                        className="p-1.5 rounded-[2px] text-white/60 hover:text-rose-400 hover:bg-[#1B1E3D] transition-colors cursor-pointer"
                         title="Delete Room Type"
                       >
                         <Trash2 className="w-4 h-4 stroke-[1.5]" />

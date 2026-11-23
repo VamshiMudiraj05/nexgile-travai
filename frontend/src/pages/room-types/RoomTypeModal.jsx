@@ -159,7 +159,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
       subtitle="Define nightly rate, guest capacity, and bespoke amenities."
     >
       {error && (
-        <div className="mb-4 p-3 rounded-[2px] bg-[#FDF2F2] border border-[#993A3A]/30 flex items-center gap-2 text-xs text-[#993A3A] font-sans">
+        <div className="mb-4 p-3 rounded-[2px] bg-[#1B1E3D] border border-rose-500/40 flex items-center gap-2 text-xs text-rose-400 font-sans">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
         </div>
@@ -168,7 +168,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Category Name *
             </label>
             <input
@@ -183,7 +183,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
           </div>
 
           <div>
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Category Code *
             </label>
             <input
@@ -198,7 +198,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
           </div>
 
           <div>
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Base Rate / Night (₹) *
             </label>
             <input
@@ -213,7 +213,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
           </div>
 
           <div>
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Suite Floor Area
             </label>
             <input
@@ -227,14 +227,14 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
           </div>
 
           <div>
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Bedding Type
             </label>
             <select
               name="bed_type"
               value={formData.bed_type}
               onChange={handleChange}
-              className="w-full luxury-input text-xs font-semibold bg-[#FFFFFF]"
+              className="w-full luxury-input text-xs font-semibold bg-[#13152C]"
             >
               <option value="KING">King Bed</option>
               <option value="QUEEN">Queen Bed</option>
@@ -245,7 +245,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
           </div>
 
           <div>
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Bed Count
             </label>
             <input
@@ -259,7 +259,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
           </div>
 
           <div>
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Adults Capacity
             </label>
             <input
@@ -273,7 +273,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
           </div>
 
           <div>
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Children Capacity
             </label>
             <input
@@ -287,7 +287,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
           </div>
 
           <div className="sm:col-span-2">
-            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+            <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
               Category Description
             </label>
             <textarea
@@ -303,7 +303,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
 
         {/* Amenities */}
         <div>
-          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+          <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
             Category Amenities
           </label>
           <div className="flex gap-2 mb-2">
@@ -327,13 +327,13 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
             {formData.amenities.map((a) => (
               <span
                 key={a}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/30 text-xs font-sans text-[#13152C]"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] text-xs font-sans text-white"
               >
                 <span>{a}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveAmenity(a)}
-                  className="text-[#13152C]/40 hover:text-[#993A3A] font-bold cursor-pointer"
+                  className="text-white/40 hover:text-rose-400 font-bold cursor-pointer"
                 >
                   ×
                 </button>
@@ -353,7 +353,7 @@ export const RoomTypeModal = ({ isOpen, onClose, propertyId, roomType, onSuccess
           />
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#DFB76C]/20">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#2C315E]">
           <button
             type="button"
             onClick={onClose}

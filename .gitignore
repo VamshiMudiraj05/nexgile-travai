@@ -49,3 +49,9 @@ frontend/dist-ssr/
 # Logs
 logs/
 *.log
+
+# Databases & local run artifacts
+output/
+*.db
+*.sqlite3
+*.log

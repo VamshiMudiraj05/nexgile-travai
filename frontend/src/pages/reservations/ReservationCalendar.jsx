@@ -97,13 +97,13 @@ export const ReservationCalendar = () => {
   return (
     <div className="space-y-6">
       {/* Top Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFFFFF] border border-[#DFB76C]/30 p-4 rounded-[4px] shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#13152C] border border-[#2C315E] p-4 rounded-[4px] shadow-sm">
         <div className="flex items-center gap-3">
           <Building2 className="w-4 h-4 text-[#DFB76C]" />
           <select
             value={selectedPropertyId}
             onChange={(e) => setSelectedPropertyId(e.target.value)}
-            className="luxury-input text-xs font-semibold bg-[#FAF6F0] cursor-pointer"
+            className="luxury-input text-xs font-semibold bg-[#1B1E3D] cursor-pointer"
           >
             {properties.map((p) => (
               <option key={p.id || p._id} value={p.id || p._id}>
@@ -116,7 +116,7 @@ export const ReservationCalendar = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={handlePrevDays}
-            className="p-1.5 rounded-[2px] bg-[#FFFFFF] border border-[#13152C]/15 text-[#13152C] hover:bg-[#FAF6F0] cursor-pointer"
+            className="p-1.5 rounded-[2px] bg-[#13152C] border border-[#2C315E] text-white hover:bg-[#1B1E3D] cursor-pointer"
             title="Previous 7 Days"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -131,13 +131,13 @@ export const ReservationCalendar = () => {
 
           <button
             onClick={handleNextDays}
-            className="p-1.5 rounded-[2px] bg-[#FFFFFF] border border-[#13152C]/15 text-[#13152C] hover:bg-[#FAF6F0] cursor-pointer"
+            className="p-1.5 rounded-[2px] bg-[#13152C] border border-[#2C315E] text-white hover:bg-[#1B1E3D] cursor-pointer"
             title="Next 7 Days"
           >
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
 
-          <span className="font-cinzel text-xs font-semibold text-[#13152C]/80 ml-2">
+          <span className="font-cinzel text-xs font-semibold text-white/80 ml-2">
             {days[0]?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} —{' '}
             {days[days.length - 1]?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </span>
@@ -146,17 +146,17 @@ export const ReservationCalendar = () => {
 
       {/* Calendar Grid */}
       {loading ? (
-        <div className="py-20 text-center text-[#13152C]/60">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#B88E43] mb-2" />
+        <div className="py-20 text-center text-white/60">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#DFB76C] mb-2" />
           <p className="font-cinzel text-xs tracking-wider uppercase">Loading timeline occupancy...</p>
         </div>
       ) : (
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] overflow-hidden shadow-sm">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-xs">
               <thead>
-                <tr className="bg-[#FAF6F0] text-[#13152C]/70 border-b border-[#DFB76C]/30 font-cinzel">
-                  <th className="py-3 px-4 font-bold uppercase sticky left-0 z-20 bg-[#FAF6F0] w-48 border-r border-[#DFB76C]/25 text-[10px] tracking-wider">
+                <tr className="bg-[#1B1E3D] text-white/70 border-b border-[#2C315E] font-cinzel">
+                  <th className="py-3 px-4 font-bold uppercase sticky left-0 z-20 bg-[#1B1E3D] w-48 border-r border-[#2C315E] text-[10px] tracking-wider">
                     Suite / Unit
                   </th>
                   {days.map((day) => {
@@ -164,14 +164,14 @@ export const ReservationCalendar = () => {
                     return (
                       <th
                         key={day.toISOString()}
-                        className={`py-3 px-2.5 text-center font-semibold min-w-[72px] border-r border-[#DFB76C]/20 ${
-                          isToday ? 'bg-[#DFB76C]/20 text-[#13152C] font-bold' : ''
+                        className={`py-3 px-2.5 text-center font-semibold min-w-[72px] border-r border-[#2C315E] ${
+                          isToday ? 'bg-[#DFB76C]/20 text-white font-bold' : ''
                         }`}
                       >
-                        <div className="text-[9px] uppercase tracking-wider text-[#13152C]/50">
+                        <div className="text-[9px] uppercase tracking-wider text-white/50">
                           {day.toLocaleDateString('en-US', { weekday: 'short' })}
                         </div>
-                        <div className="font-editorial text-base font-normal text-[#13152C]">{day.getDate()}</div>
+                        <div className="font-editorial text-base font-normal text-white">{day.getDate()}</div>
                       </th>
                     );
                   })}
@@ -181,14 +181,14 @@ export const ReservationCalendar = () => {
                 {rooms.map((room) => {
                   const rId = room.id || room._id;
                   return (
-                    <tr key={rId} className="hover:bg-[#FAF6F0]/40 transition-colors">
+                    <tr key={rId} className="hover:bg-[#1B1E3D]/40 transition-colors">
                       {/* Room Header Column */}
-                      <td className="py-3 px-4 font-bold sticky left-0 z-10 bg-[#FFFFFF] border-r border-[#DFB76C]/25">
+                      <td className="py-3 px-4 font-bold sticky left-0 z-10 bg-[#13152C] border-r border-[#2C315E]">
                         <div className="flex items-center gap-2.5">
                           <BedDouble className="w-4 h-4 text-[#DFB76C] flex-shrink-0" />
                           <div>
-                            <span className="font-editorial text-base font-normal text-[#13152C]">Suite #{room.room_number}</span>
-                            <span className="font-sans text-[10px] text-[#13152C]/60 block font-normal">
+                            <span className="font-editorial text-base font-normal text-white">Suite #{room.room_number}</span>
+                            <span className="font-sans text-[10px] text-white/60 block font-normal">
                               {room.room_type_name || 'Standard'}
                             </span>
                           </div>
@@ -204,13 +204,13 @@ export const ReservationCalendar = () => {
                         if (booking) {
                           if (booking.status === 'CHECKED_IN') statusColor = 'bg-[#F2F8F4] text-[#2D5A40] border border-[#2D5A40]/30';
                           else if (booking.status === 'CONFIRMED') statusColor = 'bg-[#13152C] text-[#DFB76C] border border-[#2C315E]';
-                          else statusColor = 'bg-[#FBF6ED] text-[#A0702A] border border-[#DFB76C]/35';
+                          else statusColor = 'bg-[#1B1E3D] text-[#DFB76C] border border-[#2C315E]';
                         }
 
                         return (
                           <td
                             key={day.toISOString()}
-                            className="p-1 border-r border-[#DFB76C]/15 text-center relative h-14"
+                            className="p-1 border-r border-[#2C315E] text-center relative h-14"
                           >
                             {booking ? (
                               <Link

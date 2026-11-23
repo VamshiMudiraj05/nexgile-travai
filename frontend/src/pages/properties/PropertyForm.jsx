@@ -427,24 +427,24 @@ export const PropertyForm = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-20">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#DFB76C]/30">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#2C315E]">
         <div className="flex items-center gap-4">
           <Link
             to="/properties"
-            className="p-2 rounded-[2px] text-[#13152C]/60 hover:text-[#13152C] hover:bg-[#FAF6F0] transition-colors border border-[#13152C]/10"
+            className="p-2 rounded-[2px] text-white/60 hover:text-white hover:bg-[#1B1E3D] transition-colors border border-[#2C315E]"
           >
             <ArrowLeft className="w-4 h-4 stroke-[1.5]" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-cinzel text-[9.5px] uppercase font-bold tracking-[0.24em] text-[#B88E43]">
-                01 / ESTATE CONFIGURATION
+              <span className="font-cinzel text-[9.5px] uppercase font-bold tracking-[0.24em] text-[#DFB76C]">
+                ESTATE CONFIGURATION
               </span>
             </div>
-            <h1 className="font-editorial text-3xl font-normal text-[#13152C] tracking-tight mt-0.5">
+            <h1 className="font-editorial text-3xl font-normal text-white tracking-tight mt-0.5">
               {isEdit ? `Edit ${formData.name || 'Property'}` : 'Register New Hotel Property'}
             </h1>
-            <p className="font-sans text-xs text-[#13152C]/60 mt-0.5">
+            <p className="font-sans text-xs text-white/60 mt-0.5">
               {isEdit 
                 ? 'Update estate profile, location metadata, and guest operational policies.'
                 : 'Configure Property metadata, Room Categories, and Physical Inventory in a unified workflow.'}
@@ -455,11 +455,11 @@ export const PropertyForm = () => {
 
       {/* Preset Quick Fill Templates for New Properties */}
       {!isEdit && (
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/40 rounded-[4px] p-5 shadow-sm space-y-2">
-          <div className="flex items-center gap-2 font-cinzel text-[9.5px] font-bold text-[#B88E43] uppercase tracking-wider">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm space-y-2">
+          <div className="flex items-center gap-2 font-cinzel text-[9.5px] font-bold text-[#DFB76C] uppercase tracking-wider">
             <Wand2 className="w-3.5 h-3.5 text-[#DFB76C]" /> Curated Hospitality Archetypes (1-Click Populate)
           </div>
-          <p className="font-sans text-xs text-[#13152C]/65">
+          <p className="font-sans text-xs text-white/65">
             Select an archetype below to pre-populate luxury hospitality details, photography, and room categories:
           </p>
           <div className="flex flex-wrap gap-2.5 pt-1">
@@ -478,7 +478,7 @@ export const PropertyForm = () => {
       )}
 
       {error && (
-        <div className="p-4 rounded-[3px] bg-[#FDF2F2] border border-[#993A3A]/30 flex items-center gap-3 text-[#993A3A] text-xs font-sans">
+        <div className="p-4 rounded-[3px] bg-[#1B1E3D] border border-rose-500/40 flex items-center gap-3 text-rose-400 text-xs font-sans">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{error}</span>
         </div>
@@ -486,17 +486,17 @@ export const PropertyForm = () => {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Section 1: Property Information */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 sm:p-8 shadow-sm space-y-4">
-          <div className="flex items-center justify-between border-b border-[#DFB76C]/20 pb-3">
-            <h2 className="font-editorial text-xl font-normal text-[#13152C] flex items-center gap-2">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 sm:p-8 shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-[#2C315E] pb-3">
+            <h2 className="font-editorial text-xl font-normal text-white flex items-center gap-2">
               <Building2 className="w-4 h-4 text-[#DFB76C]" /> 1. Property Identity & Branding
             </h2>
-            <span className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-semibold">* Required</span>
+            <span className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-semibold">* Required</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
                 Property Name *
               </label>
               <input
@@ -511,7 +511,7 @@ export const PropertyForm = () => {
             </div>
 
             <div>
-              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
                 Property Code * (Unique Identifier)
               </label>
               <input
@@ -526,14 +526,14 @@ export const PropertyForm = () => {
             </div>
 
             <div>
-              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
                 Property Archetype
               </label>
               <select
                 name="property_type"
                 value={formData.property_type}
                 onChange={handleChange}
-                className="w-full luxury-input text-xs font-semibold bg-[#FAF6F0]"
+                className="w-full luxury-input text-xs font-semibold bg-[#1B1E3D]"
               >
                 <option value="HOTEL">Hotel</option>
                 <option value="RESORT">Resort</option>
@@ -545,14 +545,14 @@ export const PropertyForm = () => {
             </div>
 
             <div>
-              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
                 Star Rating
               </label>
               <select
                 name="star_rating"
                 value={formData.star_rating}
                 onChange={handleChange}
-                className="w-full luxury-input text-xs font-semibold bg-[#FAF6F0]"
+                className="w-full luxury-input text-xs font-semibold bg-[#1B1E3D]"
               >
                 <option value={1}>⭐ 1 Star</option>
                 <option value={2}>⭐⭐ 2 Star</option>
@@ -563,7 +563,7 @@ export const PropertyForm = () => {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
                 Editorial Description
               </label>
               <textarea
@@ -579,14 +579,14 @@ export const PropertyForm = () => {
         </div>
 
         {/* Section 2: Location & Address */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 sm:p-8 shadow-sm space-y-4">
-          <h2 className="font-editorial text-xl font-normal text-[#13152C] border-b border-[#DFB76C]/20 pb-3">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 sm:p-8 shadow-sm space-y-4">
+          <h2 className="font-editorial text-xl font-normal text-white border-b border-[#2C315E] pb-3">
             2. Location & Geographic Address
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-3">
-              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
                 Street Address *
               </label>
               <input
@@ -601,7 +601,7 @@ export const PropertyForm = () => {
             </div>
 
             <div>
-              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
                 City *
               </label>
               <input
@@ -616,7 +616,7 @@ export const PropertyForm = () => {
             </div>
 
             <div>
-              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
                 State / Province
               </label>
               <input
@@ -630,7 +630,7 @@ export const PropertyForm = () => {
             </div>
 
             <div>
-              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1.5">
+              <label className="font-cinzel text-[9px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1.5">
                 Country
               </label>
               <input
@@ -646,8 +646,8 @@ export const PropertyForm = () => {
         </div>
 
         {/* Section 3: Property Amenities */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 sm:p-8 shadow-sm space-y-4">
-          <h2 className="font-editorial text-xl font-normal text-[#13152C] border-b border-[#DFB76C]/20 pb-3">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 sm:p-8 shadow-sm space-y-4">
+          <h2 className="font-editorial text-xl font-normal text-white border-b border-[#2C315E] pb-3">
             3. Curated Estate Amenities
           </h2>
 
@@ -661,12 +661,12 @@ export const PropertyForm = () => {
                   onClick={() => handleAmenityToggle(item)}
                   className={`p-3 rounded-[2px] border text-left text-xs font-sans transition-all flex items-center justify-between cursor-pointer ${
                     checked
-                      ? 'bg-[#FAF6F0] border-[#DFB76C] text-[#13152C] font-semibold shadow-sm'
-                      : 'bg-[#FFFFFF] border-[#13152C]/15 text-[#13152C]/60 hover:border-[#DFB76C]/40'
+                      ? 'bg-[#1B1E3D] border-[#DFB76C] text-white font-semibold shadow-sm'
+                      : 'bg-[#13152C] border-[#2C315E] text-white/60 hover:border-[#2C315E]'
                   }`}
                 >
                   <span>{item}</span>
-                  {checked && <CheckCircle className="w-3.5 h-3.5 text-[#B88E43]" />}
+                  {checked && <CheckCircle className="w-3.5 h-3.5 text-[#DFB76C]" />}
                 </button>
               );
             })}
@@ -674,8 +674,8 @@ export const PropertyForm = () => {
         </div>
 
         {/* Section 4: Property Photos */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 sm:p-8 shadow-sm space-y-4">
-          <h2 className="font-editorial text-xl font-normal text-[#13152C] border-b border-[#DFB76C]/20 pb-3">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 sm:p-8 shadow-sm space-y-4">
+          <h2 className="font-editorial text-xl font-normal text-white border-b border-[#2C315E] pb-3">
             4. Editorial Photography & Gallery
           </h2>
 
@@ -690,18 +690,18 @@ export const PropertyForm = () => {
 
         {/* Section 5: Unified Room Types & Live Units Setup (Only during Property Creation) */}
         {!isEdit && (
-          <div className="bg-[#FFFFFF] border border-[#DFB76C]/40 rounded-[4px] p-6 sm:p-8 shadow-sm space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#DFB76C]/20 pb-4">
+          <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 sm:p-8 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#2C315E] pb-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="p-1 rounded-[2px] bg-[#FAF6F0] text-[#B88E43] border border-[#DFB76C]/30">
+                  <span className="p-1 rounded-[2px] bg-[#1B1E3D] text-[#DFB76C] border border-[#2C315E]">
                     <Layers className="w-4 h-4 stroke-[1.5]" />
                   </span>
-                  <h2 className="font-editorial text-2xl font-normal text-[#13152C]">
+                  <h2 className="font-editorial text-2xl font-normal text-white">
                     5. Room Categories & Initial Inventory
                   </h2>
                 </div>
-                <p className="font-sans text-xs text-[#13152C]/60 mt-1">
+                <p className="font-sans text-xs text-white/60 mt-1">
                   Define your suite categories and unit ranges — all rooms are minted automatically upon launch.
                 </p>
               </div>
@@ -726,17 +726,17 @@ export const PropertyForm = () => {
                 return (
                   <div
                     key={rtIdx}
-                    className="bg-[#FAF6F0] border border-[#DFB76C]/30 rounded-[3px] p-5 space-y-4"
+                    className="bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] p-5 space-y-4"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="w-5 h-5 rounded-[2px] bg-[#13152C] text-[#DFB76C] font-cinzel text-[10px] font-bold flex items-center justify-center">
                           {rtIdx + 1}
                         </span>
-                        <h3 className="font-editorial text-lg text-[#13152C]">
+                        <h3 className="font-editorial text-lg text-white">
                           {rt.name || `Room Type #${rtIdx + 1}`}
                         </h3>
-                        <span className="font-cinzel text-[8.5px] bg-[#FFFFFF] text-[#B88E43] px-2 py-0.5 rounded-[2px] border border-[#DFB76C]/30 tracking-wider">
+                        <span className="font-cinzel text-[8.5px] bg-[#13152C] text-[#DFB76C] px-2 py-0.5 rounded-[2px] border border-[#2C315E] tracking-wider">
                           {rt.code || 'CODE'}
                         </span>
                       </div>
@@ -745,7 +745,7 @@ export const PropertyForm = () => {
                         <button
                           type="button"
                           onClick={() => handleRemoveRoomType(rtIdx)}
-                          className="p-1 rounded-[2px] text-[#13152C]/50 hover:text-[#993A3A] transition-colors cursor-pointer"
+                          className="p-1 rounded-[2px] text-white/50 hover:text-rose-400 transition-colors cursor-pointer"
                           title="Remove Category"
                         >
                           <Trash2 className="w-4 h-4 stroke-[1.5]" />
@@ -756,7 +756,7 @@ export const PropertyForm = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                       {/* Name */}
                       <div className="sm:col-span-2">
-                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
                           Category Name *
                         </label>
                         <input
@@ -765,13 +765,13 @@ export const PropertyForm = () => {
                           value={rt.name}
                           onChange={(e) => handleRoomTypeChange(rtIdx, 'name', e.target.value)}
                           placeholder="e.g. Deluxe Ocean View Suite"
-                          className="w-full luxury-input text-xs font-sans bg-[#FFFFFF]"
+                          className="w-full luxury-input text-xs font-sans bg-[#13152C]"
                         />
                       </div>
 
                       {/* Code */}
                       <div>
-                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
                           Code *
                         </label>
                         <input
@@ -780,13 +780,13 @@ export const PropertyForm = () => {
                           value={rt.code}
                           onChange={(e) => handleRoomTypeChange(rtIdx, 'code', e.target.value.toUpperCase())}
                           placeholder="e.g. DLX"
-                          className="w-full luxury-input text-xs font-cinzel uppercase bg-[#FFFFFF]"
+                          className="w-full luxury-input text-xs font-cinzel uppercase bg-[#13152C]"
                         />
                       </div>
 
                       {/* Price / Night */}
                       <div>
-                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
                           Base Room Rate (₹) *
                         </label>
                         <input
@@ -796,19 +796,19 @@ export const PropertyForm = () => {
                           value={rt.base_price}
                           onChange={(e) => handleRoomTypeChange(rtIdx, 'base_price', e.target.value)}
                           placeholder="3500"
-                          className="w-full luxury-input text-xs font-sans font-bold bg-[#FFFFFF]"
+                          className="w-full luxury-input text-xs font-sans font-bold bg-[#13152C]"
                         />
                       </div>
 
                       {/* Bedding */}
                       <div>
-                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
                           Bedding
                         </label>
                         <select
                           value={rt.bed_type}
                           onChange={(e) => handleRoomTypeChange(rtIdx, 'bed_type', e.target.value)}
-                          className="w-full luxury-input text-xs font-semibold bg-[#FFFFFF]"
+                          className="w-full luxury-input text-xs font-semibold bg-[#13152C]"
                         >
                           <option value="KING">1 King Bed</option>
                           <option value="QUEEN">1 Queen Bed</option>
@@ -819,7 +819,7 @@ export const PropertyForm = () => {
 
                       {/* Max Occupancy */}
                       <div>
-                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#B88E43] font-bold block mb-1">
+                        <label className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block mb-1">
                           Max Capacity
                         </label>
                         <input
@@ -828,7 +828,7 @@ export const PropertyForm = () => {
                           max="10"
                           value={rt.max_occupancy}
                           onChange={(e) => handleRoomTypeChange(rtIdx, 'max_occupancy', e.target.value)}
-                          className="w-full luxury-input text-xs font-sans bg-[#FFFFFF]"
+                          className="w-full luxury-input text-xs font-sans bg-[#13152C]"
                         />
                       </div>
 
@@ -843,7 +843,7 @@ export const PropertyForm = () => {
                           max="50"
                           value={rt.number_of_rooms}
                           onChange={(e) => handleRoomTypeChange(rtIdx, 'number_of_rooms', e.target.value)}
-                          className="w-full luxury-input text-xs font-sans font-bold bg-[#FFFFFF]"
+                          className="w-full luxury-input text-xs font-sans font-bold bg-[#13152C]"
                         />
                       </div>
 
@@ -858,15 +858,15 @@ export const PropertyForm = () => {
                           value={rt.starting_room_number}
                           onChange={(e) => handleRoomTypeChange(rtIdx, 'starting_room_number', e.target.value)}
                           placeholder="101"
-                          className="w-full luxury-input text-xs font-sans font-bold bg-[#FFFFFF]"
+                          className="w-full luxury-input text-xs font-sans font-bold bg-[#13152C]"
                         />
                       </div>
                     </div>
 
                     {/* Room Units Preview */}
-                    <div className="bg-[#FFFFFF] border border-[#DFB76C]/25 p-3 rounded-[2px] space-y-1.5">
+                    <div className="bg-[#13152C] border border-[#2C315E] p-3 rounded-[2px] space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#13152C]/60 font-semibold">
+                        <span className="font-cinzel text-[8.5px] uppercase tracking-wider text-white/60 font-semibold">
                           Generated Suites (Floor {rt.floor || 1}):
                         </span>
                         <span className="font-sans text-xs font-bold text-[#2D5A40]">
@@ -877,13 +877,13 @@ export const PropertyForm = () => {
                         {generatedRoomPreview.map((num) => (
                           <span
                             key={num}
-                            className="bg-[#FAF6F0] border border-[#DFB76C]/30 text-[#13152C] text-[10px] font-cinzel font-semibold px-2 py-0.5 rounded-[2px]"
+                            className="bg-[#1B1E3D] border border-[#2C315E] text-white text-[10px] font-cinzel font-semibold px-2 py-0.5 rounded-[2px]"
                           >
                             Suite #{num}
                           </span>
                         ))}
                         {roomCount > 8 && (
-                          <span className="text-[10px] text-[#13152C]/40 self-center font-sans">
+                          <span className="text-[10px] text-white/40 self-center font-sans">
                             +{roomCount - 8} more units...
                           </span>
                         )}
@@ -897,11 +897,11 @@ export const PropertyForm = () => {
         )}
 
         {/* Form Actions Footer */}
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 p-4 rounded-[4px] shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4 sticky bottom-4 z-20">
+        <div className="bg-[#13152C] border border-[#2C315E] p-4 rounded-[4px] shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4 sticky bottom-4 z-20">
           <div>
             {!isEdit && (
-              <p className="font-sans text-xs text-[#13152C]/70">
-                Summary: <strong className="text-[#13152C]">1 Property</strong> • <strong className="text-[#B88E43]">{roomTypes.length} Categories</strong> • <strong className="text-[#2D5A40]">{totalInventoryRooms} Total Suites</strong>
+              <p className="font-sans text-xs text-white/70">
+                Summary: <strong className="text-white">1 Property</strong> • <strong className="text-[#DFB76C]">{roomTypes.length} Categories</strong> • <strong className="text-[#2D5A40]">{totalInventoryRooms} Total Suites</strong>
               </p>
             )}
           </div>

@@ -60,13 +60,13 @@ export default function OccupancyAnalytics() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-20">
       {/* Header */}
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center pb-6 border-b border-[#DFB76C]/30">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center pb-6 border-b border-[#2C315E]">
         <div>
-          <span className="eyebrow-label text-[#B88E43]">03 / REVENUE INTELLIGENCE &middot; CAPACITY AUDIT</span>
-          <h1 className="text-3xl font-editorial font-bold text-[#13152C] tracking-tight mt-1">
+          <span className="eyebrow-label text-[#DFB76C]">REVENUE INTELLIGENCE &middot; CAPACITY AUDIT</span>
+          <h1 className="text-3xl font-editorial font-bold text-white tracking-tight mt-1">
             Occupancy Analytics &amp; Capacity Utilization
           </h1>
-          <p className="mt-1 text-xs text-[#13152C]/70">
+          <p className="mt-1 text-xs text-white/70">
             Real-time room occupancy trends, peaks, troughs, and utilization rates across properties.
           </p>
         </div>
@@ -74,14 +74,14 @@ export default function OccupancyAnalytics() {
           onClick={fetchOccupancyData}
           className="btn-luxury-secondary text-xs inline-flex items-center gap-2 self-start cursor-pointer"
         >
-          <RefreshCw size={14} className="text-[#B88E43]" />
+          <RefreshCw size={14} className="text-[#DFB76C]" />
           <span>Refresh Analysis</span>
         </button>
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-4 rounded-[4px] border border-[#DFB76C]/30 bg-[#FFFFFF] p-5 shadow-sm">
-        <div className="flex items-center gap-2 eyebrow-label text-[#B88E43]">
+      <div className="flex flex-wrap items-center gap-4 rounded-[4px] border border-[#2C315E] bg-[#13152C] p-5 shadow-sm">
+        <div className="flex items-center gap-2 eyebrow-label text-[#DFB76C]">
           <Filter size={15} /> Filters:
         </div>
 
@@ -89,7 +89,7 @@ export default function OccupancyAnalytics() {
         <select
           value={propertyId}
           onChange={(e) => setPropertyId(e.target.value)}
-          className="rounded-[3px] border border-[#DFB76C]/40 bg-[#FAF6F0] px-3.5 py-2 text-xs font-semibold text-[#13152C] focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF]"
+          className="rounded-[3px] border border-[#2C315E] bg-[#1B1E3D] px-3.5 py-2 text-xs font-semibold text-white focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C]"
         >
           <option value="">All Hotel Estates</option>
           {properties.map((p) => (
@@ -105,14 +105,14 @@ export default function OccupancyAnalytics() {
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="rounded-[3px] border border-[#DFB76C]/40 bg-[#FAF6F0] px-3.5 py-2 text-xs text-[#13152C] focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF]"
+            className="rounded-[3px] border border-[#2C315E] bg-[#1B1E3D] px-3.5 py-2 text-xs text-white focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C]"
           />
-          <span className="text-xs text-[#13152C]/60 font-cinzel">to</span>
+          <span className="text-xs text-white/60 font-cinzel">to</span>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="rounded-[3px] border border-[#DFB76C]/40 bg-[#FAF6F0] px-3.5 py-2 text-xs text-[#13152C] focus:outline-none focus:border-[#DFB76C] focus:bg-[#FFFFFF]"
+            className="rounded-[3px] border border-[#2C315E] bg-[#1B1E3D] px-3.5 py-2 text-xs text-white focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C]"
           />
         </div>
 
@@ -123,7 +123,7 @@ export default function OccupancyAnalytics() {
               setStartDate('');
               setEndDate('');
             }}
-            className="text-xs font-cinzel text-[#B88E43] hover:underline"
+            className="text-xs font-cinzel text-[#DFB76C] hover:underline"
           >
             Clear Filters
           </button>
@@ -136,29 +136,29 @@ export default function OccupancyAnalytics() {
         <>
           {/* Summary KPIs */}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm">
-              <div className="flex items-center justify-between text-[#B88E43]">
-                <span className="eyebrow-label text-[#B88E43]">Current Occupancy</span>
+            <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 shadow-sm">
+              <div className="flex items-center justify-between text-[#DFB76C]">
+                <span className="eyebrow-label text-[#DFB76C]">Current Occupancy</span>
                 <Percent size={18} />
               </div>
-              <p className="mt-3 text-3xl font-editorial font-bold text-[#13152C]">
+              <p className="mt-3 text-3xl font-editorial font-bold text-white">
                 {data.summary?.current}%
               </p>
-              <p className="mt-1 text-[11px] text-[#13152C]/60">Active live rate</p>
+              <p className="mt-1 text-[11px] text-white/60">Active live rate</p>
             </div>
 
-            <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm">
-              <div className="flex items-center justify-between text-[#B88E43]">
-                <span className="eyebrow-label text-[#B88E43]">Average Occupancy</span>
+            <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 shadow-sm">
+              <div className="flex items-center justify-between text-[#DFB76C]">
+                <span className="eyebrow-label text-[#DFB76C]">Average Occupancy</span>
                 <TrendingUp size={18} />
               </div>
-              <p className="mt-3 text-3xl font-editorial font-bold text-[#13152C]">
+              <p className="mt-3 text-3xl font-editorial font-bold text-white">
                 {data.summary?.average}%
               </p>
-              <p className="mt-1 text-[11px] text-[#13152C]/60">Window baseline</p>
+              <p className="mt-1 text-[11px] text-white/60">Window baseline</p>
             </div>
 
-            <div className="bg-[#FFFFFF] border border-emerald-300 rounded-[4px] p-6 shadow-sm">
+            <div className="bg-[#13152C] border border-emerald-300 rounded-[4px] p-6 shadow-sm">
               <div className="flex items-center justify-between text-emerald-800">
                 <span className="eyebrow-label text-emerald-800">Peak Occupancy</span>
                 <ArrowUp size={18} />
@@ -169,7 +169,7 @@ export default function OccupancyAnalytics() {
               <p className="mt-1 text-[11px] text-emerald-800/80">Maximum recorded</p>
             </div>
 
-            <div className="bg-[#FFFFFF] border border-amber-300 rounded-[4px] p-6 shadow-sm">
+            <div className="bg-[#13152C] border border-amber-300 rounded-[4px] p-6 shadow-sm">
               <div className="flex items-center justify-between text-amber-800">
                 <span className="eyebrow-label text-amber-800">Lowest Occupancy</span>
                 <ArrowDown size={18} />
@@ -182,10 +182,10 @@ export default function OccupancyAnalytics() {
           </div>
 
           {/* Occupancy Timeline Chart */}
-          <div className="rounded-[4px] border border-[#DFB76C]/30 bg-[#FFFFFF] p-6 shadow-sm">
-            <span className="eyebrow-label text-[#B88E43]">UTILIZATION PACING</span>
-            <h3 className="font-editorial text-xl font-bold text-[#13152C] mt-0.5">Occupancy Timeline (%)</h3>
-            <p className="text-xs text-[#13152C]/60 mb-5">Daily percentage of occupied inventory</p>
+          <div className="rounded-[4px] border border-[#2C315E] bg-[#13152C] p-6 shadow-sm">
+            <span className="eyebrow-label text-[#DFB76C]">UTILIZATION PACING</span>
+            <h3 className="font-editorial text-xl font-bold text-white mt-0.5">Occupancy Timeline (%)</h3>
+            <p className="text-xs text-white/60 mb-5">Daily percentage of occupied inventory</p>
             <div className="h-64">
               <SvgAreaChart
                 data={data.trend}

@@ -32,10 +32,16 @@ api.interceptors.response.use(
       if (currentToken) {
         localStorage.removeItem('nexgile_token');
         localStorage.removeItem('nexgile_user');
-        // If not already on login page, redirect
-        if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
-          window.location.href = '/login';
-        }
+      }
+
+      const reqUrl = error.config?.url || '';
+      const isAuthEndpoint = reqUrl.includes('/auth/login') || reqUrl.includes('/auth/me');
+      const publicPaths = ['/', '/landing', '/login', '/register'];
+      const isPublicPage = publicPaths.includes(window.location.pathname);
+
+      // Only redirect if accessing a protected resource from inside the application
+      if (!isAuthEndpoint && !isPublicPage) {
+        window.location.href = '/login';
       }
     }
     return Promise.reject(error);

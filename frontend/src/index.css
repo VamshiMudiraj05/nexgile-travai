@@ -50,8 +50,8 @@
 body {
   margin: 0;
   font-family: var(--font-body);
-  background-color: var(--cream-background);
-  color: var(--navy);
+  background-color: #0B0C1E;
+  color: #FAF6F0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -76,7 +76,7 @@ body {
   font-size: 0.6875rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #B88E43;
+  color: #DFB76C;
   font-weight: 600;
 }
 
@@ -84,26 +84,28 @@ body {
   font-family: "Cormorant Garamond", "Playfair Display", Georgia, serif;
   font-weight: 500;
   letter-spacing: -0.01em;
-  color: #13152C;
+  color: #FFFFFF;
 }
 
 /* Luxury Card System */
 .luxury-card {
-  background-color: #FFFFFF;
-  border: 1px solid rgba(19, 21, 44, 0.08);
+  background-color: #13152C;
+  border: 1px solid #2C315E;
   border-radius: 4px;
-  box-shadow: 0 4px 20px -2px rgba(19, 21, 44, 0.03), 0 2px 6px -1px rgba(19, 21, 44, 0.02);
+  box-shadow: 0 4px 20px -2px rgba(13, 14, 32, 0.4), 0 2px 6px -1px rgba(13, 14, 32, 0.2);
   transition: all 250ms ease;
+  color: #FAF6F0;
 }
 
 .luxury-card:hover {
-  border-color: rgba(223, 183, 108, 0.4);
+  border-color: rgba(223, 183, 108, 0.6);
 }
 
 .luxury-card-cream {
-  background-color: #F4EFE6;
-  border: 1px solid rgba(223, 183, 108, 0.25);
+  background-color: #1B1E3D;
+  border: 1px solid #2C315E;
   border-radius: 4px;
+  color: #FAF6F0;
 }
 
 .luxury-card-navy {
@@ -115,7 +117,7 @@ body {
 
 /* Luxury Button System */
 .btn-luxury-primary {
-  background-color: #13152C;
+  background-color: #1B1E3D;
   color: #DFB76C;
   border: 1px solid #2C315E;
   border-radius: 3px;
@@ -134,16 +136,16 @@ body {
 }
 
 .btn-luxury-primary:hover {
-  background-color: #1B1E3D;
+  background-color: #24284F;
   border-color: #DFB76C;
   color: #F2D59B;
-  box-shadow: 0 4px 14px rgba(19, 21, 44, 0.2);
+  box-shadow: 0 4px 14px rgba(13, 14, 32, 0.3);
 }
 
 .btn-luxury-secondary {
-  background-color: #FFFFFF;
-  color: #13152C;
-  border: 1px solid rgba(19, 21, 44, 0.2);
+  background-color: #1B1E3D;
+  color: #DFB76C;
+  border: 1px solid #2C315E;
   border-radius: 3px;
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.75rem;
@@ -160,8 +162,9 @@ body {
 }
 
 .btn-luxury-secondary:hover {
-  background-color: #F4EFE6;
-  border-color: #13152C;
+  background-color: #24284F;
+  border-color: #DFB76C;
+  color: #F2D59B;
 }
 
 .btn-luxury-gold {
@@ -193,10 +196,10 @@ body {
 
 /* Luxury Input / Select */
 .luxury-input {
-  background-color: #FFFFFF;
-  border: 1px solid rgba(19, 21, 44, 0.16);
+  background-color: #1B1E3D;
+  border: 1px solid #2C315E;
   border-radius: 3px;
-  color: #13152C;
+  color: #FFFFFF;
   font-size: 0.8125rem;
   padding: 0.625rem 0.875rem;
   transition: all 200ms ease;
@@ -215,11 +218,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F4EFE6;
+  background: #0D0E20;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ECE5DA;
+  background: #2C315E;
   border-radius: 2px;
 }
 
@@ -230,5 +233,5 @@ body {
 /* Hairline gold rule */
 .gold-hairline {
   height: 1px;
-  background: linear-gradient(90deg, rgba(223, 183, 108, 0.4) 0%, rgba(223, 183, 108, 0.1) 100%);
+  background: linear-gradient(90deg, rgba(223, 183, 108, 0.5) 0%, rgba(223, 183, 108, 0.1) 100%);
 }

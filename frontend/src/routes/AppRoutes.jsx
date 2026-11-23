@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from '../pages/Login';
 import { Register } from '../pages/Register';
+import LandingPage from '../pages/LandingPage';
 import Dashboard from '../pages/Dashboard';
 import { AdminLayout } from '../layouts/AdminLayout';
 import { ProtectedRoute } from '../components/ProtectedRoute';
@@ -30,9 +31,14 @@ import OccupancyAnalytics from '../pages/analytics/OccupancyAnalytics';
 import BookingAnalytics from '../pages/analytics/BookingAnalytics';
 import ForecastAnalytics from '../pages/analytics/ForecastAnalytics';
 import RateRecommendations from '../pages/revenue/RateRecommendations';
+import RatePlanManager from '../pages/revenue/RatePlanManager';
+import CorporateAccounts from '../pages/corporate/CorporateAccounts';
+import CorporateExpenseManager from '../pages/corporate/CorporateExpenseManager';
+import ChannelManager from '../pages/channels/ChannelManager';
 
 // Phase 5 Traveler Pages
 import Marketplace from '../pages/marketplace/Marketplace';
+import MultimodalMarketplace from '../pages/marketplace/MultimodalMarketplace';
 import MarketplacePropertyDetail from '../pages/marketplace/PropertyDetail';
 import BookingFlow from '../pages/marketplace/BookingFlow';
 import MyTrips from '../pages/traveler/MyTrips';
@@ -40,6 +46,9 @@ import TripDetail from '../pages/traveler/TripDetail';
 import Loyalty from '../pages/traveler/Loyalty';
 import TravelerProfile from '../pages/traveler/TravelerProfile';
 import Concierge from '../pages/traveler/Concierge';
+import OmnichannelDispatchHub from '../pages/concierge/OmnichannelDispatchHub';
+import MobileSuperAppHub from '../pages/traveler/MobileSuperAppHub';
+import TravelerDashboard from '../pages/traveler/TravelerDashboard';
 
 const RoleIndexRedirect = () => {
   const { user } = useAuth();
@@ -47,7 +56,7 @@ const RoleIndexRedirect = () => {
   if (user?.role === 'FINANCE') return <Navigate to="/finance" replace />;
   if (user?.role === 'MAINTENANCE') return <Navigate to="/maintenance" replace />;
   if (user?.role === 'HOUSEKEEPING') return <Navigate to="/housekeeping" replace />;
-  if (user?.role === 'TRAVELER') return <Navigate to="/marketplace" replace />;
+  if (user?.role === 'TRAVELER') return <Navigate to="/traveler/dashboard" replace />;
   if (user?.role === 'REVENUE_MANAGER') return <Navigate to="/revenue/recommendations" replace />;
   return <Navigate to="/dashboard" replace />;
 };
@@ -56,19 +65,20 @@ export const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Routes */}
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
       {/* Protected Layout & Routes */}
       <Route
-        path="/"
         element={
           <ProtectedRoute>
             <AdminLayout />
           </ProtectedRoute>
         }
       >
-        <Route index element={<RoleIndexRedirect />} />
+        <Route path="app" element={<RoleIndexRedirect />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="frontdesk/dashboard" element={<FrontDeskDashboard />} />
 
@@ -82,6 +92,7 @@ export const AppRoutes = () => {
         <Route path="rooms" element={<RoomList />} />
         <Route path="housekeeping" element={<HousekeepingBoard />} />
         <Route path="maintenance" element={<MaintenanceBoard />} />
+        <Route path="operations/omnichannel" element={<OmnichannelDispatchHub />} />
         <Route path="finance" element={<FinanceOverview />} />
 
         <Route path="guests" element={<GuestList />} />
@@ -99,15 +110,22 @@ export const AppRoutes = () => {
         <Route path="analytics/bookings" element={<BookingAnalytics />} />
         <Route path="analytics/forecast" element={<ForecastAnalytics />} />
         <Route path="revenue/recommendations" element={<RateRecommendations />} />
+        <Route path="revenue/rate-plans" element={<RatePlanManager />} />
+        <Route path="corporate/accounts" element={<CorporateAccounts />} />
+        <Route path="corporate/expenses" element={<CorporateExpenseManager />} />
+        <Route path="distribution/channels" element={<ChannelManager />} />
 
         {/* Phase 5: Traveler Experience */}
+        <Route path="traveler/dashboard" element={<TravelerDashboard />} />
         <Route path="marketplace" element={<Marketplace />} />
+        <Route path="marketplace/multimodal" element={<MultimodalMarketplace />} />
         <Route path="marketplace/properties/:property_id" element={<MarketplacePropertyDetail />} />
         <Route path="marketplace/book" element={<BookingFlow />} />
         <Route path="my-trips" element={<MyTrips />} />
         <Route path="my-trips/:reservation_id" element={<TripDetail />} />
         <Route path="loyalty" element={<Loyalty />} />
         <Route path="profile" element={<TravelerProfile />} />
+        <Route path="superapp" element={<MobileSuperAppHub />} />
         <Route path="concierge" element={<Concierge />} />
       </Route>
 

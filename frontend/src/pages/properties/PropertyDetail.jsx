@@ -88,7 +88,7 @@ export const PropertyDetail = () => {
       <div className="flex items-center justify-between">
         <Link
           to="/properties"
-          className="inline-flex items-center gap-2 text-xs font-cinzel tracking-wider uppercase text-[#13152C]/60 hover:text-[#13152C] transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-cinzel tracking-wider uppercase text-white/60 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Portfolio</span>
@@ -106,7 +106,7 @@ export const PropertyDetail = () => {
       </div>
 
       {/* Hero Header */}
-      <div className="relative rounded-[4px] overflow-hidden border border-[#DFB76C]/35 bg-[#FFFFFF] shadow-sm">
+      <div className="relative rounded-[4px] overflow-hidden border border-[#2C315E] bg-[#13152C] shadow-sm">
         <div className="h-72 sm:h-96 w-full relative">
           <img src={heroImage} alt={property.name} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0D0E20] via-[#0D0E20]/50 to-transparent"></div>
@@ -114,7 +114,7 @@ export const PropertyDetail = () => {
           <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4 text-white">
             <div>
               <div className="flex items-center gap-2 mb-2 flex-wrap">
-                <span className="font-cinzel text-[9px] text-[#DFB76C] bg-[#13152C]/80 px-2 py-0.5 rounded-[2px] border border-[#DFB76C]/40 tracking-widest uppercase">
+                <span className="font-cinzel text-[9px] text-[#DFB76C] bg-[#13152C]/80 px-2 py-0.5 rounded-[2px] border border-[#2C315E] tracking-widest uppercase">
                   {property.property_code}
                 </span>
                 <StatusBadge status={property.status} size="sm" />
@@ -131,11 +131,11 @@ export const PropertyDetail = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="px-5 py-2.5 rounded-[2px] bg-[#13152C]/80 backdrop-blur-md border border-[#DFB76C]/30 text-center">
+              <div className="px-5 py-2.5 rounded-[2px] bg-[#13152C]/80 backdrop-blur-md border border-[#2C315E] text-center">
                 <span className="font-editorial text-2xl font-normal text-white block">{property.total_rooms || 0}</span>
                 <span className="font-cinzel text-[8.5px] text-[#DFB76C] uppercase tracking-widest font-semibold">Total Suites</span>
               </div>
-              <div className="px-5 py-2.5 rounded-[2px] bg-[#13152C]/80 backdrop-blur-md border border-[#DFB76C]/30 text-center">
+              <div className="px-5 py-2.5 rounded-[2px] bg-[#13152C]/80 backdrop-blur-md border border-[#2C315E] text-center">
                 <span className="font-editorial text-2xl font-normal text-[#DFB76C] block">{roomTypes.length}</span>
                 <span className="font-cinzel text-[8.5px] text-[#DFB76C] uppercase tracking-widest font-semibold">Categories</span>
               </div>
@@ -144,7 +144,7 @@ export const PropertyDetail = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="px-6 border-t border-[#DFB76C]/25 bg-[#FAF6F0] flex items-center gap-6 overflow-x-auto">
+        <div className="px-6 border-t border-[#2C315E] bg-[#1B1E3D] flex items-center gap-6 overflow-x-auto">
           {[
             { id: 'overview', label: 'Overview', icon: Building2 },
             { id: 'room-types', label: `Categories (${roomTypes.length})`, icon: Layers },
@@ -159,8 +159,8 @@ export const PropertyDetail = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-4 inline-flex items-center gap-2 font-cinzel text-[10.5px] font-bold uppercase tracking-[0.16em] border-b-2 transition-all whitespace-nowrap cursor-pointer ${
                   active
-                    ? 'border-[#13152C] text-[#13152C]'
-                    : 'border-transparent text-[#13152C]/50 hover:text-[#13152C]'
+                    ? 'border-[#13152C] text-white'
+                    : 'border-transparent text-white/50 hover:text-white'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5 stroke-[1.5]" />
@@ -175,94 +175,94 @@ export const PropertyDetail = () => {
       {activeTab === 'overview' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-8 shadow-sm space-y-3">
-              <span className="font-cinzel text-[9.5px] font-bold uppercase tracking-[0.24em] text-[#B88E43]">
+            <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-8 shadow-sm space-y-3">
+              <span className="font-cinzel text-[9.5px] font-bold uppercase tracking-[0.24em] text-[#DFB76C]">
                 EDITORIAL STATEMENT
               </span>
-              <h2 className="font-editorial text-2xl text-[#13152C] font-normal">About the Property</h2>
-              <p className="font-sans text-xs sm:text-sm text-[#13152C]/75 leading-relaxed">
+              <h2 className="font-editorial text-2xl text-white font-normal">About the Property</h2>
+              <p className="font-sans text-xs sm:text-sm text-white/75 leading-relaxed">
                 {property.description || 'A distinguished sanctuary reflecting world-class European hospitality and refined comfort.'}
               </p>
             </div>
 
-            <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-8 shadow-sm space-y-4">
-              <span className="font-cinzel text-[9.5px] font-bold uppercase tracking-[0.24em] text-[#B88E43]">
+            <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-8 shadow-sm space-y-4">
+              <span className="font-cinzel text-[9.5px] font-bold uppercase tracking-[0.24em] text-[#DFB76C]">
                 HOSPITALITY SERVICES
               </span>
-              <h2 className="font-editorial text-2xl text-[#13152C] font-normal">Amenities & Concierge Offerings</h2>
+              <h2 className="font-editorial text-2xl text-white font-normal">Amenities & Concierge Offerings</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
                 {property.amenities && property.amenities.length > 0 ? (
                   property.amenities.map((item) => (
                     <div
                       key={item}
-                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/25 font-sans text-xs font-medium text-[#13152C]"
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] font-sans text-xs font-medium text-white"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5 text-[#2D5A40]" />
                       <span>{item}</span>
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-[#13152C]/50 col-span-3 font-sans">No amenities recorded for this property.</p>
+                  <p className="text-xs text-white/50 col-span-3 font-sans">No amenities recorded for this property.</p>
                 )}
               </div>
             </div>
           </div>
 
           <div className="space-y-6">
-            <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm space-y-4">
-              <span className="font-cinzel text-[9px] font-bold uppercase tracking-[0.2em] text-[#B88E43]">
+            <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 shadow-sm space-y-4">
+              <span className="font-cinzel text-[9px] font-bold uppercase tracking-[0.2em] text-[#DFB76C]">
                 SCHEDULE & POLICIES
               </span>
               <div className="space-y-3 font-sans text-xs">
-                <div className="flex items-center justify-between py-2 border-b border-[#DFB76C]/20">
-                  <span className="text-[#13152C]/60 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#B88E43]" />
+                <div className="flex items-center justify-between py-2 border-b border-[#2C315E]">
+                  <span className="text-white/60 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-[#DFB76C]" />
                     Check-in Time
                   </span>
-                  <span className="font-semibold text-[#13152C] font-cinzel">{property.check_in_time}</span>
+                  <span className="font-semibold text-white font-cinzel">{property.check_in_time}</span>
                 </div>
 
-                <div className="flex items-center justify-between py-2 border-b border-[#DFB76C]/20">
-                  <span className="text-[#13152C]/60 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#B88E43]" />
+                <div className="flex items-center justify-between py-2 border-b border-[#2C315E]">
+                  <span className="text-white/60 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-[#DFB76C]" />
                     Check-out Time
                   </span>
-                  <span className="font-semibold text-[#13152C] font-cinzel">{property.check_out_time}</span>
+                  <span className="font-semibold text-white font-cinzel">{property.check_out_time}</span>
                 </div>
 
-                <div className="flex items-center justify-between py-2 border-b border-[#DFB76C]/20">
-                  <span className="text-[#13152C]/60">Settlement Currency</span>
-                  <span className="font-semibold text-[#13152C] font-cinzel">{property.currency}</span>
+                <div className="flex items-center justify-between py-2 border-b border-[#2C315E]">
+                  <span className="text-white/60">Settlement Currency</span>
+                  <span className="font-semibold text-white font-cinzel">{property.currency}</span>
                 </div>
 
                 <div className="flex items-center justify-between py-2">
-                  <span className="text-[#13152C]/60">Operational Timezone</span>
-                  <span className="font-semibold text-[#13152C]">{property.timezone}</span>
+                  <span className="text-white/60">Operational Timezone</span>
+                  <span className="font-semibold text-white">{property.timezone}</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm space-y-4">
-              <span className="font-cinzel text-[9px] font-bold uppercase tracking-[0.2em] text-[#B88E43]">
+            <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 shadow-sm space-y-4">
+              <span className="font-cinzel text-[9px] font-bold uppercase tracking-[0.2em] text-[#DFB76C]">
                 CONCIERGE CONTACT
               </span>
               <div className="space-y-3 font-sans text-xs">
                 {property.phone && (
-                  <div className="flex items-center gap-2.5 text-[#13152C]">
-                    <Phone className="w-3.5 h-3.5 text-[#B88E43]" />
+                  <div className="flex items-center gap-2.5 text-white">
+                    <Phone className="w-3.5 h-3.5 text-[#DFB76C]" />
                     <span>{property.phone}</span>
                   </div>
                 )}
                 {property.email && (
-                  <div className="flex items-center gap-2.5 text-[#13152C]">
-                    <Mail className="w-3.5 h-3.5 text-[#B88E43]" />
+                  <div className="flex items-center gap-2.5 text-white">
+                    <Mail className="w-3.5 h-3.5 text-[#DFB76C]" />
                     <span>{property.email}</span>
                   </div>
                 )}
                 {property.website && (
-                  <div className="flex items-center gap-2.5 text-[#13152C]">
-                    <Globe className="w-3.5 h-3.5 text-[#B88E43]" />
-                    <a href={property.website} target="_blank" rel="noreferrer" className="hover:underline truncate text-[#B88E43] font-medium">
+                  <div className="flex items-center gap-2.5 text-white">
+                    <Globe className="w-3.5 h-3.5 text-[#DFB76C]" />
+                    <a href={property.website} target="_blank" rel="noreferrer" className="hover:underline truncate text-[#DFB76C] font-medium">
                       {property.website}
                     </a>
                   </div>
@@ -277,7 +277,7 @@ export const PropertyDetail = () => {
       {activeTab === 'room-types' && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-editorial text-2xl text-[#13152C] font-normal">Room Categories</h2>
+            <h2 className="font-editorial text-2xl text-white font-normal">Room Categories</h2>
             {isAdmin && (
               <button
                 onClick={() => {
@@ -305,17 +305,17 @@ export const PropertyDetail = () => {
                 return (
                   <div
                     key={rt.id || rt._id}
-                    className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] overflow-hidden shadow-sm flex flex-col justify-between group hover:border-[#DFB76C] transition-all"
+                    className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden shadow-sm flex flex-col justify-between group hover:border-[#DFB76C] transition-all"
                   >
-                    <div className="h-48 bg-[#FAF6F0] relative overflow-hidden">
+                    <div className="h-48 bg-[#1B1E3D] relative overflow-hidden">
                       {rtImg ? (
                         <img src={rtImg} alt={rt.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[#13152C]/30">
+                        <div className="w-full h-full flex items-center justify-center text-white/30">
                           <BedDouble className="w-8 h-8 stroke-[1.25]" />
                         </div>
                       )}
-                      <div className="absolute top-3 right-3 px-3 py-1 rounded-[2px] bg-[#13152C]/90 text-xs font-semibold text-[#DFB76C] border border-[#DFB76C]/40">
+                      <div className="absolute top-3 right-3 px-3 py-1 rounded-[2px] bg-[#13152C]/90 text-xs font-semibold text-[#DFB76C] border border-[#2C315E]">
                         ₹{rt.base_price?.toLocaleString('en-IN')} <span className="text-[10px] text-[#FAF6F0]/70 font-normal">/ night</span>
                       </div>
                     </div>
@@ -323,18 +323,18 @@ export const PropertyDetail = () => {
                     <div className="p-6 flex-1 flex flex-col justify-between">
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
-                          <h3 className="font-editorial text-xl font-normal text-[#13152C]">{rt.name}</h3>
-                          <span className="font-cinzel text-[8.5px] text-[#B88E43] bg-[#FAF6F0] px-1.5 py-0.5 rounded-[2px] border border-[#DFB76C]/30 tracking-widest uppercase">
+                          <h3 className="font-editorial text-xl font-normal text-white">{rt.name}</h3>
+                          <span className="font-cinzel text-[8.5px] text-[#DFB76C] bg-[#1B1E3D] px-1.5 py-0.5 rounded-[2px] border border-[#2C315E] tracking-widest uppercase">
                             {rt.code}
                           </span>
                         </div>
-                        <p className="font-sans text-xs text-[#13152C]/65 line-clamp-2 mb-4 leading-relaxed">{rt.description}</p>
+                        <p className="font-sans text-xs text-white/65 line-clamp-2 mb-4 leading-relaxed">{rt.description}</p>
 
-                        <div className="grid grid-cols-2 gap-2 font-sans text-xs text-[#13152C]/75 py-3 border-y border-[#DFB76C]/20 mb-4">
-                          <div>Max Capacity: <strong className="text-[#13152C]">{rt.max_occupancy} Guests</strong></div>
-                          <div>Bedding: <strong className="text-[#13152C]">{rt.bed_type}</strong></div>
-                          <div>Inventory: <strong className="text-[#13152C]">{rt.total_rooms || 0} Units</strong></div>
-                          <div>Suite Size: <strong className="text-[#13152C]">{rt.size || '450 sq ft'}</strong></div>
+                        <div className="grid grid-cols-2 gap-2 font-sans text-xs text-white/75 py-3 border-y border-[#2C315E] mb-4">
+                          <div>Max Capacity: <strong className="text-white">{rt.max_occupancy} Guests</strong></div>
+                          <div>Bedding: <strong className="text-white">{rt.bed_type}</strong></div>
+                          <div>Inventory: <strong className="text-white">{rt.total_rooms || 0} Units</strong></div>
+                          <div>Suite Size: <strong className="text-white">{rt.size || '450 sq ft'}</strong></div>
                         </div>
                       </div>
 
@@ -364,7 +364,7 @@ export const PropertyDetail = () => {
       {activeTab === 'rooms' && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-editorial text-2xl text-[#13152C] font-normal">Individual Suites & Status</h2>
+            <h2 className="font-editorial text-2xl text-white font-normal">Individual Suites & Status</h2>
             {isAdmin && (
               <button
                 onClick={() => {
@@ -390,14 +390,14 @@ export const PropertyDetail = () => {
               {rooms.map((room) => (
                 <div
                   key={room.id || room._id}
-                  className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-5 shadow-sm hover:border-[#DFB76C] transition-all flex flex-col justify-between"
+                  className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm hover:border-[#DFB76C] transition-all flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <span className="font-cinzel text-[8.5px] text-[#13152C]/50 uppercase tracking-widest font-semibold block">Floor {room.floor}</span>
-                        <h3 className="font-editorial text-2xl font-normal text-[#13152C] tracking-tight">Suite #{room.room_number}</h3>
-                        <p className="font-sans text-xs text-[#13152C]/65 mt-0.5">{room.room_type_name || 'Standard'}</p>
+                        <span className="font-cinzel text-[8.5px] text-white/50 uppercase tracking-widest font-semibold block">Floor {room.floor}</span>
+                        <h3 className="font-editorial text-2xl font-normal text-white tracking-tight">Suite #{room.room_number}</h3>
+                        <p className="font-sans text-xs text-white/65 mt-0.5">{room.room_type_name || 'Standard'}</p>
                       </div>
 
                       <button
@@ -410,17 +410,17 @@ export const PropertyDetail = () => {
                     </div>
 
                     {room.current_guest_name && (
-                      <div className="p-2.5 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/25 mb-3 text-xs font-sans">
-                        <span className="font-cinzel text-[8px] text-[#B88E43] uppercase tracking-wider block font-bold">Occupied By</span>
-                        <span className="font-semibold text-[#13152C] truncate block">{room.current_guest_name}</span>
+                      <div className="p-2.5 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] mb-3 text-xs font-sans">
+                        <span className="font-cinzel text-[8px] text-[#DFB76C] uppercase tracking-wider block font-bold">Occupied By</span>
+                        <span className="font-semibold text-white truncate block">{room.current_guest_name}</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-[#DFB76C]/20 text-xs">
+                  <div className="flex items-center justify-between pt-3 border-t border-[#2C315E] text-xs">
                     <button
                       onClick={() => setStatusModalRoom(room)}
-                      className="font-cinzel text-[9.5px] uppercase tracking-wider text-[#B88E43] hover:text-[#13152C] font-semibold cursor-pointer"
+                      className="font-cinzel text-[9.5px] uppercase tracking-wider text-[#DFB76C] hover:text-white font-semibold cursor-pointer"
                     >
                       Update Status
                     </button>
@@ -431,7 +431,7 @@ export const PropertyDetail = () => {
                           setSelectedRoom(room);
                           setIsRoomModalOpen(true);
                         }}
-                        className="font-sans text-xs text-[#13152C]/60 hover:text-[#13152C] font-medium cursor-pointer"
+                        className="font-sans text-xs text-white/60 hover:text-white font-medium cursor-pointer"
                       >
                         Edit
                       </button>
@@ -448,7 +448,7 @@ export const PropertyDetail = () => {
       {activeTab === 'reservations' && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-editorial text-2xl text-[#13152C] font-normal">Recent Property Bookings</h2>
+            <h2 className="font-editorial text-2xl text-white font-normal">Recent Property Bookings</h2>
             <Link
               to="/reservations/new"
               className="btn-luxury-primary text-xs"
@@ -465,9 +465,9 @@ export const PropertyDetail = () => {
               description="Bookings for this hotel property will appear here in the registry."
             />
           ) : (
-            <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] overflow-hidden shadow-sm">
+            <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden shadow-sm">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#FAF6F0] font-cinzel text-[9px] uppercase font-bold text-[#13152C]/70 border-b border-[#DFB76C]/25 tracking-wider">
+                <thead className="bg-[#1B1E3D] font-cinzel text-[9px] uppercase font-bold text-white/70 border-b border-[#2C315E] tracking-wider">
                   <tr>
                     <th className="py-3 px-4">Booking Ref</th>
                     <th className="py-3 px-4">Guest</th>
@@ -480,16 +480,16 @@ export const PropertyDetail = () => {
                 </thead>
                 <tbody className="divide-y divide-[#DFB76C]/15 font-sans">
                   {reservations.map((res) => (
-                    <tr key={res.id || res._id} className="hover:bg-[#FAF6F0]/60">
-                      <td className="py-3 px-4 font-cinzel font-bold text-[#B88E43]">
+                    <tr key={res.id || res._id} className="hover:bg-[#1B1E3D]/60">
+                      <td className="py-3 px-4 font-cinzel font-bold text-[#DFB76C]">
                         #{res.booking_reference}
                       </td>
-                      <td className="py-3 px-4 font-semibold text-[#13152C]">{res.guest_name || 'Guest'}</td>
-                      <td className="py-3 px-4 text-[#13152C]/70">Suite #{res.room_number || '-'}</td>
-                      <td className="py-3 px-4 text-[#13152C]/60 font-mono text-[11px]">
+                      <td className="py-3 px-4 font-semibold text-white">{res.guest_name || 'Guest'}</td>
+                      <td className="py-3 px-4 text-white/70">Suite #{res.room_number || '-'}</td>
+                      <td className="py-3 px-4 text-white/60 font-mono text-[11px]">
                         {res.check_in_date} → {res.check_out_date}
                       </td>
-                      <td className="py-3 px-4 font-editorial text-sm font-semibold text-[#13152C]">
+                      <td className="py-3 px-4 font-editorial text-sm font-semibold text-white">
                         ₹{res.total_amount?.toLocaleString('en-IN')}
                       </td>
                       <td className="py-3 px-4">
@@ -498,7 +498,7 @@ export const PropertyDetail = () => {
                       <td className="py-3 px-4 text-right">
                         <Link
                           to={`/reservations/${res.id || res._id}`}
-                          className="font-cinzel text-[10px] text-[#B88E43] hover:text-[#13152C] uppercase font-semibold"
+                          className="font-cinzel text-[10px] text-[#DFB76C] hover:text-white uppercase font-semibold"
                         >
                           View Folio →
                         </Link>

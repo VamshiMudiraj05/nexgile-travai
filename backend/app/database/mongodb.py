@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Optional
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 import pymongo
@@ -95,8 +96,36 @@ async def connect_to_mongo():
         await db.traveler_profiles.create_index([("user_id", pymongo.ASCENDING)], unique=True, name="unique_traveler_profile_user")
 
         logger.info("Ensured all Phase 2, 4, and 5 collection indexes on MongoDB.")
+        await seed_default_users(db)
     except Exception as e:
         logger.error(f"Failed to connect to MongoDB or create indexes: {str(e)}")
+
+
+async def seed_default_users(db):
+    """Seed default persona accounts with password123 for seamless evaluation."""
+    from app.core.security import hash_password
+    default_users = [
+        {"name": "Master Administrator", "email": "admin@nexgile.com", "role": "ADMIN"},
+        {"name": "Front Desk Agent", "email": "frontdesk@nexgile.com", "role": "FRONT_DESK"},
+        {"name": "Revenue Strategy Director", "email": "revenue@nexgile.com", "role": "REVENUE_MANAGER"},
+        {"name": "Finance & Audit Controller", "email": "finance@nexgile.com", "role": "FINANCE"},
+        {"name": "Eleanor Vance", "email": "traveler@nexgile.com", "role": "TRAVELER"},
+        {"name": "Lead Housekeeping Attendant", "email": "housekeeping@nexgile.com", "role": "HOUSEKEEPING"},
+    ]
+    now = datetime.now(timezone.utc)
+    for u in default_users:
+        existing = await db.users.find_one({"email": u["email"]})
+        if not existing:
+            await db.users.insert_one({
+                "name": u["name"],
+                "email": u["email"],
+                "password_hash": hash_password("password123"),
+                "role": u["role"],
+                "is_active": True,
+                "created_at": now,
+                "updated_at": now,
+            })
+    logger.info("Verified default demo persona accounts.")
 
 
 async def close_mongo_connection():

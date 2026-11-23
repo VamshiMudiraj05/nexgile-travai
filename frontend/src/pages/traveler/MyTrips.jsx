@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   Calendar,
   MapPin,
-  Clock,
-  ArrowRight,
   Building2,
   Luggage,
   Sparkles,
@@ -61,35 +59,35 @@ export default function MyTrips() {
   const currentList = tripsData[activeTab] || [];
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-8 pb-12 text-[#FAF6F0]">
       {/* Editorial Header */}
-      <div className="flex flex-col justify-between gap-6 border-b border-[#DFB76C]/20 pb-6 md:flex-row md:items-end">
+      <div className="flex flex-col justify-between gap-6 border-b border-[#2C315E] pb-6 md:flex-row md:items-end">
         <div>
-          <span className="font-cinzel text-[10px] tracking-[0.25em] text-[#B88E43] uppercase">
-            05 / Traveler Portfolio
+          <span className="font-cinzel text-[10px] tracking-[0.25em] text-[#DFB76C] uppercase font-semibold">
+            MY BOOKINGS
           </span>
-          <h1 className="mt-1 font-editorial text-3xl md:text-4xl text-[#13152C] tracking-tight">
-            My Stays & Itineraries
+          <h1 className="mt-1 font-editorial text-3xl md:text-4xl text-white tracking-tight font-bold">
+            My Trips & Stays
           </h1>
-          <p className="mt-1 font-sans text-xs md:text-sm text-[#13152C]/70 max-w-2xl">
-            Review your upcoming verified journeys, active room folios, and historical hospitality reservations.
+          <p className="mt-1 font-sans text-xs md:text-sm text-white/70 max-w-2xl">
+            View your upcoming hotel stays, active room bookings, and past trips.
           </p>
         </div>
 
         <Link
           to="/marketplace"
-          className="inline-flex items-center gap-2 bg-[#13152C] border border-[#DFB76C]/40 text-[#DFB76C] px-5 py-2.5 font-cinzel text-xs tracking-widest uppercase hover:bg-[#1B1E3D] hover:border-[#DFB76C] transition-all shadow-sm rounded-[2px]"
+          className="inline-flex items-center gap-2 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] px-5 py-2.5 font-cinzel text-xs tracking-widest uppercase font-bold transition-all shadow-sm rounded-[2px]"
         >
-          <Luggage size={14} className="text-[#DFB76C]" /> Book a New Stay →
+          <Luggage size={14} className="text-[#13152C]" /> Book a New Stay →
         </Link>
       </div>
 
       {/* Luxury Tabs */}
-      <div className="flex border-b border-[#2C315E]/15 gap-4 md:gap-8 overflow-x-auto">
+      <div className="flex border-b border-[#2C315E] gap-4 md:gap-8 overflow-x-auto">
         {[
           { key: 'upcoming', label: 'Upcoming Stays', count: tripsData.upcoming?.length },
           { key: 'current', label: 'Currently Staying', count: tripsData.current?.length },
-          { key: 'past', label: 'Completed Stays', count: tripsData.past?.length },
+          { key: 'past', label: 'Past Stays', count: tripsData.past?.length },
           { key: 'cancelled', label: 'Cancelled', count: tripsData.cancelled?.length },
         ].map((tab) => (
           <button
@@ -97,16 +95,16 @@ export default function MyTrips() {
             onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-2.5 pb-3 font-cinzel text-xs tracking-wider uppercase transition-all border-b-2 -mb-[2px] whitespace-nowrap cursor-pointer ${
               activeTab === tab.key
-                ? 'border-[#B88E43] text-[#13152C] font-bold'
-                : 'border-transparent text-[#13152C]/50 hover:text-[#13152C]'
+                ? 'border-[#DFB76C] text-[#DFB76C] font-bold'
+                : 'border-transparent text-white/60 hover:text-white'
             }`}
           >
             <span>{tab.label}</span>
             {tab.count !== undefined && (
               <span className={`px-2 py-0.5 text-[10px] font-sans rounded-[2px] ${
                 activeTab === tab.key
-                  ? 'bg-[#13152C] text-[#DFB76C]'
-                  : 'bg-[#ECE5DA] text-[#13152C]/70'
+                  ? 'bg-[#1B1E3D] text-[#DFB76C] border border-[#2C315E]'
+                  : 'bg-[#13152C] text-white/50 border border-[#2C315E]/60'
               }`}>
                 {tab.count}
               </span>
@@ -117,22 +115,22 @@ export default function MyTrips() {
 
       {/* List */}
       {loading ? (
-        <LoadingSpinner text="Retrieving verified itinerary records..." />
+        <LoadingSpinner text="Loading your trips..." />
       ) : currentList.length === 0 ? (
-        <div className="rounded-[4px] border border-[#DFB76C]/25 bg-[#FFFFFF] p-16 text-center shadow-sm">
-          <Luggage size={36} className="mx-auto text-[#B88E43]/60 mb-3" />
-          <h3 className="font-editorial text-2xl text-[#13152C]">No {activeTab} journeys recorded</h3>
-          <p className="mt-1 font-sans text-xs text-[#13152C]/70 max-w-md mx-auto">
+        <div className="rounded-[4px] border border-[#2C315E] bg-[#13152C] p-16 text-center shadow-sm">
+          <Luggage size={36} className="mx-auto text-[#DFB76C]/60 mb-3" />
+          <h3 className="font-editorial text-2xl text-white font-bold">No {activeTab} trips found</h3>
+          <p className="mt-1 font-sans text-xs text-white/70 max-w-md mx-auto">
             {activeTab === 'upcoming'
-              ? 'Your future sanctuary awaits. Explore curated estates across world-class travel destinations.'
-              : `You currently have no ${activeTab} reservation history recorded in your profile.`}
+              ? 'You have no upcoming hotel reservations. Browse our luxury properties and plan your next journey.'
+              : `You have no ${activeTab} stays recorded in your account.`}
           </p>
           {activeTab === 'upcoming' && (
             <Link
               to="/marketplace"
-              className="mt-6 inline-flex items-center gap-2 bg-[#DFB76C] text-[#13152C] px-6 py-2.5 font-cinzel text-xs tracking-widest uppercase hover:bg-[#F2D59B] transition-all shadow-sm rounded-[2px]"
+              className="mt-6 inline-flex items-center gap-2 bg-[#DFB76C] text-[#13152C] px-6 py-2.5 font-cinzel text-xs tracking-widest uppercase hover:bg-[#F2D59B] font-bold transition-all shadow-sm rounded-[2px]"
             >
-              Explore Estates →
+              Browse Hotels →
             </Link>
           )}
         </div>
@@ -141,10 +139,10 @@ export default function MyTrips() {
           {currentList.map((trip, idx) => (
             <div
               key={trip.id}
-              className={`group flex flex-col justify-between overflow-hidden rounded-[4px] border bg-[#FFFFFF] shadow-sm transition-all hover:shadow-md ${
+              className={`group flex flex-col justify-between overflow-hidden rounded-[4px] border bg-[#13152C] shadow-sm transition-all hover:shadow-md ${
                 activeTab === 'upcoming' && idx === 0
                   ? 'border-[#DFB76C] ring-1 ring-[#DFB76C]/30'
-                  : 'border-[#2C315E]/15 hover:border-[#DFB76C]/60'
+                  : 'border-[#2C315E] hover:border-[#DFB76C]/60'
               }`}
             >
               <div>
@@ -161,7 +159,7 @@ export default function MyTrips() {
                       <Building2 size={44} />
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D0E20]/80 via-transparent to-black/30 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D0E20]/90 via-transparent to-black/30 pointer-events-none" />
 
                   <div className="absolute top-3.5 left-3.5">
                     <StatusBadge status={trip.status} />
@@ -172,7 +170,7 @@ export default function MyTrips() {
 
                   {activeTab === 'upcoming' && idx === 0 && (
                     <div className="absolute bottom-3 left-3.5 flex items-center gap-1.5 px-2.5 py-1 bg-[#DFB76C] text-[#13152C] font-cinzel text-[10px] tracking-wider uppercase font-bold rounded-[2px]">
-                      <Sparkles size={12} /> Next Upcoming Journey
+                      <Sparkles size={12} /> Next Trip
                     </div>
                   )}
                 </div>
@@ -180,23 +178,23 @@ export default function MyTrips() {
                 {/* Content */}
                 <div className="p-6 space-y-4">
                   <div>
-                    <div className="flex items-center gap-1.5 font-cinzel text-[10px] tracking-widest text-[#B88E43] uppercase">
+                    <div className="flex items-center gap-1.5 font-cinzel text-[10px] tracking-widest text-[#DFB76C] uppercase font-semibold">
                       <MapPin size={12} /> {trip.property_city}
                     </div>
-                    <h3 className="mt-1 font-editorial text-2xl font-bold text-[#13152C] tracking-tight group-hover:text-[#B88E43] transition-colors">
+                    <h3 className="mt-1 font-editorial text-2xl font-bold text-white tracking-tight group-hover:text-[#DFB76C] transition-colors">
                       {trip.property_name}
                     </h3>
-                    <p className="mt-0.5 font-sans text-xs text-[#13152C]/70">
-                      <span className="font-semibold text-[#13152C]">{trip.room_type_name}</span> • Suite {trip.room_number || 'To Be Assigned'}
+                    <p className="mt-0.5 font-sans text-xs text-white/70">
+                      <span className="font-semibold text-white">{trip.room_type_name}</span> • Room {trip.room_number || 'Assigned at check-in'}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-[2px] bg-[#FAF6F0] p-3 border border-[#2C315E]/10 font-sans text-xs text-[#13152C]">
-                    <Calendar size={15} className="text-[#B88E43] shrink-0" />
+                  <div className="flex items-center gap-2.5 rounded-[2px] bg-[#1B1E3D] p-3 border border-[#2C315E] font-sans text-xs text-white/90">
+                    <Calendar size={15} className="text-[#DFB76C] shrink-0" />
                     <span className="font-medium">
                       {trip.check_in_date} &rarr; {trip.check_out_date}
                     </span>
-                    <span className="ml-auto font-cinzel text-[10px] tracking-wider uppercase text-[#13152C]/60">
+                    <span className="ml-auto font-cinzel text-[10px] tracking-wider uppercase text-white/60">
                       ({trip.nights} Nights)
                     </span>
                   </div>
@@ -204,10 +202,10 @@ export default function MyTrips() {
               </div>
 
               {/* Actions Footer */}
-              <div className="flex items-center justify-between border-t border-[#2C315E]/10 bg-[#FAF6F0] px-6 py-4">
+              <div className="flex items-center justify-between border-t border-[#2C315E] bg-[#1B1E3D]/50 px-6 py-4">
                 <div>
-                  <span className="block font-cinzel text-[9px] tracking-widest text-[#13152C]/60 uppercase">Total Settled</span>
-                  <p className="font-editorial text-xl font-bold text-[#13152C]">
+                  <span className="block font-cinzel text-[9px] tracking-widest text-white/60 uppercase">Total Paid</span>
+                  <p className="font-editorial text-xl font-bold text-[#DFB76C]">
                     ₹{trip.total_amount?.toLocaleString()}
                   </p>
                 </div>
@@ -215,14 +213,14 @@ export default function MyTrips() {
                 <div className="flex items-center gap-3">
                   <Link
                     to={`/my-trips/${trip.id}`}
-                    className="inline-flex items-center gap-1.5 rounded-[2px] border border-[#13152C] bg-[#13152C] px-4 py-2 font-cinzel text-[11px] tracking-wider uppercase text-[#DFB76C] hover:bg-[#1B1E3D] hover:border-[#DFB76C] transition-all"
+                    className="inline-flex items-center gap-1.5 rounded-[2px] border border-[#DFB76C]/40 bg-[#13152C] px-4 py-2 font-cinzel text-[11px] tracking-wider uppercase text-[#DFB76C] hover:bg-[#DFB76C] hover:text-[#13152C] transition-all font-semibold"
                   >
-                    View Folio &rarr;
+                    Trip Details &rarr;
                   </Link>
                   {trip.status === 'CONFIRMED' && (
                     <button
                       onClick={() => setCancellingTrip(trip)}
-                      className="rounded-[2px] border border-rose-300/40 bg-rose-50 px-3 py-2 font-cinzel text-[10px] tracking-wider uppercase text-rose-700 hover:bg-rose-100 transition-all cursor-pointer"
+                      className="rounded-[2px] border border-rose-500/40 bg-rose-950/40 px-3 py-2 font-cinzel text-[10px] tracking-wider uppercase text-rose-300 hover:bg-rose-900/60 transition-all cursor-pointer"
                     >
                       Cancel
                     </button>
