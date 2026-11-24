@@ -342,7 +342,20 @@ class AnalyticsService:
             status = r.get("status", "CONFIRMED")
             status_counts[status] = status_counts.get(status, 0) + 1
             
-            source = r.get("booking_source", "WEBSITE")
+            raw_source = r.get("booking_source") or r.get("source") or "Direct Website"
+            source_mapping = {
+                "WEBSITE": "Direct Website",
+                "DIRECT": "Direct Website",
+                "MARKETPLACE": "Nexgile Marketplace",
+                "MOBILE_APP": "Nexgile Marketplace",
+                "CORPORATE": "Corporate & Groups",
+                "CORPORATE_ACCOUNT": "Corporate & Groups",
+                "OTA": "Global OTAs / GDS",
+                "CHANNEL_MANAGER": "Global OTAs / GDS",
+                "WALK_IN": "Front Desk / Walk-in",
+                "FRONT_DESK": "Front Desk / Walk-in",
+            }
+            source = source_mapping.get(str(raw_source).upper(), raw_source)
             source_counts[source] = source_counts.get(source, 0) + 1
             
             total_nights += int(r.get("nights", 1))
@@ -352,7 +365,7 @@ class AnalyticsService:
 
         bookings_by_source = [
             {"source": k, "count": v, "percentage": round((v / total_bookings) * 100.0, 1) if total_bookings > 0 else 0.0}
-            for k, v in source_counts.items() if v > 0 or total_bookings == 0
+            for k, v in sorted(source_counts.items(), key=lambda x: x[1], reverse=True) if v > 0 or total_bookings == 0
         ]
 
         # Trend over past 14 days
