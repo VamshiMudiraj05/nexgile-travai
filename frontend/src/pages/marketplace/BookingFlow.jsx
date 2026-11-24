@@ -181,6 +181,7 @@ export default function BookingFlow() {
         const scriptLoaded = await paymentService.loadRazorpayScript();
 
         if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
+          const cleanPhone = (phone || '9876543210').replace(/\D/g, '').slice(-10) || '9876543210';
           const options = {
             key: orderData.key_id,
             amount: orderData.amount,
@@ -188,6 +189,14 @@ export default function BookingFlow() {
             name: 'Nexgile TravAI',
             description: `Reservation #${resResponse.booking_reference}`,
             order_id: orderData.order_id,
+            prefill: {
+              name: `${firstName} ${lastName}`.trim() || 'Resident Guest',
+              email: email || 'traveler@nexgile.com',
+              contact: cleanPhone,
+            },
+            theme: {
+              color: '#DFB76C',
+            },
             handler: async function (response) {
               try {
                 setBookingLoading(true);

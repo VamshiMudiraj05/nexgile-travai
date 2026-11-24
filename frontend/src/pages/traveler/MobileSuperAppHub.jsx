@@ -195,6 +195,7 @@ export default function MobileSuperAppHub() {
 
       if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
         setPaymentStatusMsg('Awaiting Razorpay Checkout completion...');
+        const cleanPhone = (user?.phone || '9876543210').replace(/\D/g, '').slice(-10) || '9876543210';
         const options = {
           key: orderData.key_id,
           amount: orderData.amount,
@@ -202,6 +203,14 @@ export default function MobileSuperAppHub() {
           name: 'Nexgile TravAI',
           description: chosenPkg.description,
           order_id: orderData.order_id,
+          prefill: {
+            name: user?.name || 'Resident Traveler',
+            email: user?.email || 'traveler@nexgile.com',
+            contact: cleanPhone,
+          },
+          theme: {
+            color: '#DFB76C',
+          },
           handler: async function (response) {
             try {
               setPaymentStatusMsg('Verifying payment signature with server...');
