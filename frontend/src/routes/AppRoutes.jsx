@@ -121,6 +121,7 @@ export const AppRoutes = () => {
         <Route path="marketplace/multimodal" element={<MultimodalMarketplace />} />
         <Route path="marketplace/properties/:property_id" element={<MarketplacePropertyDetail />} />
         <Route path="marketplace/book" element={<BookingFlow />} />
+        <Route path="marketplace/checkout" element={<BookingFlow />} />
         <Route path="my-trips" element={<MyTrips />} />
         <Route path="my-trips/:reservation_id" element={<TripDetail />} />
         <Route path="loyalty" element={<Loyalty />} />

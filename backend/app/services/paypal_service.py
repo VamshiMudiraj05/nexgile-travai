@@ -53,24 +53,34 @@ class PayPalService:
     ) -> Dict[str, Any]:
         """Create a PayPal v2 Checkout Order."""
         token = await self.get_access_token()
-        formatted_amount = f"{amount:.2f}"
+
+        # PayPal REST API does not support INR directly. Convert INR to USD (₹86 = $1 USD)
+        paypal_currency = currency.upper()
+        paypal_amount = amount
+        item_description = description
+        if paypal_currency == "INR":
+            paypal_currency = "USD"
+            paypal_amount = max(round(amount / 86.0, 2), 1.0)
+            item_description = f"{description[:80]} (₹{amount:,.0f} ~ ${paypal_amount:.2f} USD)"
+
+        formatted_amount = f"{paypal_amount:.2f}"
 
         headers = {
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
         }
 
-        return_url = f"http://localhost:5173/marketplace/book?paypal_return=true&reservation_id={reservation_id}" if reservation_id else "http://localhost:5173/my-trips"
-        cancel_url = f"http://localhost:5173/marketplace/book?paypal_cancel=true&reservation_id={reservation_id}" if reservation_id else "http://localhost:5173/marketplace"
+        return_url = f"http://localhost:5173/marketplace/checkout?paypal_return=true&reservation_id={reservation_id}" if reservation_id else "http://localhost:5173/my-trips"
+        cancel_url = f"http://localhost:5173/marketplace/checkout?paypal_cancel=true&reservation_id={reservation_id}" if reservation_id else "http://localhost:5173/marketplace"
 
         order_payload = {
             "intent": "CAPTURE",
             "purchase_units": [
                 {
                     "reference_id": booking_reference or "NGX-RES",
-                    "description": description[:120],
+                    "description": item_description[:120],
                     "amount": {
-                        "currency_code": currency,
+                        "currency_code": paypal_currency,
                         "value": formatted_amount
                     }
                 }
