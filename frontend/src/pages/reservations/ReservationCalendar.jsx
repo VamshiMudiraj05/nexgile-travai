@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ChevronLeft, 
   ChevronRight, 
-  Calendar as CalendarIcon, 
   Building2, 
   BedDouble, 
-  Loader2 
+  Loader2,
+  CalendarDays
 } from 'lucide-react';
 import { propertyService } from '../../services/propertyService';
 import { roomService } from '../../services/roomService';
 import { reservationService } from '../../services/reservationService';
+import { Calendar } from '@/components/ui/calendar';
 
 export const ReservationCalendar = () => {
   const [properties, setProperties] = useState([]);
@@ -19,6 +20,18 @@ export const ReservationCalendar = () => {
   const [reservations, setReservations] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
+  const [isCalendarPickerOpen, setIsCalendarPickerOpen] = useState(false);
+  const calendarRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (calendarRef.current && !calendarRef.current.contains(e.target)) {
+        setIsCalendarPickerOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Generate array of 14 consecutive days starting from startDate
   const days = Array.from({ length: 14 }, (_, i) => {
@@ -113,7 +126,7 @@ export const ReservationCalendar = () => {
           </select>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative" ref={calendarRef}>
           <button
             onClick={handlePrevDays}
             className="p-1.5 rounded-[2px] bg-[#13152C] border border-[#2C315E] text-white hover:bg-[#1B1E3D] cursor-pointer"
@@ -137,10 +150,38 @@ export const ReservationCalendar = () => {
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
 
-          <span className="font-cinzel text-xs font-semibold text-white/80 ml-2">
-            {days[0]?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} —{' '}
-            {days[days.length - 1]?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-          </span>
+          {/* EasyUI Interactive Calendar Trigger */}
+          <button
+            type="button"
+            onClick={() => setIsCalendarPickerOpen(!isCalendarPickerOpen)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] bg-[#1B1E3D] hover:bg-[#24284F] border border-[#2C315E] hover:border-[#DFB76C]/60 text-[#DFB76C] text-xs font-cinzel font-semibold tracking-wider transition-all cursor-pointer ml-1 shadow-xs"
+            title="Click to jump to date using EasyUI Calendar"
+          >
+            <CalendarDays className="w-3.5 h-3.5 text-[#DFB76C]" />
+            <span>
+              {days[0]?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} —{' '}
+              {days[days.length - 1]?.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            </span>
+          </button>
+
+          {/* EasyUI Calendar Gliding Pill Popover */}
+          {isCalendarPickerOpen && (
+            <div className="absolute right-0 top-full mt-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="relative">
+                <Calendar
+                  mode="single"
+                  value={startDate}
+                  onChange={(d) => {
+                    if (d) {
+                      setStartDate(d);
+                      setIsCalendarPickerOpen(false);
+                    }
+                  }}
+                  className="shadow-2xl border-[#DFB76C]/40"
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

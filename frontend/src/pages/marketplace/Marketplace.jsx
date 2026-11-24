@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Search,
   MapPin,
-  Calendar,
+  Calendar as CalendarIcon,
   Users,
-  Star,
   Sparkles,
   ArrowRight,
   Building2,
@@ -15,6 +14,7 @@ import { marketplaceService } from '../../services/marketplaceService';
 import { travelerService } from '../../services/travelerService';
 import StarRating from '../../components/StarRating';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { Calendar as EasyUICalendar } from '@/components/ui/calendar';
 
 export default function Marketplace() {
   const navigate = useNavigate();
@@ -30,6 +30,35 @@ export default function Marketplace() {
   const [children, setChildren] = useState(0);
   const [rooms, setRooms] = useState(1);
   const [sortBy, setSortBy] = useState('price_asc');
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const datePickerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (datePickerRef.current && !datePickerRef.current.contains(e.target)) {
+        setIsDatePickerOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const dateRange = {
+    from: checkIn ? new Date(checkIn + 'T00:00:00') : null,
+    to: checkOut ? new Date(checkOut + 'T00:00:00') : null,
+  };
+
+  const handleRangeSelect = (range) => {
+    if (range?.from) {
+      const cinStr = range.from.toISOString().split('T')[0];
+      setCheckIn(cinStr);
+      if (range.to) {
+        const coutStr = range.to.toISOString().split('T')[0];
+        setCheckOut(coutStr);
+        setIsDatePickerOpen(false);
+      }
+    }
+  };
 
   useEffect(() => {
     // Set default dates: check-in today + 3 days, check-out today + 6 days
@@ -115,32 +144,41 @@ export default function Marketplace() {
             </div>
           </div>
 
-          {/* Check-In */}
-          <div className="flex items-center gap-2.5 rounded-[2px] bg-[#1B1E3D] px-3.5 py-2 border border-[#2C315E]">
-            <Calendar size={16} className="text-[#DFB76C] shrink-0" />
-            <div className="min-w-0 flex-1">
-              <label className="block font-cinzel text-[9px] tracking-wider uppercase text-[#DFB76C]">Arrival</label>
-              <input
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                className="w-full bg-transparent text-xs font-semibold text-white focus:outline-none [color-scheme:dark]"
-              />
+          {/* Stay Dates (Arrival & Departure with EasyUI Calendar Range Picker) */}
+          <div className="relative sm:col-span-2" ref={datePickerRef}>
+            <div
+              onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+              className="flex items-center gap-2.5 rounded-[2px] bg-[#1B1E3D] px-3.5 py-2 border border-[#2C315E] hover:border-[#DFB76C]/60 cursor-pointer transition-colors h-full select-none"
+            >
+              <CalendarIcon size={16} className="text-[#DFB76C] shrink-0" />
+              <div className="min-w-0 flex-1 grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block font-cinzel text-[9px] tracking-wider uppercase text-[#DFB76C]">Arrival</label>
+                  <p className="text-xs font-semibold text-white truncate">
+                    {checkIn ? new Date(checkIn + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Select Date'}
+                  </p>
+                </div>
+                <div className="border-l border-[#2C315E] pl-2">
+                  <label className="block font-cinzel text-[9px] tracking-wider uppercase text-[#DFB76C]">Departure</label>
+                  <p className="text-xs font-semibold text-white truncate">
+                    {checkOut ? new Date(checkOut + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Select Date'}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Check-Out */}
-          <div className="flex items-center gap-2.5 rounded-[2px] bg-[#1B1E3D] px-3.5 py-2 border border-[#2C315E]">
-            <Calendar size={16} className="text-[#DFB76C] shrink-0" />
-            <div className="min-w-0 flex-1">
-              <label className="block font-cinzel text-[9px] tracking-wider uppercase text-[#DFB76C]">Departure</label>
-              <input
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                className="w-full bg-transparent text-xs font-semibold text-white focus:outline-none [color-scheme:dark]"
-              />
-            </div>
+            {/* EasyUI Interactive Range Calendar Popover */}
+            {isDatePickerOpen && (
+              <div className="absolute left-0 top-full mt-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <EasyUICalendar
+                  mode="range"
+                  value={dateRange}
+                  onChange={handleRangeSelect}
+                  minDate={new Date()}
+                  className="shadow-2xl border-[#DFB76C]/50"
+                />
+              </div>
+            )}
           </div>
 
           {/* Guests & Rooms */}

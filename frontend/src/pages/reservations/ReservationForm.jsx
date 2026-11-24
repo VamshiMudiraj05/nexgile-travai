@@ -2,20 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
-  Save, 
   Loader2, 
   AlertCircle, 
-  CalendarCheck, 
-  Building2, 
-  User, 
-  BedDouble,
-  CheckCircle2
+  CalendarCheck
 } from 'lucide-react';
 import { propertyService } from '../../services/propertyService';
 import { guestService } from '../../services/guestService';
 import { roomTypeService } from '../../services/roomTypeService';
 import { reservationService } from '../../services/reservationService';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { Calendar } from '@/components/ui/calendar';
 
 export const ReservationForm = () => {
   const navigate = useNavigate();
@@ -31,24 +27,25 @@ export const ReservationForm = () => {
   const [availableRooms, setAvailableRooms] = useState([]);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
 
-  // Today and tomorrow dates in YYYY-MM-DD
-  const todayStr = new Date().toISOString().split('T')[0];
-  const tomorrowStr = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-
-  const [formData, setFormData] = useState({
-    property_id: '',
-    guest_id: initialGuestId,
-    room_type_id: '',
-    room_id: '',
-    check_in_date: todayStr,
-    check_out_date: tomorrowStr,
-    number_of_adults: 2,
-    number_of_children: 0,
-    number_of_rooms: 1,
-    rate_per_night: 5000,
-    special_requests: '',
-    source: 'DIRECT',
-    status: 'CONFIRMED',
+  const [formData, setFormData] = useState(() => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return {
+      property_id: '',
+      guest_id: initialGuestId,
+      room_type_id: '',
+      room_id: '',
+      check_in_date: today.toISOString().split('T')[0],
+      check_out_date: tomorrow.toISOString().split('T')[0],
+      number_of_adults: 2,
+      number_of_children: 0,
+      number_of_rooms: 1,
+      rate_per_night: 5000,
+      special_requests: '',
+      source: 'DIRECT',
+      status: 'CONFIRMED',
+    };
   });
 
   const [loading, setLoading] = useState(true);
@@ -170,6 +167,22 @@ export const ReservationForm = () => {
           rate_per_night: selectedRt.base_price || prev.rate_per_night,
         }));
       }
+    }
+  };
+
+  const calendarRange = {
+    from: formData.check_in_date ? new Date(formData.check_in_date + 'T00:00:00') : null,
+    to: formData.check_out_date ? new Date(formData.check_out_date + 'T00:00:00') : null,
+  };
+
+  const handleCalendarRangeChange = (range) => {
+    if (range?.from) {
+      const cin = range.from.toISOString().split('T')[0];
+      setFormData((prev) => ({
+        ...prev,
+        check_in_date: cin,
+        ...(range.to ? { check_out_date: range.to.toISOString().split('T')[0] } : {}),
+      }));
     }
   };
 
@@ -307,75 +320,95 @@ export const ReservationForm = () => {
           </div>
         </div>
 
-        {/* Section 2: Dates & Room Category */}
-        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-7 shadow-sm space-y-5">
-          <div className="border-b border-[#2C315E] pb-3">
-            <span className="eyebrow-label text-[#DFB76C]">Section 02</span>
-            <h2 className="text-lg font-editorial font-semibold text-white">
-              Stay Schedule & Suite Assignment
-            </h2>
+        {/* Section 2: Dates & Room Category with EasyUI Calendar */}
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-7 shadow-sm space-y-6">
+          <div className="border-b border-[#2C315E] pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span className="eyebrow-label text-[#DFB76C]">Section 02</span>
+              <h2 className="text-lg font-editorial font-semibold text-white">
+                Stay Schedule & Suite Assignment
+              </h2>
+            </div>
+            <span className="font-cinzel text-[10px] tracking-widest text-[#DFB76C] uppercase font-semibold">
+              Interactive Range Calendar
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className="block eyebrow-label text-white/80 mb-2">
-                Arrival Date *
-              </label>
-              <input
-                type="date"
-                name="check_in_date"
-                required
-                value={formData.check_in_date}
-                onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* EasyUI Range Calendar */}
+            <div className="lg:col-span-5 flex justify-center">
+              <Calendar
+                mode="range"
+                value={calendarRange}
+                onChange={handleCalendarRangeChange}
+                minDate={new Date()}
+                className="w-full max-w-sm border-[#2C315E] bg-[#1B1E3D] shadow-md"
               />
             </div>
 
-            <div>
-              <label className="block eyebrow-label text-white/80 mb-2">
-                Departure Date *
-              </label>
-              <input
-                type="date"
-                name="check_out_date"
-                required
-                value={formData.check_out_date}
-                onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
-              />
-            </div>
+            {/* Form Fields: Dates, Suite Category & Room Unit */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-3 rounded-[3px] bg-[#1B1E3D] border border-[#2C315E]">
+                  <label className="block eyebrow-label text-[#DFB76C] mb-1">
+                    Arrival Date *
+                  </label>
+                  <input
+                    type="date"
+                    name="check_in_date"
+                    required
+                    value={formData.check_in_date}
+                    onChange={handleChange}
+                    className="w-full bg-transparent text-white font-semibold text-xs focus:outline-none [color-scheme:dark]"
+                  />
+                </div>
 
-            <div>
-              <label className="block eyebrow-label text-white/80 mb-2">
-                Suite Category *
-              </label>
-              <select
-                name="room_type_id"
-                required
-                value={formData.room_type_id}
-                onChange={handleChange}
-                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
-              >
-                {roomTypes.map((rt) => (
-                  <option key={rt.id || rt._id} value={rt.id || rt._id}>
-                    {rt.name} ({rt.code}) &mdash; ₹{rt.base_price?.toLocaleString('en-IN')}/night
-                  </option>
-                ))}
-              </select>
-            </div>
+                <div className="p-3 rounded-[3px] bg-[#1B1E3D] border border-[#2C315E]">
+                  <label className="block eyebrow-label text-[#DFB76C] mb-1">
+                    Departure Date *
+                  </label>
+                  <input
+                    type="date"
+                    name="check_out_date"
+                    required
+                    value={formData.check_out_date}
+                    onChange={handleChange}
+                    className="w-full bg-transparent text-white font-semibold text-xs focus:outline-none [color-scheme:dark]"
+                  />
+                </div>
+              </div>
 
-            <div>
-              <label className="block eyebrow-label text-white/80 mb-2">
-                Available Physical Suite Unit *
-              </label>
-              <select
-                name="room_id"
-                required
-                value={formData.room_id}
-                onChange={handleChange}
-                disabled={isCheckingAvailability || availableRooms.length === 0}
-                className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] disabled:opacity-50 transition-all"
-              >
+              <div>
+                <label className="block eyebrow-label text-white/80 mb-2">
+                  Suite Category *
+                </label>
+                <select
+                  name="room_type_id"
+                  required
+                  value={formData.room_type_id}
+                  onChange={handleChange}
+                  className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
+                >
+                  {roomTypes.map((rt) => (
+                    <option key={rt.id || rt._id} value={rt.id || rt._id}>
+                      {rt.name} ({rt.code}) &mdash; ₹{rt.base_price?.toLocaleString('en-IN')}/night
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block eyebrow-label text-white/80 mb-2">
+                  Available Physical Suite Unit *
+                </label>
+                <select
+                  name="room_id"
+                  required
+                  value={formData.room_id}
+                  onChange={handleChange}
+                  disabled={isCheckingAvailability || availableRooms.length === 0}
+                  className="w-full px-3.5 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-white text-sm focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] disabled:opacity-50 transition-all"
+                >
                 {isCheckingAvailability ? (
                   <option>Verifying suite availability...</option>
                 ) : availableRooms.length === 0 ? (
@@ -433,6 +466,7 @@ export const ReservationForm = () => {
             </div>
           </div>
         </div>
+      </div>
 
         {/* Section 3: Pricing Summary Calculation */}
         <div className="bg-[#13152C] text-[#FAF6F0] border border-[#2C315E] rounded-[4px] p-7 shadow-md space-y-5">
