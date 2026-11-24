@@ -15,6 +15,7 @@ import { travelerService } from '../../services/travelerService';
 import StarRating from '../../components/StarRating';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Calendar as EasyUICalendar } from '@/components/ui/calendar';
+import { GooeyMenu } from '@/components/ui/gooey-menu';
 import { cn } from '@/lib/utils';
 
 export default function Marketplace() {
@@ -317,21 +318,33 @@ export default function Marketplace() {
             </p>
           </div>
 
-          {/* Sort Selector */}
+          {/* Tactile Liquid Sort Selector */}
           <div className="flex items-center gap-2">
             <SlidersHorizontal size={14} className="text-[#DFB76C]" />
-            <select
-              value={sortBy}
-              onChange={(e) => {
-                setSortBy(e.target.value);
+            <GooeyMenu
+              width={200}
+              align="end"
+              options={['Rate: Low to High', 'Rate: High to Low', 'Guest Star Rating']}
+              value={
+                sortBy === 'price_desc'
+                  ? 'Rate: High to Low'
+                  : sortBy === 'rating'
+                  ? 'Guest Star Rating'
+                  : 'Rate: Low to High'
+              }
+              triggerStyle={{ height: 36, paddingLeft: 14, paddingRight: 14, borderRadius: 2 }}
+              surfaceClassName="bg-[#1B1E3D]"
+              onSelect={(opt) => {
+                const nextSort =
+                  opt === 'Rate: High to Low'
+                    ? 'price_desc'
+                    : opt === 'Guest Star Rating'
+                    ? 'rating'
+                    : 'price_asc';
+                setSortBy(nextSort);
                 fetchCatalogAndRecommendations(checkIn, checkOut);
               }}
-              className="rounded-[2px] border border-[#2C315E] bg-[#1B1E3D] px-3 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-[#DFB76C] cursor-pointer [color-scheme:dark]"
-            >
-              <option value="price_asc" className="bg-[#13152C] text-white">Rate: Low to High</option>
-              <option value="price_desc" className="bg-[#13152C] text-white">Rate: High to Low</option>
-              <option value="rating" className="bg-[#13152C] text-white">Guest Star Rating</option>
-            </select>
+            />
           </div>
         </div>
 

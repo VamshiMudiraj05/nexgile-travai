@@ -19,6 +19,7 @@ import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { EmptyState } from '../../components/EmptyState';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
 import { useAuth } from '../../hooks/useAuth';
+import { GooeyMenu } from '@/components/ui/gooey-menu';
 
 export const PropertyList = () => {
   const { user } = useAuth();
@@ -121,19 +122,30 @@ export const PropertyList = () => {
           />
         </form>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <select
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
+        <div className="flex items-center gap-3 w-full sm:w-auto z-20">
+          <GooeyMenu
+            width={220}
+            options={['All Operational Statuses', 'Active Portfolio', 'Archived Portfolio']}
+            value={
+              statusFilter === 'ACTIVE'
+                ? 'Active Portfolio'
+                : statusFilter === 'INACTIVE'
+                ? 'Archived Portfolio'
+                : 'All Operational Statuses'
+            }
+            triggerStyle={{ height: 38, paddingLeft: 14, paddingRight: 14, borderRadius: 2 }}
+            surfaceClassName="bg-[#1B1E3D]"
+            onSelect={(opt) => {
+              const val =
+                opt === 'Active Portfolio'
+                  ? 'ACTIVE'
+                  : opt === 'Archived Portfolio'
+                  ? 'INACTIVE'
+                  : '';
+              setStatusFilter(val);
               setPage(1);
             }}
-            className="w-full sm:w-auto px-3.5 py-2 luxury-input text-xs font-semibold bg-[#1B1E3D] cursor-pointer"
-          >
-            <option value="">All Operational Statuses</option>
-            <option value="ACTIVE">Active Portfolio</option>
-            <option value="INACTIVE">Archived Portfolio</option>
-          </select>
+          />
         </div>
       </div>
 

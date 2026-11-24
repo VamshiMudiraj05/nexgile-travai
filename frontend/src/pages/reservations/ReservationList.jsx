@@ -19,6 +19,7 @@ import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { EmptyState } from '../../components/EmptyState';
 import { Pagination } from '../../components/Pagination';
 import { ReservationCalendar } from './ReservationCalendar';
+import { GooeyMenu } from '@/components/ui/gooey-menu';
 
 export const ReservationList = () => {
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'calendar'
@@ -160,23 +161,45 @@ export const ReservationList = () => {
               </div>
 
               {/* Status Filter */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 z-20">
                 <Filter className="w-4 h-4 text-[#DFB76C]" />
-                <select
-                  value={statusFilter}
-                  onChange={(e) => {
-                    setStatusFilter(e.target.value);
+                <GooeyMenu
+                  width={210}
+                  options={[
+                    'All Reservation Statuses',
+                    'Confirmed',
+                    'Checked In',
+                    'Checked Out',
+                    'Pending',
+                    'Cancelled',
+                  ]}
+                  value={
+                    statusFilter === 'CONFIRMED'
+                      ? 'Confirmed'
+                      : statusFilter === 'CHECKED_IN'
+                      ? 'Checked In'
+                      : statusFilter === 'CHECKED_OUT'
+                      ? 'Checked Out'
+                      : statusFilter === 'PENDING'
+                      ? 'Pending'
+                      : statusFilter === 'CANCELLED'
+                      ? 'Cancelled'
+                      : 'All Reservation Statuses'
+                  }
+                  triggerStyle={{ height: 38, paddingLeft: 12, paddingRight: 12, borderRadius: 2 }}
+                  surfaceClassName="bg-[#1B1E3D]"
+                  onSelect={(opt) => {
+                    const statusMap = {
+                      'Confirmed': 'CONFIRMED',
+                      'Checked In': 'CHECKED_IN',
+                      'Checked Out': 'CHECKED_OUT',
+                      'Pending': 'PENDING',
+                      'Cancelled': 'CANCELLED',
+                    };
+                    setStatusFilter(statusMap[opt] || '');
                     setPage(1);
                   }}
-                  className="luxury-input text-xs font-semibold bg-[#1B1E3D] cursor-pointer"
-                >
-                  <option value="">All Reservation Statuses</option>
-                  <option value="CONFIRMED">Confirmed</option>
-                  <option value="CHECKED_IN">Checked In</option>
-                  <option value="CHECKED_OUT">Checked Out</option>
-                  <option value="PENDING">Pending</option>
-                  <option value="CANCELLED">Cancelled</option>
-                </select>
+                />
               </div>
             </div>
 

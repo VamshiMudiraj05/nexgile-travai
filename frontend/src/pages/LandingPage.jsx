@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { Meteors } from '@/components/ui/meteors';
+import { GooeyMenu } from '@/components/ui/gooey-menu';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -64,21 +65,29 @@ export default function LandingPage() {
           {/* User Auth CTAs */}
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
-              <>
-                <Link
-                  to="/dashboard"
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-[11px] font-bold tracking-[0.16em] uppercase shadow-sm transition"
-                >
-                  <span>Dashboard</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-                <button
-                  onClick={() => logout()}
-                  className="px-2.5 py-1 text-white/60 hover:text-white font-cinzel text-[10px] tracking-wider uppercase transition-colors"
-                >
-                  Sign Out
-                </button>
-              </>
+              <GooeyMenu
+                width={190}
+                align="end"
+                triggerLabel="Open account menu"
+                triggerStyle={{ height: 34, paddingLeft: 14, paddingRight: 14, borderRadius: 2 }}
+                surfaceClassName="bg-[#13152C]"
+                triggerClassName="bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-[11px] font-bold tracking-[0.16em] uppercase flex items-center gap-1.5 shadow-sm"
+                trigger={
+                  <span className="flex items-center gap-1.5 font-cinzel text-[11px] font-bold tracking-[0.16em] uppercase text-[#13152C]">
+                    <span>Account</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                }
+                options={['Executive Dashboard', 'AI Concierge', 'Sign Out']}
+                optionClassName={(option) =>
+                  option === 'Sign Out' ? 'text-rose-400 hover:text-rose-300' : undefined
+                }
+                onSelect={(opt) => {
+                  if (opt === 'Sign Out') logout();
+                  else if (opt === 'Executive Dashboard') navigate('/dashboard');
+                  else if (opt === 'AI Concierge') navigate('/concierge');
+                }}
+              />
             ) : (
               <div className="flex items-center gap-2.5">
                 <Link

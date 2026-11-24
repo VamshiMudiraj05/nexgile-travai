@@ -23,6 +23,7 @@ import { RoomModal } from './RoomModal';
 import { RoomStatusModal } from './RoomStatusModal';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
 import { useAuth } from '../../hooks/useAuth';
+import { GooeyMenu } from '@/components/ui/gooey-menu';
 
 export const RoomList = () => {
   const { user } = useAuth();
@@ -168,24 +169,49 @@ export const RoomList = () => {
           </div>
 
           {/* Status Filter */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 z-20">
             <Filter className="w-4 h-4 text-[#DFB76C] flex-shrink-0" />
-            <select
-              value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value);
+            <GooeyMenu
+              width={200}
+              options={[
+                'All Statuses',
+                'Available',
+                'Occupied',
+                'Reserved',
+                'Cleaning',
+                'Maintenance',
+                'Out of Order',
+              ]}
+              value={
+                statusFilter === 'AVAILABLE'
+                  ? 'Available'
+                  : statusFilter === 'OCCUPIED'
+                  ? 'Occupied'
+                  : statusFilter === 'RESERVED'
+                  ? 'Reserved'
+                  : statusFilter === 'CLEANING'
+                  ? 'Cleaning'
+                  : statusFilter === 'MAINTENANCE'
+                  ? 'Maintenance'
+                  : statusFilter === 'OUT_OF_ORDER'
+                  ? 'Out of Order'
+                  : 'All Statuses'
+              }
+              triggerStyle={{ height: 38, paddingLeft: 12, paddingRight: 12, borderRadius: 2 }}
+              surfaceClassName="bg-[#1B1E3D]"
+              onSelect={(opt) => {
+                const statusMap = {
+                  'Available': 'AVAILABLE',
+                  'Occupied': 'OCCUPIED',
+                  'Reserved': 'RESERVED',
+                  'Cleaning': 'CLEANING',
+                  'Maintenance': 'MAINTENANCE',
+                  'Out of Order': 'OUT_OF_ORDER',
+                };
+                setStatusFilter(statusMap[opt] || '');
                 setPage(1);
               }}
-              className="luxury-input text-xs font-semibold bg-[#1B1E3D] cursor-pointer"
-            >
-              <option value="">All Statuses</option>
-              <option value="AVAILABLE">Available</option>
-              <option value="OCCUPIED">Occupied</option>
-              <option value="RESERVED">Reserved</option>
-              <option value="CLEANING">Cleaning</option>
-              <option value="MAINTENANCE">Maintenance</option>
-              <option value="OUT_OF_ORDER">Out of Order</option>
-            </select>
+            />
           </div>
         </div>
 

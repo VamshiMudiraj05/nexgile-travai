@@ -30,8 +30,8 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { DynamicIsland } from '@/components/ui/dynamic-island';
 import { RainbowButton } from '@/components/ui/rainbow-button';
+import { GooeyMenu } from '@/components/ui/gooey-menu';
 import { motion } from 'framer-motion';
 
 export const AdminLayout = () => {
@@ -262,10 +262,40 @@ export const AdminLayout = () => {
           </div>
         </Link>
         <div className="flex items-center gap-3">
-          <DynamicIsland
-            name={displayName}
-            role={user?.role || 'TRAVELER'}
-            onLogout={handleLogout}
+          <GooeyMenu
+            width={200}
+            align="end"
+            triggerLabel="Open profile menu"
+            triggerStyle={{ width: 34, height: 34, borderRadius: '50%', padding: 0 }}
+            surfaceClassName="bg-[#0D0E20]"
+            trigger={
+              <span
+                aria-hidden="true"
+                className="relative flex h-full w-full items-center justify-center rounded-full bg-[#1B1E3D] border border-[#DFB76C]/60 text-xs font-cinzel font-bold text-[#DFB76C] shadow-md"
+              >
+                {displayName.charAt(0).toUpperCase()}
+                <span className="absolute bottom-0 right-0 w-1.5 h-1.5 rounded-full bg-emerald-400 border border-[#0D0E20]" />
+              </span>
+            }
+            options={[
+              `${displayName}`,
+              isTraveler ? 'My Trips' : 'Dashboard',
+              'AI Concierge',
+              'Sign Out',
+            ]}
+            optionClassName={(option) =>
+              option === 'Sign Out'
+                ? 'text-rose-400 hover:text-rose-300'
+                : option === displayName
+                ? 'text-[#DFB76C] font-semibold text-xs border-b border-[#2C315E]/40 pb-1 pointer-events-none'
+                : undefined
+            }
+            onSelect={(opt) => {
+              if (opt === 'Sign Out') handleLogout();
+              else if (opt === 'My Trips') navigate('/traveler/trips');
+              else if (opt === 'Dashboard') navigate(homePath);
+              else if (opt === 'AI Concierge') navigate('/concierge');
+            }}
           />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -376,10 +406,41 @@ export const AdminLayout = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <DynamicIsland
-              name={displayName}
-              role={user?.role || 'TRAVELER'}
-              onLogout={handleLogout}
+            <GooeyMenu
+              width={220}
+              align="end"
+              triggerLabel="Open profile menu"
+              triggerStyle={{ width: 38, height: 38, borderRadius: '50%', padding: 0 }}
+              surfaceClassName="bg-[#0D0E20]"
+              trigger={
+                <span
+                  aria-hidden="true"
+                  className="relative flex h-full w-full items-center justify-center rounded-full bg-[#1B1E3D] border border-[#DFB76C]/60 text-xs font-cinzel font-bold text-[#DFB76C] shadow-md hover:border-[#DFB76C] transition-colors"
+                  title={`${displayName} (${user?.role || 'TRAVELER'})`}
+                >
+                  {displayName.charAt(0).toUpperCase()}
+                  <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-[#0D0E20]" />
+                </span>
+              }
+              options={[
+                `${displayName}`,
+                isTraveler ? 'My Trips & Bookings' : 'Executive Dashboard',
+                'AI Concierge',
+                'Sign Out',
+              ]}
+              optionClassName={(option) =>
+                option === 'Sign Out'
+                  ? 'text-rose-400 hover:text-rose-300 hover:bg-rose-950/30'
+                  : option === displayName
+                  ? 'text-[#DFB76C] font-semibold text-xs border-b border-[#2C315E]/40 pb-1 mb-1 pointer-events-none'
+                  : undefined
+              }
+              onSelect={(opt) => {
+                if (opt === 'Sign Out') handleLogout();
+                else if (opt === 'My Trips & Bookings') navigate('/traveler/trips');
+                else if (opt === 'Executive Dashboard') navigate(homePath);
+                else if (opt === 'AI Concierge') navigate('/concierge');
+              }}
             />
           </div>
         </header>
