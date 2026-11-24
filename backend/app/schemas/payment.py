@@ -14,11 +14,14 @@ class CreditPackage(BaseModel):
 
 
 class PaymentConfigResponse(BaseModel):
-    razorpay_key_id: str
+    razorpay_key_id: Optional[str] = None
+    paypal_client_id: Optional[str] = None
+    paypal_mode: Optional[str] = "sandbox"
     currency: str = "INR"
     mode: str = "test"
 
 
+# --- Razorpay Schemas ---
 class RazorpayCreateOrderRequest(BaseModel):
     package_id: Optional[str] = Field(default=None, description="Credit package ID for wallet top-up")
     reservation_id: Optional[str] = Field(default=None, description="Reservation ID for hotel booking checkout")
@@ -55,3 +58,40 @@ class RazorpayVerifyPaymentResponse(BaseModel):
     credits_added: Optional[int] = None
     reservation_id: Optional[str] = None
     booking_reference: Optional[str] = None
+
+
+# --- PayPal Schemas ---
+class PayPalCreateOrderRequest(BaseModel):
+    reservation_id: Optional[str] = None
+    amount: float = Field(..., gt=0, description="Amount in USD or local currency")
+    currency: str = Field(default="USD", description="Currency code (USD, EUR, GBP, INR, etc.)")
+    booking_reference: Optional[str] = None
+    description: Optional[str] = "Nexgile-TravAI Hotel Stay"
+    return_url: Optional[str] = None
+    cancel_url: Optional[str] = None
+
+
+class PayPalCreateOrderResponse(BaseModel):
+    order_id: str
+    status: str
+    approval_url: Optional[str] = None
+    amount: float
+    currency: str
+
+
+class PayPalCaptureOrderRequest(BaseModel):
+    order_id: str
+    reservation_id: str
+
+
+class PayPalCaptureOrderResponse(BaseModel):
+    success: bool
+    status: str
+    order_id: str
+    capture_id: Optional[str] = None
+    payer_email: Optional[str] = None
+    amount: float
+    currency: str
+    reservation_id: str
+    booking_reference: str
+    message: str

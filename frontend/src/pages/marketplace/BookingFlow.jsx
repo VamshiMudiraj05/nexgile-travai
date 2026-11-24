@@ -16,7 +16,7 @@ import { paymentService } from '../../services/paymentService';
 import { useAuth } from '../../hooks/useAuth';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Calendar } from '@/components/ui/calendar';
-import { WalletBalance, RazorpayMark, RazorpayIcon, NexgileMark, WiseMark } from '@/components/ui/wallet-balance';
+import { WalletBalance, RazorpayMark, RazorpayIcon, PayPalIcon, NexgileMark, WiseMark } from '@/components/ui/wallet-balance';
 
 export default function BookingFlow() {
   const [searchParams] = useSearchParams();
@@ -107,12 +107,62 @@ export default function BookingFlow() {
   };
 
   useEffect(() => {
-    if (propertyId && roomTypeId) {
+    const isPaypalReturn = searchParams.get('paypal_return') === 'true';
+    const isPaypalCancel = searchParams.get('paypal_cancel') === 'true';
+    const reservationId = searchParams.get('reservation_id');
+    const paypalToken = searchParams.get('token'); // PayPal Order ID
+
+    if (isPaypalReturn && reservationId) {
+      handlePayPalReturn(paypalToken, reservationId);
+    } else if (isPaypalCancel) {
+      setErrorMessage('PayPal checkout was cancelled. You can retry payment anytime.');
+      if (propertyId && roomTypeId) {
+        fetchDetails();
+      } else {
+        setLoading(false);
+      }
+    } else if (propertyId && roomTypeId) {
       fetchDetails();
     } else {
       setLoading(false);
     }
   }, [searchParams, propertyId, roomTypeId]);
+
+  const handlePayPalReturn = async (orderId, resId) => {
+    try {
+      setLoading(true);
+      if (orderId) {
+        try {
+          await paymentService.capturePayPalOrder({
+            order_id: orderId,
+            reservation_id: resId,
+          });
+        } catch (capErr) {
+          console.warn('PayPal capture during return callback:', capErr);
+        }
+      }
+
+      // Fetch confirmed reservation details
+      const resData = await travelerService.getBookingDetails(resId);
+      setConfirmedBooking({
+        booking_reference: resData.booking_reference,
+        property_name: resData.property_name || 'Confirmed Stay',
+        room_number: resData.room_number || 'Auto-Assigned',
+        room_type_name: resData.room_type_name || 'Standard Suite',
+        guest_name: `${resData.guest_first_name || ''} ${resData.guest_last_name || ''}`.trim() || 'Resident Guest',
+        check_in_date: resData.check_in_date,
+        check_out_date: resData.check_out_date,
+        nights: resData.number_of_nights || 1,
+        total_amount: resData.total_amount,
+        payment_method: 'PAYPAL',
+      });
+    } catch (err) {
+      console.error('Failed to verify PayPal return flow:', err);
+      setErrorMessage('Could not verify PayPal payment status. Please check My Trips.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchDetails = async () => {
     try {
@@ -257,6 +307,26 @@ export default function BookingFlow() {
             reservation_id: reservationId,
           });
         }
+      } else if (paymentMethod === 'PAYPAL') {
+        const orderRes = await paymentService.createPayPalOrder({
+          reservation_id: reservationId,
+          amount: totalAmount,
+          currency: 'INR',
+          description: `Stay at ${property?.name || 'Hotel'} - ${roomType?.name || 'Suite'}`,
+          return_url: `${window.location.origin}/marketplace/checkout?paypal_return=true&reservation_id=${reservationId}`,
+          cancel_url: `${window.location.origin}/marketplace/checkout?paypal_cancel=true&property_id=${propertyId}&room_type_id=${roomTypeId}&check_in=${checkIn}&check_out=${checkOut}`,
+        });
+
+        if (orderRes?.approval_url) {
+          window.location.href = orderRes.approval_url;
+          return;
+        } else {
+          // Sandbox Fallback Simulator (instant capture)
+          await paymentService.capturePayPalOrder({
+            order_id: orderRes.order_id,
+            reservation_id: reservationId,
+          });
+        }
       }
 
       setConfirmedBooking({
@@ -309,7 +379,7 @@ export default function BookingFlow() {
               {confirmedBooking.booking_reference}
             </p>
             <div className="mt-2 inline-flex items-center gap-1.5 rounded-[2px] bg-[#13152C] border border-[#2C315E] px-3 py-1 text-[10px] font-cinzel font-semibold text-white">
-              <Lock size={11} className="text-[#DFB76C]" /> Paid via {paymentMethod === 'RAZORPAY' ? 'Razorpay Express' : 'Direct Card Simulation'}
+              <Lock size={11} className="text-[#DFB76C]" /> Paid via {paymentMethod === 'RAZORPAY' ? 'Razorpay Express' : paymentMethod === 'PAYPAL' ? 'PayPal Express' : 'Direct Card Simulation'}
             </div>
           </div>
 
@@ -524,61 +594,90 @@ export default function BookingFlow() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               {/* Razorpay Option */}
               <div
                 onClick={() => setPaymentMethod('RAZORPAY')}
-                className={`flex cursor-pointer items-center justify-between rounded-[3px] border p-5 transition-all ${
+                className={`flex cursor-pointer flex-col justify-between rounded-[3px] border p-4 transition-all ${
                   paymentMethod === 'RAZORPAY'
                     ? 'border-[#DFB76C] bg-[#1B1E3D] shadow-sm'
                     : 'border-[#2C315E] bg-[#13152C] hover:border-[#DFB76C]/50'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[3px] bg-[#0C2340] border border-[#0C83FD]/40 shadow-inner shrink-0">
-                    <RazorpayIcon className="w-5 h-5" />
+                <div className="flex items-start justify-between">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-[3px] bg-[#0C2340] border border-[#0C83FD]/40 shadow-inner shrink-0">
+                    <RazorpayIcon className="w-4 h-4" />
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-white flex items-center gap-1.5">
-                      Razorpay <span className="text-[10px] text-amber-400 font-mono font-normal">(Test Mode)</span>
-                    </p>
-                    <p className="text-[10px] text-white/60 font-cinzel">UPI &bull; NetBanking &bull; Cards</p>
-                  </div>
+                  <input
+                    type="radio"
+                    name="payment_method"
+                    checked={paymentMethod === 'RAZORPAY'}
+                    onChange={() => setPaymentMethod('RAZORPAY')}
+                    className="accent-[#DFB76C]"
+                  />
                 </div>
-                <input
-                  type="radio"
-                  name="payment_method"
-                  checked={paymentMethod === 'RAZORPAY'}
-                  onChange={() => setPaymentMethod('RAZORPAY')}
-                  className="accent-[#DFB76C]"
-                />
+                <div className="mt-3">
+                  <p className="text-xs font-bold text-white flex items-center gap-1">
+                    Razorpay <span className="text-[9px] text-amber-400 font-mono font-normal">(Test)</span>
+                  </p>
+                  <p className="text-[10px] text-white/60 font-cinzel mt-0.5">UPI &bull; NetBanking &bull; INR Cards</p>
+                </div>
+              </div>
+
+              {/* PayPal Option */}
+              <div
+                onClick={() => setPaymentMethod('PAYPAL')}
+                className={`flex cursor-pointer flex-col justify-between rounded-[3px] border p-4 transition-all ${
+                  paymentMethod === 'PAYPAL'
+                    ? 'border-[#DFB76C] bg-[#1B1E3D] shadow-sm'
+                    : 'border-[#2C315E] bg-[#13152C] hover:border-[#DFB76C]/50'
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-[3px] bg-[#001c38] border border-[#0079C1]/40 shadow-inner shrink-0">
+                    <PayPalIcon className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="radio"
+                    name="payment_method"
+                    checked={paymentMethod === 'PAYPAL'}
+                    onChange={() => setPaymentMethod('PAYPAL')}
+                    className="accent-[#DFB76C]"
+                  />
+                </div>
+                <div className="mt-3">
+                  <p className="text-xs font-bold text-white flex items-center gap-1">
+                    PayPal <span className="text-[9px] text-amber-400 font-mono font-normal">(Sandbox)</span>
+                  </p>
+                  <p className="text-[10px] text-white/60 font-cinzel mt-0.5">PayPal Wallet &bull; Global Cards</p>
+                </div>
               </div>
 
               {/* Demo Card Option */}
               <div
                 onClick={() => setPaymentMethod('DEMO_CARD')}
-                className={`flex cursor-pointer items-center justify-between rounded-[3px] border p-5 transition-all ${
+                className={`flex cursor-pointer flex-col justify-between rounded-[3px] border p-4 transition-all ${
                   paymentMethod === 'DEMO_CARD'
                     ? 'border-[#DFB76C] bg-[#1B1E3D] shadow-sm'
                     : 'border-[#2C315E] bg-[#13152C] hover:border-[#DFB76C]/50'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[3px] bg-[#0B0C1E] text-[#DFB76C]">
-                    <CreditCard size={18} />
+                <div className="flex items-start justify-between">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-[3px] bg-[#0B0C1E] text-[#DFB76C] border border-[#2C315E]">
+                    <CreditCard size={16} />
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-white">Direct Card Simulation</p>
-                    <p className="text-[10px] text-white/60 font-cinzel">Instant Test Checkout</p>
-                  </div>
+                  <input
+                    type="radio"
+                    name="payment_method"
+                    checked={paymentMethod === 'DEMO_CARD'}
+                    onChange={() => setPaymentMethod('DEMO_CARD')}
+                    className="accent-[#DFB76C]"
+                  />
                 </div>
-                <input
-                  type="radio"
-                  name="payment_method"
-                  checked={paymentMethod === 'DEMO_CARD'}
-                  onChange={() => setPaymentMethod('DEMO_CARD')}
-                  className="accent-[#DFB76C]"
-                />
+                <div className="mt-3">
+                  <p className="text-xs font-bold text-white">Direct Simulation</p>
+                  <p className="text-[10px] text-white/60 font-cinzel mt-0.5">Instant 1-Click Sandbox</p>
+                </div>
               </div>
             </div>
 
@@ -589,6 +688,15 @@ export default function BookingFlow() {
                 </p>
                 <p className="text-[11px] text-white/60 leading-relaxed">
                   Your transaction is processed via Razorpay Test Mode with server-side HMAC-SHA256 signature verification. Real money is never charged.
+                </p>
+              </div>
+            ) : paymentMethod === 'PAYPAL' ? (
+              <div className="rounded-[3px] border border-[#2C315E] bg-[#1B1E3D] p-4 text-xs text-white/80 space-y-1">
+                <p className="font-cinzel font-bold text-[#DFB76C]">
+                  PayPal Sandbox Checkout Active
+                </p>
+                <p className="text-[11px] text-white/60 leading-relaxed">
+                  Your reservation is authenticated securely through the official PayPal REST API v2 with automatic INR/USD exchange rate conversion (~₹86 = $1 USD).
                 </p>
               </div>
             ) : (
@@ -609,6 +717,8 @@ export default function BookingFlow() {
                 ? 'Securing Room & Capturing Payment...'
                 : paymentMethod === 'RAZORPAY'
                 ? `CONFIRM WITH RAZORPAY (₹${totalAmount.toLocaleString()}) →`
+                : paymentMethod === 'PAYPAL'
+                ? `CONFIRM WITH PAYPAL (₹${totalAmount.toLocaleString()}) →`
                 : `CONFIRM & PAY ₹${totalAmount.toLocaleString()} →`}
             </button>
           </div>

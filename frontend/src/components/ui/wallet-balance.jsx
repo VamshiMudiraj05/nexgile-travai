@@ -83,6 +83,36 @@ export function RazorpayMark() {
   );
 }
 
+export function PayPalIcon({ className = "h-[18px] w-[18px]" }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path
+        d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 2.59a.854.854 0 0 1 .843-.715h6.76c3.21 0 5.485 1.583 4.966 5.163-.443 3.056-2.52 4.795-5.59 4.795H8.766l-1.05 6.643a.64.64 0 0 1-.64.561z"
+        fill="#003087"
+      />
+      <path
+        d="M8.766 11.833h3.157c3.07 0 5.147-1.74 5.59-4.795.52-3.58-1.756-5.163-4.966-5.163H5.787a.854.854 0 0 0-.843.715l-1.39 8.814h3.608l1.604-.429z"
+        fill="#0079C1"
+      />
+      <path
+        d="M9.82 21.337h3.654a.754.754 0 0 0 .744-.632l.745-4.723a.754.754 0 0 1 .744-.632h1.564c3.07 0 5.147-1.739 5.59-4.795.337-2.327-.47-3.953-2.195-4.688a5.556 5.556 0 0 1-1.398 5.672c-.89.873-2.148 1.34-3.565 1.34H12.35l-1.89 8.458h-.64z"
+        fill="#00457C"
+      />
+    </svg>
+  );
+}
+
+export function PayPalMark() {
+  return (
+    <span className="flex items-center gap-[6px] text-white">
+      <PayPalIcon className="h-[18px] w-[18px]" />
+      <span className="text-[17px] font-bold tracking-tight text-[#0079C1]">
+        PayPal
+      </span>
+    </span>
+  );
+}
+
 export function NexgileMark() {
   return (
     <span className="flex items-center gap-[4px] text-[#DFB76C]">

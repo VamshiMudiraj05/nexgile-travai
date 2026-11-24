@@ -12,25 +12,32 @@ from app.schemas.payment import (
     RazorpayCreateOrderResponse,
     RazorpayVerifyPaymentRequest,
     RazorpayVerifyPaymentResponse,
+    PayPalCreateOrderRequest,
+    PayPalCreateOrderResponse,
+    PayPalCaptureOrderRequest,
+    PayPalCaptureOrderResponse,
 )
 from app.services.razorpay_service import razorpay_service
+from app.services.paypal_service import paypal_service
 from app.services.superapp_service import SuperAppService
 from app.services.loyalty_service import LoyaltyService
 from app.database.mongodb import get_database
 from app.core.logging import logger
 
-router = APIRouter(prefix="/payments", tags=["Payments & Razorpay Gateway"])
+router = APIRouter(prefix="/payments", tags=["Payments & Gateways"])
 
 
 @router.get(
     "/config",
     response_model=PaymentConfigResponse,
-    summary="Get Razorpay Public Client Configuration",
+    summary="Get Dual Gateway Public Configuration",
 )
 async def get_payment_config():
-    """Return public Razorpay Key ID and test mode for client initialization."""
+    """Return public Razorpay and PayPal configuration for client initialization."""
     return {
         "razorpay_key_id": razorpay_service.key_id,
+        "paypal_client_id": settings.PAYPAL_CLIENT_ID,
+        "paypal_mode": settings.PAYPAL_MODE,
         "currency": "INR",
         "mode": "test"
     }
@@ -327,4 +334,166 @@ async def verify_razorpay_payment(
         "credits_added": credits_added,
         "reservation_id": reservation_id,
         "booking_reference": booking_ref
+    }
+
+
+# ==========================================
+# PAYPAL GATEWAY ENDPOINTS
+# ==========================================
+
+@router.post(
+    "/paypal/create-order",
+    response_model=PayPalCreateOrderResponse,
+    summary="Create PayPal Checkout Order",
+)
+async def create_paypal_order(
+    payload: PayPalCreateOrderRequest,
+    current_user: Optional[UserResponse] = Depends(get_optional_current_user),
+):
+    """Initiate a PayPal Order via PayPal REST API v2."""
+    db = get_database()
+    amount = payload.amount
+    currency = payload.currency
+    booking_ref = payload.booking_reference or ""
+
+    # If reservation_id is provided, verify amount from DB
+    if payload.reservation_id and ObjectId.is_valid(payload.reservation_id):
+        res = await db.reservations.find_one({"_id": ObjectId(payload.reservation_id)})
+        if res:
+            amount = float(res.get("total_amount", amount))
+            booking_ref = res.get("booking_reference", booking_ref)
+
+    order_data = await paypal_service.create_order(
+        amount=amount,
+        currency=currency,
+        booking_reference=booking_ref,
+        description=payload.description or "Nexgile-TravAI Hotel Stay",
+        reservation_id=payload.reservation_id or ""
+    )
+
+    approval_url = None
+    for link in order_data.get("links", []):
+        if link.get("rel") == "approve":
+            approval_url = link.get("href")
+            break
+
+    # Record transaction in database
+    now = datetime.now(timezone.utc)
+    user_id = str(current_user.id) if current_user else "guest"
+    await db.payment_transactions.update_one(
+        {"order_id": order_data.get("id")},
+        {"$set": {
+            "order_id": order_data.get("id"),
+            "user_id": user_id,
+            "amount_inr": amount if currency.upper() == "INR" else round(amount * 86.0, 2),
+            "currency": currency,
+            "reservation_id": payload.reservation_id,
+            "status": "CREATED",
+            "payment_method": "PAYPAL",
+            "created_at": now,
+            "updated_at": now,
+        }},
+        upsert=True
+    )
+
+    return {
+        "order_id": order_data.get("id"),
+        "status": order_data.get("status", "CREATED"),
+        "approval_url": approval_url,
+        "amount": amount,
+        "currency": currency
+    }
+
+
+@router.post(
+    "/paypal/capture-order",
+    response_model=PayPalCaptureOrderResponse,
+    summary="Capture PayPal Payment & Update Reservation",
+)
+async def capture_paypal_order(
+    payload: PayPalCaptureOrderRequest,
+    current_user: Optional[UserResponse] = Depends(get_optional_current_user),
+):
+    """Capture authorized PayPal order, verify payment status, and update MongoDB reservation."""
+    db = get_database()
+
+    # 1. Capture on PayPal
+    capture_data = await paypal_service.capture_order(payload.order_id)
+    capture_status = capture_data.get("status")
+
+    if capture_status != "COMPLETED":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"PayPal order status is {capture_status}, payment was not completed."
+        )
+
+    # 2. Extract capture details
+    purchase_unit = capture_data.get("purchase_units", [{}])[0]
+    payments_obj = purchase_unit.get("payments", {})
+    captures = payments_obj.get("captures", [{}])
+    capture_id = captures[0].get("id") if captures else None
+    payer_email = capture_data.get("payer", {}).get("email_address")
+    amount_val = float(captures[0].get("amount", {}).get("value", 0.0)) if captures else 0.0
+    currency = captures[0].get("amount", {}).get("currency_code", "USD") if captures else "USD"
+
+    # 3. Update Reservation Document
+    res_id = payload.reservation_id
+    booking_ref = ""
+    now = datetime.now(timezone.utc)
+    now_iso = now.isoformat()
+
+    if ObjectId.is_valid(res_id):
+        res = await db.reservations.find_one({"_id": ObjectId(res_id)})
+        if res:
+            booking_ref = res.get("booking_reference", "")
+            await db.reservations.update_one(
+                {"_id": ObjectId(res_id)},
+                {"$set": {
+                    "status": "CONFIRMED",
+                    "payment_status": "PAID",
+                    "payment_details": {
+                        "gateway": "PAYPAL",
+                        "paypal_order_id": payload.order_id,
+                        "paypal_capture_id": capture_id,
+                        "payer_email": payer_email,
+                        "amount_paid": amount_val,
+                        "currency": currency,
+                        "paid_at": now_iso
+                    },
+                    "updated_at": now_iso
+                }}
+            )
+
+            # Award loyalty points for completed payment if user is logged in
+            if current_user:
+                total_amt = float(res.get("total_amount", amount_val))
+                await LoyaltyService.award_points_for_booking(str(current_user.id), booking_ref, total_amt)
+
+    # Update payment transaction record
+    await db.payment_transactions.update_one(
+        {"order_id": payload.order_id},
+        {"$set": {
+            "payment_id": capture_id,
+            "status": "SUCCESSFUL",
+            "reservation_id": res_id,
+            "booking_reference": booking_ref,
+            "payer_email": payer_email,
+            "updated_at": now
+        }},
+        upsert=True
+    )
+
+    logger.info(f"PayPal capture successful for reservation {res_id}, reference: {booking_ref}")
+
+    return {
+        "success": True,
+        "status": capture_status,
+        "order_id": payload.order_id,
+        "capture_id": capture_id,
+        "payer_email": payer_email,
+        "amount": amount_val,
+        "currency": currency,
+        "reservation_id": res_id,
+        "booking_reference": booking_ref,
+        "message": "Payment captured successfully via PayPal."
     }

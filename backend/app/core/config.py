@@ -28,6 +28,12 @@ class Settings(BaseSettings):
     RAZORPAY_KEY_SECRET: str = ""
     RAZORPAY_BASE_URL: str = "https://api.razorpay.com/v1"
 
+    # PayPal Configuration (Sandbox Mode)
+    PAYPAL_CLIENT_ID: str = "AeUZfiOiCnkMD9yws8LPCDPAHTH2U1Lg0BIZPVDZofCKkjSi1Av805VMzC8QGw3r2LYfXhYoK4tURZCo"
+    PAYPAL_CLIENT_SECRET: str = "EIAsQipLcF6_72n5wR6YUi0kLuFVAgboxMPcitD92X59-zAF81WaXVl3Tj6WA0XIrem1p1LOwaDzWTdQ"
+    PAYPAL_MODE: str = "sandbox"
+    PAYPAL_BASE_URL: str = "https://api-m.sandbox.paypal.com"
+
     # AI Concierge & LLM Configuration
     LLM_API_KEY: Optional[str] = None
     LLM_MODEL: str = "gpt-4o-mini"
