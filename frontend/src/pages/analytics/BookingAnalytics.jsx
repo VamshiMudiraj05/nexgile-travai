@@ -185,17 +185,17 @@ export default function BookingAnalytics() {
             </div>
 
             {/* Source Breakdown Donut */}
-            <div className="rounded-[4px] border border-[#2C315E] bg-[#13152C] p-6 shadow-sm">
+            <div className="rounded-[4px] border border-[#2C315E] bg-[#13152C] p-6 shadow-sm min-w-0">
               <span className="eyebrow-label text-[#DFB76C]">ORIGIN DISTRIBUTION</span>
               <h3 className="font-editorial text-xl font-bold text-white mt-0.5">Booking Acquisition Channels</h3>
               <p className="text-xs text-white/60 mb-5">Direct vs Marketplace vs Corporate share</p>
-              <div className="flex items-center justify-center pt-2">
+              <div className="flex items-center justify-center pt-1 w-full min-w-0">
                 <SvgDonutChart
                   data={data.bookings_by_source}
                   nameKey="source"
                   valueKey="count"
-                  size={200}
-                  strokeWidth={24}
+                  size={160}
+                  strokeWidth={20}
                   centerLabel="Bookings"
                 />
               </div>
