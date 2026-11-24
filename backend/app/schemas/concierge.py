@@ -38,7 +38,11 @@ class ActiveStaySummary(BaseModel):
 
 class ConciergeWelcomeResponse(BaseModel):
     traveler_name: str
+    role: Optional[str] = "TRAVELER"
+    role_title: Optional[str] = "VIP Guest Concierge"
+    role_description: Optional[str] = "Personal luxury travel assistant"
     active_stay: Optional[ActiveStaySummary] = None
-    loyalty_tier: str
-    loyalty_points: int
+    staff_metrics: Optional[Dict[str, Any]] = None
+    loyalty_tier: Optional[str] = "MEMBER"
+    loyalty_points: Optional[int] = 0
     quick_suggestions: List[str]

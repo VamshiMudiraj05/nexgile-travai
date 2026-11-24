@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Sparkles,
@@ -13,11 +13,14 @@ import {
   Crown,
   AlertCircle,
   RefreshCw,
-  Bell,
-  Utensils,
-  MapPin,
+  TrendingUp,
+  Receipt,
+  Layers,
+  Wrench,
+  Users,
   Compass,
-  Luggage,
+  Briefcase,
+  DollarSign
 } from 'lucide-react';
 import { conciergeService } from '../../services/conciergeService';
 import { useAuth } from '../../hooks/useAuth';
@@ -39,6 +42,8 @@ export default function Concierge() {
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  const userRole = (welcomeData?.role || user?.role || 'TRAVELER').toUpperCase();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -73,7 +78,7 @@ export default function Concierge() {
     setInputValue('');
     const userMsg = {
       id: `user-${Date.now()}`,
-      sender: 'traveler',
+      sender: 'user',
       text,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
@@ -84,7 +89,7 @@ export default function Concierge() {
 
     try {
       const historyPayload = updatedMessages.map((m) => ({
-        role: m.sender === 'traveler' ? 'user' : 'assistant',
+        role: m.sender === 'user' ? 'user' : 'assistant',
         content: m.text,
       }));
 
@@ -99,6 +104,7 @@ export default function Concierge() {
         sender: 'concierge',
         text: res.message,
         action: res.suggested_action,
+        poweredBy: res.powered_by,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
@@ -110,7 +116,7 @@ export default function Concierge() {
         {
           id: `bot-err-${Date.now()}`,
           sender: 'concierge',
-          text: 'Concierge is temporarily unavailable. You can still manage your reservation and requests from your trips dashboard.',
+          text: 'AI Copilot is currently recalibrating. You can continue managing your properties and operations through the menu.',
           isError: true,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
@@ -131,22 +137,21 @@ export default function Concierge() {
         await conciergeService.createServiceRequest({
           category: payload.category || 'CONCIERGE',
           item: payload.item || 'Special Request',
-          details: payload.details || 'Guest requested via AI Concierge',
+          details: payload.details || 'Guest requested via ASK NEXGILE',
           reservation_id: payload.reservation_id || stay?.reservation_id,
           property_id: payload.property_id || stay?.property_id,
           room_number: payload.room_number || stay?.room_number,
         });
 
-        setServiceNotification(`Your request for "${payload.item || 'Service'}" has been successfully submitted!`);
+        setServiceNotification(`Your request for "${payload.item || 'Service'}" has been submitted!`);
         setTimeout(() => setServiceNotification(null), 4500);
 
-        // Add confirmation reply from concierge
         setMessages((prev) => [
           ...prev,
           {
             id: `bot-conf-${Date.now()}`,
             sender: 'concierge',
-            text: `✓ I have registered your **${payload.item}** request with the estate desk for **Room ${payload.room_number || stay?.room_number || 'Suite'}**. Our staff has been notified.`,
+            text: `✓ Registered **${payload.item}** for **Room ${payload.room_number || stay?.room_number || 'Suite'}**. Hotel desk has been notified.`,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           },
         ]);
@@ -157,12 +162,14 @@ export default function Concierge() {
         } else {
           navigate('/my-trips');
         }
+      } else if (action.action_type === 'VIEW_MODULE' && action.payload?.route) {
+        navigate(action.payload.route);
       } else if (action.action_type === 'BROWSE_MARKETPLACE') {
         navigate('/marketplace');
       }
     } catch (err) {
-      console.error('Failed to execute concierge action:', err);
-      alert('Unable to process the request right now. Please try again or contact the front desk.');
+      console.error('Failed to execute action:', err);
+      alert('Unable to process the request right now. Please try again or use the main dashboard.');
     } finally {
       setActionInProgress(false);
     }
@@ -172,7 +179,110 @@ export default function Concierge() {
     handleSendMessage(prompt);
   };
 
+  // Role Profile Configuration
+  const roleProfile = useMemo(() => {
+    switch (userRole) {
+      case 'ADMIN':
+        return {
+          badge: 'EXECUTIVE OPERATIONS COPILOT',
+          title: 'Executive Operations Command',
+          subtitle: 'Enterprise Portfolio Analytics · Cross-Property Oversight across 21 Luxury Estates',
+          welcomeMsg: 'Connected to live enterprise MongoDB. Query portfolio occupancy, property capacity, executive revenue, or operational maintenance.',
+          assistantName: 'ASK NEXGILE · EXECUTIVE COPILOT',
+          quickActions: [
+            { title: 'PORTFOLIO SUMMARY', sub: '21 Estates Overview', prompt: 'Summarize portfolio occupancy and arrivals across all 21 properties.' },
+            { title: 'OCCUPANCY DRIFT', sub: 'Low Capacity Watch', prompt: 'Which properties currently have the lowest occupancy rate?' },
+            { title: 'MAINTENANCE QUEUE', sub: 'Work Orders', prompt: 'List any unresolved critical maintenance work orders.' },
+            { title: 'OPERATIONAL BRIEF', sub: 'Front Desk Sync', prompt: "Give me an executive briefing on today's front desk operations." },
+            { title: 'CHANNEL REVENUE', sub: 'Direct vs OTAs', prompt: 'How is direct website revenue performing compared to OTAs?' },
+            { title: 'RATE DIRECTIVES', sub: 'Yield Strategy', prompt: 'What are the active dynamic rate recommendations for our suites?' }
+          ]
+        };
+      case 'FRONT_DESK':
+        return {
+          badge: 'FRONT DESK COMMAND COPILOT',
+          title: 'Front Desk Operations & Guest Dispatch',
+          subtitle: 'Live Arrivals & Departures · In-House Folios · Turnaround Readiness',
+          welcomeMsg: 'Front Desk Command is live. Query scheduled guest arrivals, departures, available clean suites, or key billing folios.',
+          assistantName: 'ASK NEXGILE · FRONT DESK COPILOT',
+          quickActions: [
+            { title: "TODAY'S ARRIVALS", sub: 'Expected Check-ins', prompt: 'Who are the expected arrivals scheduled for today?' },
+            { title: 'READY SUITES', sub: 'Clean & Inspected', prompt: 'Which suites are clean, inspected, and ready for walk-ins?' },
+            { title: 'DEPARTURES TODAY', sub: 'Pending Check-outs', prompt: 'Which in-house guests are scheduled for check-out today?' },
+            { title: 'FOLIO BILLING', sub: 'Balance & Settle', prompt: 'How do I look up and settle a guest billing folio?' },
+            { title: 'ROOM TURNAROUND', sub: 'Dirty & In Progress', prompt: 'How many suites are currently dirty or in turnaround?' },
+            { title: 'GUEST TICKETS', sub: 'Towels & Requests', prompt: 'List active guest service requests for towels or amenities.' }
+          ]
+        };
+      case 'REVENUE_MANAGER':
+        return {
+          badge: 'REVENUE & YIELD COPILOT',
+          title: 'Revenue Strategy & Dynamic Yield Intelligence',
+          subtitle: 'Algorithmic Pricing Directives · ADR/RevPAR · Demand Velocity',
+          welcomeMsg: 'Algorithmic yield optimization engine is active. Query ADR, RevPAR, dynamic pricing recommendations, or rate restrictions.',
+          assistantName: 'ASK NEXGILE · REVENUE COPILOT',
+          quickActions: [
+            { title: 'YIELD DIRECTIVES', sub: '41 Recommendations', prompt: 'Explain the current dynamic rate recommendations for our luxury suites.' },
+            { title: 'DEMAND SURGE', sub: 'Weekend Optimization', prompt: 'Which properties should we apply weekend demand surge pricing to?' },
+            { title: 'VELOCITY TRENDS', sub: 'Booking Pace', prompt: 'Compare weekday vs weekend booking velocity trends.' },
+            { title: 'RATE PARITY', sub: 'OTA Surveillance', prompt: 'What is our current rate parity status across Booking.com and Expedia?' },
+            { title: 'DIRECT RATIO', sub: 'Commission Savings', prompt: 'What is our direct booking revenue ratio vs OTA commissions?' },
+            { title: 'ADR & REVPAR', sub: 'Estate Performance', prompt: 'Summarize our average daily rate across resort and palace properties.' }
+          ]
+        };
+      case 'FINANCE':
+        return {
+          badge: 'FINANCE & AUDIT COPILOT',
+          title: 'Hospitality Finance & Folio Audit Intelligence',
+          subtitle: 'Razorpay Gateway · Unsettled Folios · Corporate Ledger Accounting',
+          welcomeMsg: 'Financial auditing and folio reconciliation engine is online. Query transaction logs, pending folios, or corporate billing accounts.',
+          assistantName: 'ASK NEXGILE · FINANCE COPILOT',
+          quickActions: [
+            { title: 'GATEWAY SETTLEMENT', sub: 'Razorpay Connect', prompt: "Summarize today's Razorpay payment transactions and settlement status." },
+            { title: 'UNSETTLED FOLIOS', sub: 'Pending Balances', prompt: 'List active in-house reservations with pending folio balances.' },
+            { title: 'CORPORATE BILLING', sub: 'Invoices & Ledger', prompt: 'Show corporate billing contracts and expense invoice reconciliation.' },
+            { title: 'REVENUE AUDIT', sub: 'RevPAR Accounting', prompt: 'Explain our month-to-date RevPAR and room revenue performance.' },
+            { title: 'DISPUTE PROTOCOL', sub: 'Billing Chargebacks', prompt: 'What are the protocol guidelines for uncollected room balances?' },
+            { title: 'TAX COMPLIANCE', sub: 'GST & Hospitality', prompt: 'How are GST and luxury hospitality taxes calculated on folios?' }
+          ]
+        };
+      case 'HOUSEKEEPING':
+        return {
+          badge: 'HOUSEKEEPING COPILOT',
+          title: 'Room Turnaround & Inspection Dispatch',
+          subtitle: 'Cleaning Queues · Inspection Readiness · Amenity Replenishment',
+          welcomeMsg: 'Housekeeping turnaround dispatch is online. Query room cleaning priorities, inspection readiness, or guest amenity requests.',
+          assistantName: 'ASK NEXGILE · HOUSEKEEPING COPILOT',
+          quickActions: [
+            { title: 'DIRTY QUEUE', sub: 'Floor Turnaround', prompt: 'Which suites are currently marked DIRTY on Floor 1 and Floor 2?' },
+            { title: 'READY TO INSPECT', sub: 'Supervisor Queue', prompt: 'Show suites in turnaround ready for supervisor inspection.' },
+            { title: 'AMENITY REQUESTS', sub: 'Towels & Pillows', prompt: 'List all active guest requests for extra towels, linens, or amenities.' },
+            { title: 'VIP PROTOCOLS', sub: 'Presidential Suites', prompt: 'What are the standard turnover protocols for Presidential Suites?' },
+            { title: 'TURNAROUND PACE', sub: 'Cleaning Efficiency', prompt: 'How can we optimize suite turnaround velocity between check-outs?' },
+            { title: 'MAINTENANCE BLOCK', sub: 'Work Order Sync', prompt: 'Are there any suites with active maintenance blockers?' }
+          ]
+        };
+      default: // TRAVELER
+        return {
+          badge: 'BESPOKE 5-STAR CONCIERGE',
+          title: 'Personal Luxury Travel Concierge',
+          subtitle: '24/7 Bespoke Resident Care · Curated Dining & VIP Experiences',
+          welcomeMsg: `Welcome, ${user?.name ? user.name.replace(/\s*\(.*?\)\s*/g, '').trim() : 'Valued Resident'}. Ask me anything about your room, complimentary amenities, fine dining, or request room service.`,
+          assistantName: 'ASK NEXGILE · LUXURY CONCIERGE',
+          quickActions: [
+            { title: 'MY RESERVATION', sub: 'Dates & Room', prompt: 'What is my booking reference and stay details?' },
+            { title: 'MY REQUESTS', sub: 'Status & Towels', prompt: 'Show my service requests and their live status.' },
+            { title: 'HOTEL INFORMATION', sub: 'Amenities & Pool', prompt: 'What amenities and dining does my hotel offer?' },
+            { title: 'PLAN MY TRIP', sub: 'Day Itineraries', prompt: 'Plan a 3-day luxury trip itinerary.' },
+            { title: 'DINING & TOURS', sub: 'Curated Experiences', prompt: 'Recommend fine dining restaurants and VIP tours near my hotel.' },
+            { title: 'ROOM SERVICE', sub: 'Towel & Linens', prompt: 'Can I request extra bath towels and pillows for my room?' }
+          ]
+        };
+    }
+  }, [userRole, user?.name]);
+
   const stay = welcomeData?.active_stay;
+  const staffMetrics = welcomeData?.staff_metrics;
 
   return (
     <div className="flex flex-col h-[calc(100vh-5rem)] max-w-5xl mx-auto pb-4 text-[#FAF6F0]">
@@ -185,7 +295,7 @@ export default function Concierge() {
           </div>
           <button
             onClick={() => setServiceNotification(null)}
-            className="text-xs text-white/60 hover:text-white"
+            className="text-xs text-white/60 hover:text-white cursor-pointer"
           >
             ✕
           </button>
@@ -202,27 +312,35 @@ export default function Concierge() {
               <h1 className="font-cinzel text-sm sm:text-base font-bold uppercase tracking-[0.25em] text-white">
                 ASK NEXGILE
               </h1>
+              <span className="font-cinzel text-[9px] font-bold text-[#DFB76C] bg-[#1B1E3D] px-2 py-0.5 rounded-[2px] border border-[#2C315E] uppercase tracking-wider ml-1">
+                {roleProfile.badge}
+              </span>
             </div>
             <p className="font-editorial text-xs sm:text-sm text-[#DFB76C]/80 mt-0.5 tracking-wide">
-              Personal Travel Assistant &middot; 24/7 Bespoke Resident Care
+              {roleProfile.subtitle}
             </p>
-            {/* Small gold accent line */}
             <div className="w-16 h-[1.5px] bg-gradient-to-r from-[#DFB76C] to-transparent mt-2"></div>
           </div>
 
-          {/* Loyalty & Guest Badge */}
+          {/* Role Status or Loyalty Badge */}
           <div className="flex items-center gap-3 self-start sm:self-center">
-            {welcomeData?.loyalty_tier && (
+            {userRole === 'TRAVELER' && welcomeData?.loyalty_tier && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[2px] bg-[#1B1E3D] border border-[#DFB76C]/30 text-[10px] font-cinzel text-[#DFB76C] font-semibold">
                 <Crown size={12} className="text-[#DFB76C]" />
                 <span>{welcomeData.loyalty_tier}</span>
                 <span className="text-white/60">&middot; {welcomeData.loyalty_points} pts</span>
               </span>
             )}
+            {userRole !== 'TRAVELER' && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[2px] bg-[#1B1E3D] border border-emerald-500/30 text-[10px] font-cinzel text-emerald-400 font-semibold uppercase">
+                <ShieldCheck size={12} className="text-emerald-400" />
+                <span>PMS Live Connect</span>
+              </span>
+            )}
             <button
               onClick={fetchWelcome}
-              title="Refresh Concierge Context"
-              className="p-1.5 rounded-[2px] bg-[#1B1E3D] text-[#DFB76C]/80 hover:text-[#DFB76C] border border-[#2C315E] transition-colors"
+              title="Refresh AI Context"
+              className="p-1.5 rounded-[2px] bg-[#1B1E3D] text-[#DFB76C]/80 hover:text-[#DFB76C] border border-[#2C315E] transition-colors cursor-pointer"
             >
               <RefreshCw size={13} />
             </button>
@@ -236,32 +354,64 @@ export default function Concierge() {
             <div className="p-6 rounded-[4px] bg-[#13152C] border border-amber-500/40 text-center space-y-3">
               <AlertCircle size={28} className="text-[#DFB76C] mx-auto" />
               <p className="text-xs font-sans text-white/80 max-w-md mx-auto leading-relaxed">
-                Concierge is temporarily unavailable. You can still manage your reservation and requests from the dashboard.
+                Copilot is temporarily reconnecting to backend intelligence. All navigation modules remain fully operational.
               </p>
-              <div className="flex justify-center gap-3 pt-2">
-                <Link to="/my-trips" className="px-4 py-2 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] font-cinzel text-xs text-white/80 hover:text-white uppercase">
-                  MY TRIPS
-                </Link>
-                <Link to="/marketplace" className="px-4 py-2 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-xs uppercase font-bold">
-                  BROWSE HOTELS
-                </Link>
-              </div>
             </div>
           )}
 
-          {/* Welcome Card & Active Stay Card */}
+          {/* Welcome Card & Role-Tailored Operational Context */}
           <div className="space-y-4">
             <div className="p-6 rounded-[4px] bg-[#13152C] border border-[#2C315E] text-[#FAF6F0] shadow-sm">
-              <span className="font-cinzel text-[10px] tracking-widest uppercase text-[#DFB76C] font-semibold block mb-1">NEXGILE CONCIERGE</span>
+              <span className="font-cinzel text-[10px] tracking-widest uppercase text-[#DFB76C] font-semibold block mb-1">
+                {roleProfile.badge}
+              </span>
               <h2 className="font-editorial text-2xl sm:text-3xl text-white font-bold">
-                How can I help you today?
+                {roleProfile.title}
               </h2>
-              <p className="text-xs font-sans text-white/75 mt-1 max-w-xl leading-relaxed">
-                Welcome, {user?.name ? user.name.replace(/\s*\(.*?\)\s*/g, '').trim() : 'Guest'}. Ask me anything about your room, hotel amenities, dining, or request room service.
+              <p className="text-xs font-sans text-white/75 mt-1 max-w-2xl leading-relaxed">
+                {roleProfile.welcomeMsg}
               </p>
 
-              {/* Personalized Stay Card (Where available) */}
-              {stay && (
+              {/* 1. Staff Live KPI Ribbon (For Admin, Front Desk, Revenue, Finance, Housekeeping) */}
+              {userRole !== 'TRAVELER' && staffMetrics && (
+                <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="p-3.5 rounded-[3px] bg-[#1B1E3D] border border-[#2C315E]">
+                    <span className="font-cinzel text-[8.5px] uppercase tracking-wider text-white/50 block">
+                      {staffMetrics.kpi_1_title}
+                    </span>
+                    <span className="font-editorial text-2xl text-white font-normal mt-0.5 block">
+                      {staffMetrics.kpi_1_value}
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-[3px] bg-[#1B1E3D] border border-[#2C315E]">
+                    <span className="font-cinzel text-[8.5px] uppercase tracking-wider text-white/50 block">
+                      {staffMetrics.kpi_2_title}
+                    </span>
+                    <span className="font-editorial text-2xl text-white font-normal mt-0.5 block">
+                      {staffMetrics.kpi_2_value}
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-[3px] bg-[#1B1E3D] border border-[#2C315E]">
+                    <span className="font-cinzel text-[8.5px] uppercase tracking-wider text-white/50 block">
+                      {staffMetrics.kpi_3_title}
+                    </span>
+                    <span className="font-editorial text-2xl text-white font-normal mt-0.5 block">
+                      {staffMetrics.kpi_3_value}
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-[3px] bg-[#1B1E3D] border border-[#2C315E]">
+                    <span className="font-cinzel text-[8.5px] uppercase tracking-wider text-[#DFB76C] font-bold block">
+                      {staffMetrics.kpi_4_title}
+                    </span>
+                    <span className="font-editorial text-2xl text-[#DFB76C] font-normal mt-0.5 block">
+                      {staffMetrics.kpi_4_value}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* 2. Personalized Traveler Stay Card (For Guests) */}
+              {userRole === 'TRAVELER' && stay && (
                 <div className="mt-5 p-4 rounded-[3px] bg-[#1B1E3D] border border-[#DFB76C]/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <span className="font-cinzel text-[9px] tracking-widest uppercase text-[#DFB76C] font-semibold block">YOUR STAY</span>
@@ -292,29 +442,24 @@ export default function Concierge() {
               )}
             </div>
 
-            {/* Quick Actions Ribbon (Below Welcome) */}
+            {/* Role-Tailored Quick Action Prompts */}
             <div className="space-y-2">
               <span className="font-cinzel text-[10px] tracking-widest uppercase text-white/60 block px-1 font-semibold">
-                DISCOVERY &amp; CONCIERGE ASSISTANCE
+                ROLE-TAILORED QUICK QUERIES
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-                {[
-                  { title: 'MY RESERVATION', sub: 'Dates & Room', prompt: 'What is my booking reference and stay details?' },
-                  { title: 'MY REQUESTS', sub: 'Status & Towels', prompt: 'Show my service requests and their live status.' },
-                  { title: 'HOTEL INFORMATION', sub: 'Amenities & Pool', prompt: 'What amenities and dining does my hotel offer?' },
-                  { title: 'PLAN MY TRIP', sub: 'Day Itineraries', prompt: 'Plan a 3-day trip to Hyderabad.' },
-                  { title: 'ROOM RECOMMENDATION', sub: 'Tailored Suites', prompt: 'Recommend something for me based on my preferences.' },
-                  { title: 'ASK CONCIERGE', sub: 'Towel & Clean', prompt: 'Can I request extra towels for my room?' }
-                ].map((action, idx) => (
+                {roleProfile.quickActions.map((action, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleQuickActionClick(action.prompt)}
-                    className="p-3 text-left rounded-[3px] bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/70 hover:bg-[#1B1E3D] transition-all group cursor-pointer shadow-sm"
+                    className="p-3 text-left rounded-[3px] bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/70 hover:bg-[#1B1E3D] transition-all group cursor-pointer shadow-sm flex flex-col justify-between"
                   >
-                    <span className="font-cinzel text-[10px] font-bold text-white group-hover:text-[#DFB76C] block">
-                      {action.title}
-                    </span>
-                    <span className="text-[10px] text-white/50 block mt-0.5">{action.sub}</span>
+                    <div>
+                      <span className="font-cinzel text-[10px] font-bold text-white group-hover:text-[#DFB76C] block leading-tight">
+                        {action.title}
+                      </span>
+                      <span className="text-[10px] text-white/50 block mt-1">{action.sub}</span>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -323,19 +468,19 @@ export default function Concierge() {
 
           {/* Conversation Bubble Stream */}
           {messages.map((msg) => {
-            const isTraveler = msg.sender === 'traveler';
+            const isUser = msg.sender === 'user';
             return (
               <div
                 key={msg.id}
-                className={`flex flex-col ${isTraveler ? 'items-end' : 'items-start'} space-y-1.5`}
+                className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} space-y-1.5`}
               >
                 <span className="text-[10px] font-cinzel text-white/50 px-1">
-                  {isTraveler ? user?.name || 'You' : 'NEXGILE CONCIERGE'} &middot; {msg.timestamp}
+                  {isUser ? user?.name || 'You' : roleProfile.assistantName} &middot; {msg.timestamp}
                 </span>
 
                 <div
                   className={`max-w-[85%] sm:max-w-[75%] rounded-[4px] p-4 text-xs font-sans leading-relaxed shadow-sm ${
-                    isTraveler
+                    isUser
                       ? 'bg-[#DFB76C] text-[#13152C] border border-[#DFB76C] rounded-br-none font-medium'
                       : 'bg-[#1B1E3D] text-[#FAF6F0] border border-[#2C315E] rounded-bl-none'
                   }`}
@@ -346,7 +491,7 @@ export default function Concierge() {
                       <p key={pIdx}>
                         {paragraph.split('**').map((chunk, cIdx) =>
                           cIdx % 2 === 1 ? (
-                            <strong key={cIdx} className={isTraveler ? 'text-[#13152C] font-bold' : 'text-[#DFB76C] font-semibold'}>
+                            <strong key={cIdx} className={isUser ? 'text-[#13152C] font-bold' : 'text-[#DFB76C] font-semibold'}>
                               {chunk}
                             </strong>
                           ) : (
@@ -357,7 +502,7 @@ export default function Concierge() {
                     ))}
                   </div>
 
-                  {/* Interactive Action Button (e.g. REQUEST EXTRA TOWELS, VIEW RESERVATION) */}
+                  {/* Interactive Action Button */}
                   {msg.action && (
                     <div className="mt-4 pt-3 border-t border-[#2C315E] flex flex-wrap gap-2">
                       <button
@@ -379,11 +524,11 @@ export default function Concierge() {
           {isThinking && (
             <div className="flex flex-col items-start space-y-1.5">
               <span className="text-[10px] font-cinzel text-white/50 px-1">
-                NEXGILE CONCIERGE
+                {roleProfile.assistantName}
               </span>
               <div className="p-4 rounded-[4px] rounded-bl-none bg-[#1B1E3D] border border-[#2C315E] text-[#DFB76C] text-xs font-cinzel tracking-wider flex items-center gap-2 shadow-sm animate-pulse">
                 <Sparkles size={14} className="text-[#DFB76C] animate-spin" />
-                <span>CONCIERGE IS THINKING...</span>
+                <span>CONSULTING DATABASE & REASONING...</span>
               </div>
             </div>
           )}
@@ -391,37 +536,33 @@ export default function Concierge() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Sticky Mobile & Desktop Message Input */}
+        {/* Sticky Message Input */}
         <div className="p-4 bg-[#13152C] border-t border-[#2C315E]">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSendMessage();
             }}
-            className="flex items-center gap-2"
+            className="flex items-center gap-3"
           >
             <input
               ref={inputRef}
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Inquire about your reservation, hotel amenities, towels, or trip planning..."
+              placeholder={`Ask ${roleProfile.badge.toLowerCase()} anything...`}
               disabled={isThinking}
-              className="flex-1 px-4 py-3 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs font-sans text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] transition-all"
+              className="flex-1 !pl-4 pr-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={!inputValue.trim() || isThinking}
-              className="px-5 py-3 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shrink-0 transition"
+              className="btn-luxury-primary text-xs py-2.5 px-5 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
             >
-              <span>SEND</span>
-              <Send size={13} className="text-[#13152C]" />
+              <Send size={13} />
+              <span>Ask</span>
             </button>
           </form>
-          <div className="flex items-center justify-between mt-2 px-1 text-[10px] text-white/40 font-sans">
-            <span>Real-time hotel PMS &amp; concierge synchronization</span>
-            <span className="font-cinzel text-[#DFB76C]">Nexgile-TravAI Bespoke AI</span>
-          </div>
         </div>
       </div>
     </div>

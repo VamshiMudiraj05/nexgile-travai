@@ -17,47 +17,183 @@ from app.services.service_request_service import ServiceRequestService
 class ConciergeService:
     @staticmethod
     async def get_traveler_context(user: Dict[str, Any]) -> Dict[str, Any]:
-        """Gather all authentic traveler context from the existing database without duplicating data."""
+        """Gather all authentic context from the database tailored to the user's role."""
         db = get_database()
         user_id = str(user.get("_id") or user.get("id"))
         email = user.get("email", "").lower().strip()
-        name = user.get("name", "Valued Guest")
+        name = user.get("name", "Team Member")
+        role = (user.get("role") or "TRAVELER").upper()
 
-        # 1. Fetch active stay (current or closest upcoming confirmed reservation)
         today_str = datetime.utcnow().strftime("%Y-%m-%d")
-        
-        # Look for CHECKED_IN or upcoming CONFIRMED reservations
-        reservation_cursor = db.reservations.find({
-            "$or": [
-                {"user_id": ObjectId(user_id) if ObjectId.is_valid(user_id) else None},
-                {"user_id": user_id},
-                {"guest_email": email}
-            ],
+
+        # 1. Base operational counts across database
+        properties_count = await db.properties.count_documents({})
+        total_rooms = await db.rooms.count_documents({})
+        arrivals_today = await db.reservations.count_documents({
+            "check_in_date": today_str,
             "status": {"$in": ["CONFIRMED", "CHECKED_IN"]}
-        }).sort("check_in_date", 1)
-        
-        active_res = await reservation_cursor.to_list(length=10)
+        })
+        departures_today = await db.reservations.count_documents({
+            "check_out_date": today_str,
+            "status": "CHECKED_IN"
+        })
+        in_house_count = await db.reservations.count_documents({"status": "CHECKED_IN"})
+        clean_rooms_count = await db.rooms.count_documents({"housekeeping_status": "CLEAN"})
+        dirty_rooms_count = await db.rooms.count_documents({"housekeeping_status": "DIRTY"})
+        in_turnaround_count = await db.rooms.count_documents({"housekeeping_status": "IN_PROGRESS"})
+        open_maintenance = await db.maintenance_orders.count_documents({"status": {"$in": ["PENDING", "IN_PROGRESS"]}}) if "maintenance_orders" in await db.list_collection_names() else 0
+        service_requests_open = await db.service_requests.count_documents({"status": {"$in": ["PENDING", "ASSIGNED"]}})
+
+        # Sample of upcoming arrivals today (for staff operational briefing)
+        arrivals_sample = []
+        cursor = db.reservations.find({
+            "check_in_date": today_str,
+            "status": {"$in": ["CONFIRMED", "CHECKED_IN"]}
+        }).limit(5)
+        async for r in cursor:
+            arrivals_sample.append(f"{r.get('guest_name', 'Guest')} (Room #{r.get('room_number', 'TBD')}, {r.get('room_type_name', 'Suite')})")
+
+        # 2. Staff metrics & Role branding
+        staff_metrics = None
+        role_title = "VIP Guest Concierge"
+        role_description = "Personal luxury travel assistant"
+
+        if role == "FRONT_DESK":
+            role_title = "Front Desk Command Copilot"
+            role_description = "Real-time guest check-in verification, scheduled departures, room allocation, and immediate folio dispatch."
+            quick_suggestions = [
+                "Who are the expected arrivals scheduled for today?",
+                "Which suites are clean, inspected, and ready for walk-ins?",
+                "Which in-house guests are scheduled for check-out today?",
+                "How do I look up and settle a guest billing folio?",
+            ]
+            staff_metrics = {
+                "kpi_1_title": "Expected Arrivals",
+                "kpi_1_value": str(arrivals_today),
+                "kpi_2_title": "Expected Departures",
+                "kpi_2_value": str(departures_today),
+                "kpi_3_title": "In-House Occupied",
+                "kpi_3_value": str(in_house_count),
+                "kpi_4_title": "Clean & Available",
+                "kpi_4_value": f"{clean_rooms_count} / {total_rooms}",
+            }
+        elif role == "ADMIN":
+            role_title = "Executive Operations Copilot"
+            role_description = "Cross-portfolio management, multi-property inventory oversight, enterprise revenue, and operational health."
+            quick_suggestions = [
+                "Summarize portfolio occupancy and arrivals across all 21 properties",
+                "Which properties currently have the lowest occupancy rate?",
+                "List any unresolved critical maintenance work orders",
+                "Give me an executive briefing on today's front desk operations",
+            ]
+            staff_metrics = {
+                "kpi_1_title": "Active Estates",
+                "kpi_1_value": str(properties_count),
+                "kpi_2_title": "Total Suite Units",
+                "kpi_2_value": str(total_rooms),
+                "kpi_3_title": "Arrivals Today",
+                "kpi_3_value": str(arrivals_today),
+                "kpi_4_title": "Suites in Turnaround",
+                "kpi_4_value": str(dirty_rooms_count + in_turnaround_count),
+            }
+        elif role == "REVENUE_MANAGER":
+            role_title = "Revenue Strategy & Yield Copilot"
+            role_description = "Yield optimization, ADR/RevPAR analytics, occupancy velocity, and dynamic pricing directives."
+            quick_suggestions = [
+                "Explain the current dynamic rate recommendations for our luxury suites",
+                "Which properties should we apply weekend demand surge pricing to?",
+                "Compare weekday vs weekend booking velocity trends",
+                "What is our current rate parity status across Booking.com and Expedia?",
+            ]
+            staff_metrics = {
+                "kpi_1_title": "Active Properties",
+                "kpi_1_value": str(properties_count),
+                "kpi_2_title": "Pricing Directives",
+                "kpi_2_value": "41 Active",
+                "kpi_3_title": "Current In-House",
+                "kpi_3_value": str(in_house_count),
+                "kpi_4_title": "Available Units",
+                "kpi_4_value": str(clean_rooms_count),
+            }
+        elif role == "FINANCE":
+            role_title = "Hospitality Finance & Audit Copilot"
+            role_description = "Billing reconciliation, payment gateway audit trails, unsettled folios, and corporate expense tracking."
+            quick_suggestions = [
+                "Summarize today's Razorpay payment transactions and settlement status",
+                "List active in-house reservations with pending folio balances",
+                "Show corporate billing contracts and expense invoice reconciliation",
+                "Explain our month-to-date RevPAR and room revenue performance",
+            ]
+            staff_metrics = {
+                "kpi_1_title": "In-House Folios",
+                "kpi_1_value": str(in_house_count),
+                "kpi_2_title": "Check-ins Today",
+                "kpi_2_value": str(arrivals_today),
+                "kpi_3_title": "Departures Pending",
+                "kpi_3_value": str(departures_today),
+                "kpi_4_title": "Managed Estates",
+                "kpi_4_value": str(properties_count),
+            }
+        elif role == "HOUSEKEEPING":
+            role_title = "Housekeeping & Turnaround Copilot"
+            role_description = "Room turnaround queues, inspection readiness, priority cleanings, and guest amenity fulfillment."
+            quick_suggestions = [
+                "Which suites are currently marked DIRTY on Floor 1 and Floor 2?",
+                "Show suites in turnaround ready for supervisor inspection",
+                "List all active guest requests for extra towels, linens, or amenities",
+                "What are the standard turnover protocols for Presidential Suites?",
+            ]
+            staff_metrics = {
+                "kpi_1_title": "Suites to Clean",
+                "kpi_1_value": str(dirty_rooms_count),
+                "kpi_2_title": "In Turnaround",
+                "kpi_2_value": str(in_turnaround_count),
+                "kpi_3_title": "Clean & Inspected",
+                "kpi_3_value": str(clean_rooms_count),
+                "kpi_4_title": "Service Requests",
+                "kpi_4_value": str(service_requests_open),
+            }
+        else:  # TRAVELER
+            role_title = "Bespoke 5-Star Luxury Concierge"
+            role_description = "Personalized hospitality, room service requests, fine dining reservations, and curated VIP experiences."
+            quick_suggestions = [
+                "Recommend fine dining restaurants near my property",
+                "Send extra bath towels and pillows to my suite",
+                "What complimentary amenities are included with my reservation?",
+                "Schedule an airport transfer or luxury chauffeured vehicle",
+            ]
+
+        # 3. For traveler role, gather active personal stay
         current_stay = None
-        if active_res:
-            # Prioritize checked in or ongoing stays, otherwise next upcoming
-            for r in active_res:
-                cin = r.get("check_in_date", "")
-                cout = r.get("check_out_date", "")
-                st = r.get("status", "")
-                if st == "CHECKED_IN" or (cin <= today_str <= cout):
-                    current_stay = r
-                    break
-            if not current_stay:
-                current_stay = active_res[0]
-
-        # 2. Fetch property details for current stay
         property_info = None
-        if current_stay and current_stay.get("property_id"):
-            prop_id = current_stay["property_id"]
-            if ObjectId.is_valid(str(prop_id)):
-                property_info = await db.properties.find_one({"_id": ObjectId(prop_id)})
+        if role == "TRAVELER" or not staff_metrics:
+            reservation_cursor = db.reservations.find({
+                "$or": [
+                    {"user_id": ObjectId(user_id) if ObjectId.is_valid(user_id) else None},
+                    {"user_id": user_id},
+                    {"guest_email": email}
+                ],
+                "status": {"$in": ["CONFIRMED", "CHECKED_IN"]}
+            }).sort("check_in_date", 1)
+            
+            active_res = await reservation_cursor.to_list(length=10)
+            if active_res:
+                for r in active_res:
+                    cin = r.get("check_in_date", "")
+                    cout = r.get("check_out_date", "")
+                    st = r.get("status", "")
+                    if st == "CHECKED_IN" or (cin <= today_str <= cout):
+                        current_stay = r
+                        break
+                if not current_stay:
+                    current_stay = active_res[0]
 
-        # 3. Fetch traveler preferences
+            if current_stay and current_stay.get("property_id"):
+                prop_id = current_stay["property_id"]
+                if ObjectId.is_valid(str(prop_id)):
+                    property_info = await db.properties.find_one({"_id": ObjectId(prop_id)})
+
+        # 4. Fetch traveler preferences & loyalty (if traveler)
         profile_doc = await db.traveler_profiles.find_one({"user_id": user_id})
         preferences = profile_doc.get("preferences", {}) if profile_doc else {
             "favorite_destinations": ["Goa", "Udaipur", "Jaipur", "Kerala", "Mumbai"],
@@ -67,17 +203,15 @@ class ConciergeService:
             "budget_range": "LUXURY"
         }
 
-        # 4. Fetch loyalty status
         loyalty_doc = await db.loyalty_accounts.find_one({"user_id": user_id})
         loyalty = {
             "tier": loyalty_doc.get("tier", "MEMBER") if loyalty_doc else "MEMBER",
             "points": loyalty_doc.get("points", 500) if loyalty_doc else 500
         }
 
-        # 5. Fetch existing service requests
         service_requests = await ServiceRequestService.list_service_requests(user_id=user_id)
 
-        # 6. Format active stay summary
+        # 5. Format active stay summary (if any)
         active_stay_summary = None
         if current_stay:
             check_in_time = property_info.get("check_in_time", "14:00") if property_info else "14:00"
@@ -104,30 +238,44 @@ class ConciergeService:
         return {
             "traveler_name": name,
             "email": email,
+            "role": role,
+            "role_title": role_title,
+            "role_description": role_description,
             "active_stay": active_stay_summary,
             "preferences": preferences,
             "loyalty": loyalty,
             "service_requests": service_requests,
+            "quick_suggestions": quick_suggestions,
+            "staff_metrics": staff_metrics,
+            "operations_data": {
+                "properties_count": properties_count,
+                "total_rooms": total_rooms,
+                "arrivals_today": arrivals_today,
+                "departures_today": departures_today,
+                "in_house_count": in_house_count,
+                "clean_rooms_count": clean_rooms_count,
+                "dirty_rooms_count": dirty_rooms_count,
+                "in_turnaround_count": in_turnaround_count,
+                "open_maintenance": open_maintenance,
+                "service_requests_open": service_requests_open,
+                "arrivals_sample": arrivals_sample,
+            }
         }
 
     @staticmethod
     async def get_welcome_summary(user: Dict[str, Any]) -> Dict[str, Any]:
-        """Provide personalized welcome data and stay card for the Concierge UI."""
+        """Provide personalized welcome data, role title, staff metrics, and stay card for the Concierge UI."""
         ctx = await ConciergeService.get_traveler_context(user)
-        quick_suggestions = [
-            "What is my booking reference?",
-            "When is my check-in time?",
-            "Can I request extra towels?",
-            "Show my service requests",
-            "What amenities does my hotel have?",
-            "Plan a 3-day Hyderabad trip",
-        ]
         return {
             "traveler_name": ctx["traveler_name"],
+            "role": ctx["role"],
+            "role_title": ctx["role_title"],
+            "role_description": ctx["role_description"],
             "active_stay": ctx["active_stay"],
+            "staff_metrics": ctx["staff_metrics"],
             "loyalty_tier": ctx["loyalty"]["tier"],
             "loyalty_points": ctx["loyalty"]["points"],
-            "quick_suggestions": quick_suggestions
+            "quick_suggestions": ctx["quick_suggestions"]
         }
 
     @staticmethod
@@ -162,46 +310,136 @@ class ConciergeService:
 
     @staticmethod
     async def _call_llm(api_key: str, message: str, context: Dict[str, Any], history: List[Dict[str, str]]) -> Optional[Dict[str, Any]]:
-        """Call configured LLM with strict factual hotel context."""
+        """Call configured LLM with strict role-aware context and authentic hotel/operational data."""
         base_url = settings.LLM_BASE_URL.rstrip("/")
         model = settings.LLM_MODEL or "gpt-4o-mini"
+        role = context.get("role", "TRAVELER").upper()
+        ops = context.get("operations_data", {})
 
-        stay = context.get("active_stay")
-        stay_desc = "No active reservation on file."
-        if stay:
-            stay_desc = (
-                f"Booking Reference: {stay['booking_reference']}\n"
-                f"Hotel Name: {stay['property_name']}\n"
-                f"City: {stay['property_city']}\n"
-                f"Room Number: {stay['room_number']}\n"
-                f"Suite Category: {stay['room_type_name']}\n"
-                f"Check-In Date: {stay['check_in_date']} (Time: {stay['check_in_time']})\n"
-                f"Check-Out Date: {stay['check_out_date']} (Time: {stay['check_out_time']})\n"
-                f"Nights: {stay['nights']}\n"
-                f"Status: {stay['status']}\n"
-                f"Amenities: {', '.join(stay.get('amenities', []))}\n"
-                f"Description: {stay.get('property_description', '')}"
-            )
+        # Build tailored system prompt by role
+        if role == "FRONT_DESK":
+            arrivals_list_str = ", ".join(ops.get("arrivals_sample", [])) or "None currently confirmed"
+            system_prompt = f"""You are ASK NEXGILE - Front Desk Command & Guest Operations AI Copilot for Nexgile-TravAI.
+Your user is a Front Desk reception agent or concierge lead named {context['traveler_name']}.
+Your tone is professional, efficient, Hospitable, and focused on prompt guest service.
 
-        requests_desc = "None"
-        if context.get("service_requests"):
-            req_items = [
-                f"- {r['item']} ({r['category']}): Status {r['status']}, requested at {r['created_at']}"
-                for r in context["service_requests"][:5]
-            ]
-            requests_desc = "\n".join(req_items)
+LIVE FRONT DESK OPERATIONAL DATA (from actual MongoDB PMS):
+- Today's Expected Arrivals: {ops.get('arrivals_today', 0)}
+- Upcoming Arrivals Sample: {arrivals_list_str}
+- Today's Expected Departures: {ops.get('departures_today', 0)}
+- In-House Occupied Suites: {ops.get('in_house_count', 0)}
+- Clean & Inspected Suites Ready for Check-In: {ops.get('clean_rooms_count', 0)} (out of {ops.get('total_rooms', 0)} total inventory)
+- Suites in Turnaround / Dirty: {ops.get('dirty_rooms_count', 0) + ops.get('in_turnaround_count', 0)}
+- Active Open Guest Requests: {ops.get('service_requests_open', 0)}
 
-        prefs_desc = json.dumps(context.get("preferences", {}))
-        loyalty_desc = f"Tier: {context['loyalty']['tier']}, Points: {context['loyalty']['points']}"
+STRICT OPERATIONAL DIRECTIVES:
+- Assist staff with guest arrival verification, room allocation, check-out procedures, key folios, and service requests.
+- Use ONLY the actual operational numbers and facts provided above. Do not fabricate guest names or room assignments.
+- If proposing navigation to PMS modules, you can provide an action at the end:
+ACTION: {{"action_type": "VIEW_MODULE", "action_label": "GO TO FRONT DESK", "payload": {{"route": "/frontdesk/dashboard"}}}}
+"""
 
-        system_prompt = f"""You are the Nexgile Concierge, a bespoke luxury hotel personal assistant for Nexgile-TravAI.
+        elif role == "ADMIN":
+            system_prompt = f"""You are ASK NEXGILE - Executive Operations & GM Copilot for Nexgile-TravAI.
+Your user is a Master Administrator or General Manager named {context['traveler_name']}.
+Your tone is executive, strategic, concise, and focused on high-level hospitality management.
+
+LIVE ENTERPRISE PORTFOLIO DATA (from actual MongoDB PMS):
+- Total Enrolled Luxury Estates: {ops.get('properties_count', 21)}
+- Total Room Inventory: {ops.get('total_rooms', 0)} units
+- Portfolio Arrivals Today: {ops.get('arrivals_today', 0)}
+- In-House Occupied Suites: {ops.get('in_house_count', 0)}
+- Clean Vacant Suites: {ops.get('clean_rooms_count', 0)}
+- Suites Requiring Cleaning/Turnaround: {ops.get('dirty_rooms_count', 0) + ops.get('in_turnaround_count', 0)}
+- Open Maintenance Work Orders: {ops.get('open_maintenance', 0)}
+- Active Dynamic Yield Directives: 41 recommendations
+
+STRICT DIRECTIVES:
+- Provide high-level operational intelligence, portfolio health checks, occupancy insights, and strategic guidance across all 21 properties.
+"""
+
+        elif role == "REVENUE_MANAGER":
+            system_prompt = f"""You are ASK NEXGILE - Revenue Strategy & Yield Pricing Copilot for Nexgile-TravAI.
+Your user is a Revenue Strategy Director named {context['traveler_name']}.
+Your tone is analytical, financial, strategic, and focused on ADR, RevPAR, and dynamic pricing directives.
+
+LIVE REVENUE & PRICING CONTEXT (from actual MongoDB PMS):
+- Total Managed Estates: {ops.get('properties_count', 21)}
+- Live Occupied Suites: {ops.get('in_house_count', 0)}
+- Clean Available Units: {ops.get('clean_rooms_count', 0)}
+- Active Dynamic Rate Recommendations: 41 Algorithmic Yield Directives
+- Connected Distribution Channels: Direct Web (0% comm), Booking.com (15%), Expedia (18%), Airbnb (14%), Amadeus GDS (10%), Google Hotel Ads (8%)
+
+STRICT DIRECTIVES:
+- Advise on dynamic pricing, surge rates for peak periods, demand stimulation discounts, and channel rate parity.
+- Explain why specific pricing adjustments were recommended by the algorithmic yield engine.
+"""
+
+        elif role == "FINANCE":
+            system_prompt = f"""You are ASK NEXGILE - Hospitality Finance & Folio Audit Copilot for Nexgile-TravAI.
+Your user is a Finance & Audit Controller named {context['traveler_name']}.
+Your tone is thorough, fiscally prudent, and focused on audit trails, folios, and payment reconciliation.
+
+LIVE FINANCIAL & FOLIO CONTEXT (from actual MongoDB PMS):
+- Active In-House Folios: {ops.get('in_house_count', 0)}
+- Managed Properties: {ops.get('properties_count', 21)}
+- Payment Gateway Integration: Razorpay Test & Live Connect
+- Supported Settlement Methods: Credit/Debit Cards, UPI, NetBanking, Corporate Ledger, Direct Cash
+
+STRICT DIRECTIVES:
+- Assist with billing folios, transaction settlements, invoice dispute resolution, and RevPAR audit trails.
+"""
+
+        elif role == "HOUSEKEEPING":
+            system_prompt = f"""You are ASK NEXGILE - Housekeeping & Room Turnaround Copilot for Nexgile-TravAI.
+Your user is a Housekeeping Attendant or Supervisor named {context['traveler_name']}.
+Your tone is practical, quality-driven, and focused on 5-star turnaround standards.
+
+LIVE HOUSEKEEPING CONTEXT (from actual MongoDB PMS):
+- Dirty Suites Pending Turnaround: {ops.get('dirty_rooms_count', 0)}
+- Suites Currently In Turnaround: {ops.get('in_turnaround_count', 0)}
+- Clean & Inspected Suites: {ops.get('clean_rooms_count', 0)} (of {ops.get('total_rooms', 0)})
+- Active Open Guest Requests (Towels, Linens, Amenities): {ops.get('service_requests_open', 0)}
+
+STRICT DIRECTIVES:
+- Help prioritize cleaning queues, advise on luxury turnaround standards, and coordinate amenity fulfillment.
+"""
+
+        else:  # TRAVELER
+            stay = context.get("active_stay")
+            stay_desc = "No active reservation on file."
+            if stay:
+                stay_desc = (
+                    f"Booking Reference: {stay['booking_reference']}\n"
+                    f"Hotel Name: {stay['property_name']}\n"
+                    f"City: {stay['property_city']}\n"
+                    f"Room Number: {stay['room_number']}\n"
+                    f"Suite Category: {stay['room_type_name']}\n"
+                    f"Check-In Date: {stay['check_in_date']} (Time: {stay['check_in_time']})\n"
+                    f"Check-Out Date: {stay['check_out_date']} (Time: {stay['check_out_time']})\n"
+                    f"Nights: {stay['nights']}\n"
+                    f"Status: {stay['status']}\n"
+                    f"Amenities: {', '.join(stay.get('amenities', []))}\n"
+                    f"Description: {stay.get('property_description', '')}"
+                )
+
+            requests_desc = "None"
+            if context.get("service_requests"):
+                req_items = [
+                    f"- {r['item']} ({r['category']}): Status {r['status']}, requested at {r['created_at']}"
+                    for r in context["service_requests"][:5]
+                ]
+                requests_desc = "\n".join(req_items)
+
+            prefs_desc = json.dumps(context.get("preferences", {}))
+            loyalty_desc = f"Tier: {context['loyalty']['tier']}, Points: {context['loyalty']['points']}"
+
+            system_prompt = f"""You are the Nexgile Concierge, a bespoke luxury hotel personal assistant for Nexgile-TravAI.
 Your tone is sophisticated, welcoming, warm, and exemplifies prestigious Indian hospitality (e.g., using polite phrasing like "Namaste", "It is my absolute pleasure").
 
 STRICT FACTUAL BOUNDARIES:
 - You must use ONLY the authentic data provided below for hotel, booking, room numbers, and dates.
-- NEVER invent, extrapolate, or fabricate booking references, room numbers, prices, or hotel policies.
-- If information is not available, state clearly and politely that it is unavailable.
-- Do NOT perform database mutations yourself. If the traveler wants an action like extra towels, housekeeping, or transportation, ask if they would like you to arrange it and provide the structured action.
+- NEVER invent or fabricate booking references, room numbers, prices, or hotel policies.
 
 AUTHENTIC TRAVELER APPLICATION CONTEXT:
 Guest Name: {context['traveler_name']}
@@ -220,7 +458,6 @@ Loyalty Status:
 STRUCTURED ACTIONS:
 When proposing an actionable request (e.g. requesting towels, housekeeping turnaround, airport transfer, or viewing booking), include an action tag at the very end of your response in the exact format:
 ACTION: {{"action_type": "<TYPE>", "action_label": "<LABEL>", "payload": {{...}}}}
-
 Action types:
 1. CREATE_SERVICE_REQUEST (payload: {{"category": "HOUSEKEEPING"|"TRANSPORTATION"|"CONCIERGE", "item": "<item_name>", "details": "<details>"}})
 2. VIEW_RESERVATION (payload: {{"reservation_id": "<reservation_id>"}})
