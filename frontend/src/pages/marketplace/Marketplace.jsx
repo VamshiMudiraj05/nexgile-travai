@@ -17,9 +17,11 @@ import StarRating from '../../components/StarRating';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Calendar as EasyUICalendar } from '@/components/ui/calendar';
 import { GooeyMenu } from '@/components/ui/gooey-menu';
+import { useCurrency } from '../../context/CurrencyContext';
 import { cn } from '@/lib/utils';
 
 export default function Marketplace() {
+  const { formatPrice } = useCurrency();
   const [properties, setProperties] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -449,20 +451,20 @@ export default function Marketplace() {
                 </div>
 
                 {/* Footer Pricing & CTA */}
-                <div className="flex items-center justify-between border-t border-[#2C315E] bg-[#1B1E3D]/40 p-4">
-                  <div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-[#2C315E] bg-[#1B1E3D]/40 p-4 mt-auto">
+                  <div className="min-w-0 flex-1">
                     <span className="font-cinzel text-[9px] text-white/50 block uppercase tracking-wider">Starting From</span>
-                    <p className="font-editorial text-xl font-bold text-[#DFB76C]">
-                      ₹{prop.starting_price?.toLocaleString()}
+                    <p className="font-editorial text-xl font-bold text-[#DFB76C] truncate">
+                      {formatPrice(prop.starting_price)}
                       <span className="text-xs font-sans font-normal text-white/60"> / night</span>
                     </p>
                   </div>
                   <Link
                     to={`/marketplace/properties/${prop.id}?check_in=${checkIn}&check_out=${checkOut}&adults=${adults}`}
-                    className="px-3.5 py-1.5 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-[10px] font-bold tracking-wider uppercase inline-flex items-center gap-1.5 transition shadow-sm"
+                    className="w-full sm:w-auto shrink-0 px-4 py-2 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-xs font-bold tracking-wider uppercase inline-flex items-center justify-center gap-1.5 transition shadow-sm"
                   >
-                    <span>View Suite</span>
-                    <ArrowRight size={12} />
+                    <span>Book Stay</span>
+                    <ArrowRight size={13} className="shrink-0" />
                   </Link>
                 </div>
               </div>

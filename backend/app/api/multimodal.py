@@ -45,8 +45,8 @@ async def get_optional_user_id(
     summary="Search global multimodal flights across airline networks",
 )
 async def search_flights(
-    origin: str = Query("NYC", description="Origin IATA airport code"),
-    destination: str = Query("LON", description="Destination IATA airport code"),
+    origin: str = Query("HYD", description="Origin IATA airport code"),
+    destination: str = Query("BOM", description="Destination IATA airport code"),
     departure_date: str = Query("2026-12-01", description="Departure date (YYYY-MM-DD)"),
     cabin_class: str = Query("ECONOMY", description="Cabin class: ECONOMY, BUSINESS, FIRST"),
 ):
@@ -65,7 +65,7 @@ async def search_flights(
     summary="Search car rentals & airport chauffeur fleets",
 )
 async def search_cars(
-    location: str = Query("Miami", description="Pickup city or airport"),
+    location: str = Query("Hyderabad Airport", description="Pickup city or airport"),
     pickup_date: str = Query("2026-12-01", description="Pickup date (YYYY-MM-DD)"),
     return_date: str = Query("2026-12-05", description="Return date (YYYY-MM-DD)"),
     category: Optional[str] = Query(None, description="Car category filter (SEDAN, SUV, LUXURY, ELECTRIC)"),
@@ -85,7 +85,7 @@ async def search_cars(
     summary="Search destination tours, activities, and dining experiences",
 )
 async def search_activities(
-    destination: str = Query("Paris", description="Destination city"),
+    destination: str = Query("Hyderabad", description="Destination city"),
     date: str = Query("2026-12-02", description="Activity date (YYYY-MM-DD)"),
     category: Optional[str] = Query(None, description="Category filter"),
 ):
@@ -103,7 +103,7 @@ async def search_activities(
     summary="Search dynamic flight+hotel+car bundled packages with bundled discounts",
 )
 async def search_packages(
-    destination: str = Query("Cancun", description="Destination name"),
+    destination: str = Query("Kerala Backwaters", description="Destination name"),
 ):
     return MultimodalService.search_packages(destination=destination)
 

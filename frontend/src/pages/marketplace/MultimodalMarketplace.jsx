@@ -27,8 +27,10 @@ import {
   Ticket,
   Luggage,
   Users,
-  Gauge
+  Gauge,
+  ChevronDown
 } from 'lucide-react';
+import { GooeyMenu } from '@/components/ui/gooey-menu';
 import { multimodalService } from '../../services/multimodalService';
 import { paymentService } from '../../services/paymentService';
 import { useAuth } from '../../hooks/useAuth';
@@ -44,17 +46,17 @@ export default function MultimodalMarketplace() {
   const [activities, setActivities] = useState([]);
   const [packages, setPackages] = useState([]);
 
-  // Search parameters
-  const [flightOrigin, setFlightOrigin] = useState('NYC');
-  const [flightDest, setFlightDest] = useState('LON');
+  // Search parameters (Localized to India)
+  const [flightOrigin, setFlightOrigin] = useState('HYD');
+  const [flightDest, setFlightDest] = useState('BOM');
   const [flightCabin, setFlightCabin] = useState('ECONOMY');
 
-  const [carLocation, setCarLocation] = useState('Miami');
+  const [carLocation, setCarLocation] = useState('Hyderabad Airport');
   const [carCategory, setCarCategory] = useState('');
 
-  const [actDestination, setActDestination] = useState('Paris');
+  const [actDestination, setActDestination] = useState('Hyderabad');
   const [actCategory, setActCategory] = useState('');
-  const [pkgDestination, setPkgDestination] = useState('Cancun');
+  const [pkgDestination, setPkgDestination] = useState('Kerala Backwaters');
 
   // Loading & cart states
   const [loading, setLoading] = useState(false);
@@ -484,7 +486,7 @@ export default function MultimodalMarketplace() {
                 type="text"
                 value={flightOrigin}
                 onChange={(e) => setFlightOrigin(e.target.value.toUpperCase())}
-                placeholder="NYC / JFK"
+                placeholder="HYD / DEL / BLR"
                 className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
@@ -496,7 +498,7 @@ export default function MultimodalMarketplace() {
                 type="text"
                 value={flightDest}
                 onChange={(e) => setFlightDest(e.target.value.toUpperCase())}
-                placeholder="LON / LHR"
+                placeholder="BOM / MAA / CCU"
                 className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
@@ -504,15 +506,37 @@ export default function MultimodalMarketplace() {
               <label className="block text-xs font-semibold uppercase tracking-wider text-white/70 mb-1">
                 Cabin Class
               </label>
-              <select
-                value={flightCabin}
-                onChange={(e) => setFlightCabin(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
-              >
-                <option value="ECONOMY">Economy</option>
-                <option value="BUSINESS">Business Class</option>
-                <option value="FIRST">First Class Suite</option>
-              </select>
+              <GooeyMenu
+                className="w-full"
+                style={{ width: '100%' }}
+                surfaceClassName="bg-[#13152C]"
+                options={['Economy Class', 'Business Class', 'First Class Suite']}
+                value={
+                  flightCabin === 'FIRST'
+                    ? 'First Class Suite'
+                    : flightCabin === 'BUSINESS'
+                    ? 'Business Class'
+                    : 'Economy Class'
+                }
+                onSelect={(opt) => {
+                  if (opt === 'First Class Suite') setFlightCabin('FIRST');
+                  else if (opt === 'Business Class') setFlightCabin('BUSINESS');
+                  else setFlightCabin('ECONOMY');
+                }}
+                triggerClassName="h-[42px] w-full rounded-[2px] bg-[#1B1E3D] px-4 border border-[#2C315E] hover:border-[#DFB76C]/60 transition-colors flex items-center justify-between"
+                trigger={
+                  <div className="flex h-full w-full items-center justify-between text-left">
+                    <span className="text-sm font-medium text-white truncate">
+                      {flightCabin === 'FIRST'
+                        ? 'First Class Suite'
+                        : flightCabin === 'BUSINESS'
+                        ? 'Business Class'
+                        : 'Economy Class'}
+                    </span>
+                    <ChevronDown size={14} className="text-[#DFB76C]/70 shrink-0 ml-2" />
+                  </div>
+                }
+              />
             </div>
             <div>
               <button
@@ -613,33 +637,33 @@ export default function MultimodalMarketplace() {
             {[
               {
                 id: 'HTL-001',
-                name: 'The Grand Savoy Estate & Alpine Spa',
-                location: 'Geneva, Switzerland',
+                name: 'Taj Falaknuma Palace',
+                location: 'Hyderabad, Telangana',
                 stars: 5.0,
-                price: 480.0,
+                price: 38500.0,
                 image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
-                amenities: ['Private Chalet Butler', 'Michelin Dining', 'Thermal Hydrotherapy'],
+                amenities: ['Royal Carriage Arrival', 'Nizami Butler Service', 'Heritage Palace Suites'],
               },
               {
                 id: 'HTL-002',
-                name: 'Azure Palms Overwater Sanctuary',
-                location: 'Bora Bora, French Polynesia',
+                name: 'The Taj Mahal Palace & Tower',
+                location: 'Colaba, Mumbai',
                 stars: 4.9,
-                price: 720.0,
-                image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=600&q=80',
-                amenities: ['Glass Lagoon Floor', 'Champagne Breakfast', 'Coral Reef Excursions'],
+                price: 32000.0,
+                image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80',
+                amenities: ['Gateway of India View', 'Sea Lounge High Tea', 'Jiva Luxury Spa'],
               },
               {
                 id: 'HTL-003',
-                name: 'Manhattan Skyline Penthouse Suites',
-                location: 'New York City, USA',
-                stars: 4.8,
-                price: 540.0,
+                name: 'The Oberoi Amarvilas',
+                location: 'Agra, Uttar Pradesh',
+                stars: 5.0,
+                price: 42000.0,
                 image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80',
-                amenities: ['Central Park Views', 'Rolls Royce House Car', 'Rooftop Lounge'],
+                amenities: ['Direct Taj Mahal Views', 'Private Terrace Dining', 'Royal Spa Sanctuary'],
               },
             ].map((htl) => (
-              <div key={htl.id} className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden flex flex-col justify-between">
+              <div key={htl.id} className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden flex flex-col justify-between h-full">
                 <img src={htl.image} alt={htl.name} className="h-48 w-full object-cover" />
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
@@ -657,10 +681,13 @@ export default function MultimodalMarketplace() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-[#2C315E]">
-                    <div>
-                      <span className="text-xs text-white/70">Nightly Rate</span>
-                      <div className="text-2xl font-bold text-white">₹{htl.price.toFixed(2)}</div>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 border-t border-[#2C315E] mt-auto">
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] uppercase font-cinzel tracking-wider text-white/60 block">Nightly Rate</span>
+                      <div className="text-xl font-bold text-white tracking-tight truncate">
+                        ₹{Number(htl.price).toLocaleString('en-IN')}
+                        <span className="text-xs font-sans font-normal text-white/60"> / night</span>
+                      </div>
                     </div>
                     <button
                       onClick={() =>
@@ -674,9 +701,10 @@ export default function MultimodalMarketplace() {
                           details: htl,
                         })
                       }
-                      className="px-4 py-2 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] text-sm font-semibold transition"
+                      className="w-full sm:w-auto shrink-0 px-4 py-2 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] transition shadow-md shadow-[#DFB76C]/20 inline-flex items-center justify-center gap-1.5"
                     >
-                      Book Stay
+                      <span>Book Stay</span>
+                      <ArrowRight size={13} className="shrink-0" />
                     </button>
                   </div>
                 </div>
@@ -698,7 +726,7 @@ export default function MultimodalMarketplace() {
                 type="text"
                 value={carLocation}
                 onChange={(e) => setCarLocation(e.target.value)}
-                placeholder="Miami / Los Angeles / Delhi"
+                placeholder="Hyderabad Airport / HITEC City / Mumbai Airport"
                 className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
@@ -706,17 +734,56 @@ export default function MultimodalMarketplace() {
               <label className="block text-xs font-semibold uppercase tracking-wider text-white/70 mb-1">
                 Category
               </label>
-              <select
-                value={carCategory}
-                onChange={(e) => setCarCategory(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
-              >
-                <option value="">All Fleets & Chauffeurs</option>
-                <option value="LUXURY">Luxury & Exotic</option>
-                <option value="SUV">SUV & 4x4</option>
-                <option value="ELECTRIC">Electric (EV)</option>
-                <option value="SEDAN">Executive Sedan</option>
-              </select>
+              <GooeyMenu
+                className="w-full"
+                style={{ width: '100%' }}
+                surfaceClassName="bg-[#13152C]"
+                options={[
+                  'All Categories & Chauffeurs',
+                  'Luxury & Exotic',
+                  'SUV & 4x4',
+                  'Electric (EV)',
+                  'Executive Sedan',
+                ]}
+                value={
+                  carCategory === 'LUXURY'
+                    ? 'Luxury & Exotic'
+                    : carCategory === 'SUV'
+                    ? 'SUV & 4x4'
+                    : carCategory === 'ELECTRIC'
+                    ? 'Electric (EV)'
+                    : carCategory === 'SEDAN'
+                    ? 'Executive Sedan'
+                    : 'All Categories & Chauffeurs'
+                }
+                onSelect={(opt) => {
+                  const map = {
+                    'Luxury & Exotic': 'LUXURY',
+                    'SUV & 4x4': 'SUV',
+                    'Electric (EV)': 'ELECTRIC',
+                    'Executive Sedan': 'SEDAN',
+                    'All Categories & Chauffeurs': '',
+                  };
+                  setCarCategory(map[opt] ?? '');
+                }}
+                triggerClassName="h-[42px] w-full rounded-[2px] bg-[#1B1E3D] px-4 border border-[#2C315E] hover:border-[#DFB76C]/60 transition-colors flex items-center justify-between"
+                trigger={
+                  <div className="flex h-full w-full items-center justify-between text-left">
+                    <span className="text-sm font-medium text-white truncate">
+                      {carCategory === 'LUXURY'
+                        ? 'Luxury & Exotic'
+                        : carCategory === 'SUV'
+                        ? 'SUV & 4x4'
+                        : carCategory === 'ELECTRIC'
+                        ? 'Electric (EV)'
+                        : carCategory === 'SEDAN'
+                        ? 'Executive Sedan'
+                        : 'All Categories & Chauffeurs'}
+                    </span>
+                    <ChevronDown size={14} className="text-[#DFB76C]/70 shrink-0 ml-2" />
+                  </div>
+                }
+              />
             </div>
             <div>
               <button
@@ -821,7 +888,7 @@ export default function MultimodalMarketplace() {
                 type="text"
                 value={actDestination}
                 onChange={(e) => setActDestination(e.target.value)}
-                placeholder="Paris / Tokyo / Maui / Jaipur"
+                placeholder="Hyderabad / Jaipur / Agra / Kerala"
                 className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
@@ -829,17 +896,56 @@ export default function MultimodalMarketplace() {
               <label className="block text-xs font-semibold uppercase tracking-wider text-white/70 mb-1">
                 Experience Category
               </label>
-              <select
-                value={actCategory}
-                onChange={(e) => setActCategory(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
-              >
-                <option value="">All VIP Experiences</option>
-                <option value="CRUISE">Yacht & Private Catamaran</option>
-                <option value="EXCURSION">Private Helicopter & Air</option>
-                <option value="CULINARY">Michelin-Starred Culinary</option>
-                <option value="ADVENTURE">Safari & Desert Expeditions</option>
-              </select>
+              <GooeyMenu
+                className="w-full"
+                style={{ width: '100%' }}
+                surfaceClassName="bg-[#13152C]"
+                options={[
+                  'All VIP Experiences',
+                  'Yacht & Private Catamaran',
+                  'Private Helicopter & Air',
+                  'Michelin-Starred Culinary',
+                  'Safari & Desert Expeditions',
+                ]}
+                value={
+                  actCategory === 'CRUISE'
+                    ? 'Yacht & Private Catamaran'
+                    : actCategory === 'EXCURSION'
+                    ? 'Private Helicopter & Air'
+                    : actCategory === 'CULINARY'
+                    ? 'Michelin-Starred Culinary'
+                    : actCategory === 'ADVENTURE'
+                    ? 'Safari & Desert Expeditions'
+                    : 'All VIP Experiences'
+                }
+                onSelect={(opt) => {
+                  const map = {
+                    'Yacht & Private Catamaran': 'CRUISE',
+                    'Private Helicopter & Air': 'EXCURSION',
+                    'Michelin-Starred Culinary': 'CULINARY',
+                    'Safari & Desert Expeditions': 'ADVENTURE',
+                    'All VIP Experiences': '',
+                  };
+                  setActCategory(map[opt] ?? '');
+                }}
+                triggerClassName="h-[42px] w-full rounded-[2px] bg-[#1B1E3D] px-4 border border-[#2C315E] hover:border-[#DFB76C]/60 transition-colors flex items-center justify-between"
+                trigger={
+                  <div className="flex h-full w-full items-center justify-between text-left">
+                    <span className="text-sm font-medium text-white truncate">
+                      {actCategory === 'CRUISE'
+                        ? 'Yacht & Private Catamaran'
+                        : actCategory === 'EXCURSION'
+                        ? 'Private Helicopter & Air'
+                        : actCategory === 'CULINARY'
+                        ? 'Michelin-Starred Culinary'
+                        : actCategory === 'ADVENTURE'
+                        ? 'Safari & Desert Expeditions'
+                        : 'All VIP Experiences'}
+                    </span>
+                    <ChevronDown size={14} className="text-[#DFB76C]/70 shrink-0 ml-2" />
+                  </div>
+                }
+              />
             </div>
             <div>
               <button
@@ -950,7 +1056,7 @@ export default function MultimodalMarketplace() {
                 type="text"
                 value={pkgDestination}
                 onChange={(e) => setPkgDestination(e.target.value)}
-                placeholder="Cancun / Maui / Jaipur / Maldives"
+                placeholder="Kerala Backwaters / Rajasthan / Goa / Agra"
                 className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
@@ -1083,15 +1189,44 @@ export default function MultimodalMarketplace() {
                 <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1.5">
                   Simulate Incident Type
                 </label>
-                <select
-                  value={disruptionType}
-                  onChange={(e) => setDisruptionType(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-white font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none"
-                >
-                  <option value="FLIGHT_DELAY">Flight Delay (+85 Minutes Arrival)</option>
-                  <option value="FLIGHT_CANCELLED">Flight Cancelled by Carrier</option>
-                  <option value="WEATHER_ALERT">Severe Weather Warning (Airport Ground Stop)</option>
-                </select>
+                <GooeyMenu
+                  className="w-full"
+                  style={{ width: '100%' }}
+                  surfaceClassName="bg-[#13152C]"
+                  options={[
+                    'Flight Delay (+85 Minutes Arrival)',
+                    'Flight Cancelled by Carrier',
+                    'Severe Weather Warning (Airport Ground Stop)',
+                  ]}
+                  value={
+                    disruptionType === 'FLIGHT_DELAY'
+                      ? 'Flight Delay (+85 Minutes Arrival)'
+                      : disruptionType === 'FLIGHT_CANCELLED'
+                      ? 'Flight Cancelled by Carrier'
+                      : 'Severe Weather Warning (Airport Ground Stop)'
+                  }
+                  onSelect={(opt) => {
+                    const map = {
+                      'Flight Delay (+85 Minutes Arrival)': 'FLIGHT_DELAY',
+                      'Flight Cancelled by Carrier': 'FLIGHT_CANCELLED',
+                      'Severe Weather Warning (Airport Ground Stop)': 'WEATHER_ALERT',
+                    };
+                    setDisruptionType(map[opt] ?? 'FLIGHT_DELAY');
+                  }}
+                  triggerClassName="h-[42px] w-full rounded-[2px] bg-[#1B1E3D] px-4 border border-[#2C315E] hover:border-[#DFB76C]/60 transition-colors flex items-center justify-between"
+                  trigger={
+                    <div className="flex h-full w-full items-center justify-between text-left">
+                      <span className="text-sm font-medium text-white truncate">
+                        {disruptionType === 'FLIGHT_DELAY'
+                          ? 'Flight Delay (+85 Minutes Arrival)'
+                          : disruptionType === 'FLIGHT_CANCELLED'
+                          ? 'Flight Cancelled by Carrier'
+                          : 'Severe Weather Warning (Airport Ground Stop)'}
+                      </span>
+                      <ChevronDown size={14} className="text-[#DFB76C]/70 shrink-0 ml-2" />
+                    </div>
+                  }
+                />
               </div>
 
               <div>

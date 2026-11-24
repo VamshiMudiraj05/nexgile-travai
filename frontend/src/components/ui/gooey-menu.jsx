@@ -203,9 +203,9 @@ export const GooeyMenu = ({
   };
 
   const effectiveWidth =
-    props.width !== undefined
+    width !== W
       ? width
-      : hasCustomTrigger && geometry.width > 120
+      : hasCustomTrigger && geometry.width > 80
       ? geometry.width
       : width;
 
@@ -257,7 +257,7 @@ export const GooeyMenu = ({
       }}
       className={cn(
         'relative inline-flex flex-col items-center select-none',
-        open ? 'z-50' : 'z-20',
+        open ? 'z-[100]' : 'z-20',
         className
       )}
       style={{

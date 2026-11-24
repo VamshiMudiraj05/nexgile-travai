@@ -13,14 +13,14 @@ class MultimodalService:
     # --- FLIGHT INVENTORY ---
     @staticmethod
     def search_flights(
-        origin: str = "NYC",
-        destination: str = "LON",
+        origin: str = "HYD",
+        destination: str = "BOM",
         departure_date: str = "2026-12-01",
         cabin_class: str = "ECONOMY",
     ) -> Dict[str, Any]:
         """Aggregate global airline inventory across Star Alliance, SkyTeam, and Oneworld networks."""
-        base_origin = (origin or "NYC").upper().strip()
-        base_dest = (destination or "LON").upper().strip()
+        base_origin = (origin or "HYD").upper().strip()
+        base_dest = (destination or "BOM").upper().strip()
 
         # Airline inventory catalog
         catalog = [
@@ -74,15 +74,15 @@ class MultimodalService:
             },
             {
                 "id": f"FL-{uuid.uuid4().hex[:6].upper()}",
-                "airline": "Air France",
+                "airline": "Vistara Premier",
                 "airline_logo": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=120&q=80",
-                "flight_number": "AF-023",
+                "flight_number": "UK-872",
                 "origin": base_origin,
                 "destination": base_dest,
                 "departure_time": "14:10",
-                "arrival_time": "04:25+1",
-                "duration": "9h 15m",
-                "stops": 1,
+                "arrival_time": "16:25",
+                "duration": "2h 15m",
+                "stops": 0,
                 "cabin_class": cabin_class,
                 "price": 51800.0 if cabin_class == "ECONOMY" else 148000.0 if cabin_class == "BUSINESS" else 285000.0,
                 "seats_remaining": 9,
@@ -100,8 +100,8 @@ class MultimodalService:
 
     @staticmethod
     async def search_flights_live(
-        origin: str = "NYC",
-        destination: str = "LON",
+        origin: str = "HYD",
+        destination: str = "BOM",
         departure_date: str = "2026-12-01",
         cabin_class: str = "ECONOMY",
     ) -> Dict[str, Any]:
@@ -142,13 +142,13 @@ class MultimodalService:
     # --- CAR RENTAL INVENTORY ---
     @staticmethod
     def search_cars(
-        location: str = "New York",
+        location: str = "Hyderabad Airport",
         pickup_date: str = "2026-12-01",
         return_date: str = "2026-12-05",
         category: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Aggregate certified car rental providers (Hertz, Avis, Sixt, Enterprise)."""
-        loc = location or "City Center"
+        loc = location or "Hyderabad Airport"
         catalog = [
             {
                 "id": f"CAR-{uuid.uuid4().hex[:6].upper()}",
@@ -161,8 +161,8 @@ class MultimodalService:
                 "seats": 5,
                 "transmission": "Automatic",
                 "unlimited_mileage": True,
-                "pickup_location": f"{loc} Airport (Terminal 1)",
-                "dropoff_location": f"{loc} Airport (Terminal 1)",
+                "pickup_location": f"{loc} (Terminal 1 - VIP Chauffeur Bay)",
+                "dropoff_location": f"{loc} (Terminal 1 - VIP Chauffeur Bay)",
             },
             {
                 "id": f"CAR-{uuid.uuid4().hex[:6].upper()}",
@@ -175,8 +175,8 @@ class MultimodalService:
                 "seats": 5,
                 "transmission": "Automatic",
                 "unlimited_mileage": True,
-                "pickup_location": f"{loc} Downtown Station",
-                "dropoff_location": f"{loc} Downtown Station",
+                "pickup_location": f"{loc} HITEC City Chauffeur Bay",
+                "dropoff_location": f"{loc} HITEC City Chauffeur Bay",
             },
             {
                 "id": f"CAR-{uuid.uuid4().hex[:6].upper()}",
@@ -189,8 +189,8 @@ class MultimodalService:
                 "seats": 5,
                 "transmission": "Automatic",
                 "unlimited_mileage": True,
-                "pickup_location": f"{loc} International Hub",
-                "dropoff_location": f"{loc} International Hub",
+                "pickup_location": f"{loc} Banjara Hills Lounge",
+                "dropoff_location": f"{loc} Banjara Hills Lounge",
             },
             {
                 "id": f"CAR-{uuid.uuid4().hex[:6].upper()}",
@@ -203,8 +203,8 @@ class MultimodalService:
                 "seats": 5,
                 "transmission": "Automatic",
                 "unlimited_mileage": True,
-                "pickup_location": f"{loc} Airport",
-                "dropoff_location": f"{loc} Airport",
+                "pickup_location": f"{loc} Airport VIP Terminal",
+                "dropoff_location": f"{loc} Airport VIP Terminal",
             },
         ]
 
@@ -222,66 +222,66 @@ class MultimodalService:
     # --- TOURS & EXPERIENCES ---
     @staticmethod
     def search_activities(
-        destination: str = "Maui",
+        destination: str = "Hyderabad",
         date_str: str = "2026-12-02",
         category: Optional[str] = None,
         date: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Aggregate curated local experiences, private tours, and culinary masterclasses."""
-        dest = destination or "Resort Destination"
+        dest = destination or "Hyderabad"
         effective_date = date or date_str
         catalog = [
             {
                 "id": f"ACT-{uuid.uuid4().hex[:6].upper()}",
-                "title": f"Sunset Catamaran & Champagne Yacht Cruise in {dest}",
-                "category": "CRUISE",
+                "title": f"Charminar & Golconda Fort Heritage Walk with Royal Nizami Feast in {dest}",
+                "category": "CULINARY",
                 "image_url": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80",
-                "duration": "3.5 Hours",
-                "location": f"{dest} Coastal Harbor",
-                "rating": 4.95,
+                "duration": "4.5 Hours",
+                "location": f"{dest} Old City & Citadel",
+                "rating": 4.96,
                 "review_count": 312,
-                "price_per_person": 12500.0,
+                "price_per_person": 8500.0,
                 "free_cancellation": True,
-                "highlights": ["Open Champagne Bar", "Private Chef Hors d'oeuvres", "Whale & Dolphin Watching"],
+                "highlights": ["Curated Historian Guide", "Authentic Nizami Degustation Dinner", "VIP Fort Sunset Access"],
             },
             {
                 "id": f"ACT-{uuid.uuid4().hex[:6].upper()}",
-                "title": f"VIP Helicopter Excursion & Hidden Waterfalls Tour",
+                "title": f"VIP Aerial Helicopter Tour of Mumbai Coast & Gateway of India",
                 "category": "EXCURSION",
                 "image_url": "https://images.unsplash.com/photo-1508672019048-805b876b67e2?auto=format&fit=crop&w=600&q=80",
                 "duration": "1.5 Hours",
-                "location": f"{dest} Regional Helipad",
+                "location": "Juhu Helipad, Mumbai",
                 "rating": 4.98,
                 "review_count": 184,
-                "price_per_person": 28500.0,
+                "price_per_person": 22500.0,
                 "free_cancellation": True,
-                "highlights": ["Doors-off Experience", "Two-way Pilot Headsets", "High-Definition 4K Footage Included"],
+                "highlights": ["Doors-off Experience", "Marine Drive & Sea Link Aerials", "High-Definition 4K Footage Included"],
             },
             {
                 "id": f"ACT-{uuid.uuid4().hex[:6].upper()}",
-                "title": f"Private Michelin-Starred Estate Wine & Truffle Pairing in {dest}",
-                "category": "CULINARY",
+                "title": f"Private Taj Mahal Sunrise Tour & Royal Mughlai Dining in Agra",
+                "category": "EXCURSION",
                 "image_url": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=800&q=80",
                 "duration": "4 Hours",
-                "location": f"{dest} Vineyards & Private Cellar",
-                "rating": 4.91,
-                "review_count": 94,
-                "price_per_person": 18000.0,
+                "location": "Agra, Uttar Pradesh",
+                "rating": 4.95,
+                "review_count": 294,
+                "price_per_person": 14000.0,
                 "free_cancellation": True,
-                "highlights": ["Master Sommelier Guided", "6 Rare Vintage Tastings", "Farm-to-Table 5-Course Dinner"],
+                "highlights": ["VIP Sunrise Gate Escort", "Archaeological Master Sommelier", "Direct Balcony Mughlai Brunch"],
             },
             {
                 "id": f"ACT-{uuid.uuid4().hex[:6].upper()}",
-                "title": f"Royal Desert Glamping & Private Stargazing Safari in {dest}",
-                "category": "ADVENTURE",
+                "title": f"Kerala Backwaters Luxury Houseboat Cruise & Traditional Sadhya Feast",
+                "category": "CRUISE",
                 "image_url": "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80",
                 "duration": "6 Hours",
-                "location": f"{dest} Private Dunes Sanctuary",
+                "location": "Alleppey Backwaters, Kerala",
                 "rating": 4.97,
                 "review_count": 240,
                 "price_per_person": 16500.0,
                 "free_cancellation": True,
-                "highlights": ["Private Bedouin Luxury Pavilion", "Telescopic Deep-Space Astronomy", "Five-Course Dune Candlelit Dining"],
+                "highlights": ["Private Air-Conditioned Kettuvallam", "Live Karimeen Fry Chef Masterclass", "Vembanad Lake Sunset Cruise"],
             },
         ]
 
@@ -297,17 +297,17 @@ class MultimodalService:
 
     # --- DYNAMIC PACKAGES ---
     @staticmethod
-    def search_packages(destination: str = "Maui") -> Dict[str, Any]:
+    def search_packages(destination: str = "Kerala Backwaters") -> Dict[str, Any]:
         """Generate bundled dynamic vacation packages with automated 15-20% bundle savings."""
-        dest = destination or "Hawaiian Islands"
+        dest = destination or "Kerala Backwaters"
         packages = [
             {
                 "id": f"PKG-{uuid.uuid4().hex[:6].upper()}",
-                "title": f"The Ultimate Luxury Sanctuary Package ({dest})",
+                "title": f"The Ultimate Royal Palace & Backwaters Sanctuary Package ({dest})",
                 "destination": dest,
                 "duration_days": 5,
-                "hotel_name": "Nexgile Grand Oceanfront Estate & Spa",
-                "flight_airline": "Emirates First Class",
+                "hotel_name": "Taj Falaknuma & Kumarakom Lake Resort",
+                "flight_airline": "Air India Flagship & Vistara Premier",
                 "car_model": "Porsche Cayenne S AWD (Sixt)",
                 "original_total": 385000.0,
                 "package_price": 315000.0,
@@ -315,9 +315,10 @@ class MultimodalService:
                 "savings_pct": 18.2,
                 "image_url": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80",
                 "inclusions": [
-                    "5 Nights Oceanview Presidential Suite",
-                    "Roundtrip Business/First Class Airfare",
+                    "5 Nights Heritage Palace & Luxury Lake Villa",
+                    "Roundtrip Business Class Airfare (HYD - COK)",
                     "Complimentary 5-Day Luxury SUV Rental",
+                    "Sunset Catamaran & Traditional Houseboat Feast",
                     "Daily Champagne Breakfast & ₹20,000 Spa Credit",
                 ],
             },

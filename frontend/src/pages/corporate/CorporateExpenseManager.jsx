@@ -23,8 +23,10 @@ import {
   ChevronRight,
   TrendingUp,
   Percent,
-  X
+  X,
+  ChevronDown,
 } from 'lucide-react';
+import { GooeyMenu } from '@/components/ui/gooey-menu';
 import { corporateExpenseService } from '../../services/corporateExpenseService';
 
 export default function CorporateExpenseManager() {
@@ -37,7 +39,7 @@ export default function CorporateExpenseManager() {
   const [simFlightCabin, setSimFlightCabin] = useState('BUSINESS');
   const [simAdvanceDays, setSimAdvanceDays] = useState(4);
   const [simCost, setSimCost] = useState(2400);
-  const [simDestination, setSimDestination] = useState('Paris, France');
+  const [simDestination, setSimDestination] = useState('Mumbai, India');
   const [complianceResult, setComplianceResult] = useState(null);
 
   // Approvals states
@@ -52,16 +54,16 @@ export default function CorporateExpenseManager() {
   const [reqEmployeeName, setReqEmployeeName] = useState('Julian Mercer');
   const [reqEmployeeEmail, setReqEmployeeEmail] = useState('julian.mercer@enterprise.com');
   const [reqDepartment, setReqDepartment] = useState('Sales');
-  const [reqDestination, setReqDestination] = useState('Tokyo, Japan');
+  const [reqDestination, setReqDestination] = useState('Bengaluru, India');
   const [reqDepDate, setReqDepDate] = useState('2026-12-15');
   const [reqRetDate, setReqRetDate] = useState('2026-12-22');
   const [reqTotal, setReqTotal] = useState(3800);
-  const [reqJustification, setReqJustification] = useState('APAC Key Client Enterprise Expansion & Contract Signing');
+  const [reqJustification, setReqJustification] = useState('Key Client Enterprise Expansion & Contract Signing');
 
   // Expense reports & OCR states
   const [expenses, setExpenses] = useState([]);
   const [vatSummary, setVatSummary] = useState(null);
-  const [ocrFilename, setOcrFilename] = useState('hotel_folio_geneva.jpg');
+  const [ocrFilename, setOcrFilename] = useState('hotel_tax_invoice_mumbai.pdf');
   const [ocrLoading, setOcrLoading] = useState(false);
   const [ocrResult, setOcrResult] = useState(null);
 
@@ -71,7 +73,7 @@ export default function CorporateExpenseManager() {
   const [broadcastSeverity, setBroadcastSeverity] = useState('HIGH');
   const [broadcastSubject, setBroadcastSubject] = useState('Airport Weather & Ground Stop Advisory');
   const [broadcastMessage, setBroadcastMessage] = useState(
-    'Winter weather ground stop at London Heathrow. Hotel reservations extended with zero penalty.'
+    'Monsoon weather ground stop at Mumbai Chhatrapati Shivaji Airport. Hotel reservations extended with zero penalty.'
   );
   const [broadcastStatus, setBroadcastStatus] = useState(null);
 
@@ -479,15 +481,37 @@ export default function CorporateExpenseManager() {
 
               <div>
                 <label className="block text-xs font-semibold text-white/70 uppercase mb-1">Flight Cabin Class</label>
-                <select
-                  value={simFlightCabin}
-                  onChange={(e) => setSimFlightCabin(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1B1E3D] border border-[#E5DDCF] rounded-[2px] text-white text-sm"
-                >
-                  <option value="ECONOMY">Economy</option>
-                  <option value="BUSINESS">Business Class</option>
-                  <option value="FIRST">First Class</option>
-                </select>
+                <GooeyMenu
+                  className="w-full"
+                  style={{ width: '100%' }}
+                  surfaceClassName="bg-[#13152C]"
+                  options={['Economy', 'Business Class', 'First Class']}
+                  value={
+                    simFlightCabin === 'FIRST'
+                      ? 'First Class'
+                      : simFlightCabin === 'BUSINESS'
+                      ? 'Business Class'
+                      : 'Economy'
+                  }
+                  onSelect={(opt) => {
+                    if (opt === 'First Class') setSimFlightCabin('FIRST');
+                    else if (opt === 'Business Class') setSimFlightCabin('BUSINESS');
+                    else setSimFlightCabin('ECONOMY');
+                  }}
+                  triggerClassName="h-[40px] w-full rounded-[2px] bg-[#1B1E3D] px-3 border border-[#E5DDCF] text-white text-sm flex items-center justify-between"
+                  trigger={
+                    <div className="flex h-full w-full items-center justify-between text-left">
+                      <span className="text-sm font-medium text-white truncate">
+                        {simFlightCabin === 'FIRST'
+                          ? 'First Class'
+                          : simFlightCabin === 'BUSINESS'
+                          ? 'Business Class'
+                          : 'Economy'}
+                      </span>
+                      <ChevronDown size={14} className="text-[#DFB76C]/70 shrink-0 ml-2" />
+                    </div>
+                  }
+                />
               </div>
 
               <div>

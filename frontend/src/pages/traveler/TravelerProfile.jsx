@@ -12,7 +12,9 @@ import {
   Mail,
   Shield,
   Compass,
+  ChevronDown,
 } from 'lucide-react';
+import { GooeyMenu } from '@/components/ui/gooey-menu';
 import { travelerService } from '../../services/travelerService';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -267,32 +269,76 @@ export default function TravelerProfile() {
                 <label className="block font-cinzel text-[10px] tracking-wider text-white uppercase mb-1.5 font-bold">
                   Preferred Room Type
                 </label>
-                <select
+                <GooeyMenu
+                  className="w-full"
+                  style={{ width: '100%' }}
+                  surfaceClassName="bg-[#13152C]"
+                  options={[
+                    'Deluxe Ocean Suite',
+                    'Executive Penthouse',
+                    'Standard King Room',
+                    'Family Villa',
+                  ]}
                   value={preferredRoomType}
-                  onChange={(e) => setPreferredRoomType(e.target.value)}
-                  className="w-full rounded-[2px] border border-[#2C315E] bg-[#1B1E3D] px-4 py-2.5 font-sans text-xs text-white focus:border-[#DFB76C] focus:outline-none transition-all cursor-pointer"
-                >
-                  <option value="Deluxe Ocean Suite">Deluxe Ocean Suite</option>
-                  <option value="Executive Penthouse">Executive Penthouse</option>
-                  <option value="Standard King Room">Standard King Room</option>
-                  <option value="Family Villa">Family Villa</option>
-                </select>
+                  onSelect={(opt) => setPreferredRoomType(opt)}
+                  triggerClassName="h-[42px] w-full rounded-[2px] bg-[#1B1E3D] px-4 border border-[#2C315E] hover:border-[#DFB76C]/60 transition-colors flex items-center justify-between"
+                  trigger={
+                    <div className="flex h-full w-full items-center justify-between text-left">
+                      <span className="text-xs font-sans text-white truncate">{preferredRoomType}</span>
+                      <ChevronDown size={14} className="text-[#DFB76C]/70 shrink-0 ml-2" />
+                    </div>
+                  }
+                />
               </div>
 
               <div>
                 <label className="block font-cinzel text-[10px] tracking-wider text-white uppercase mb-1.5 font-bold">
                   Typical Nightly Budget
                 </label>
-                <select
-                  value={budgetRange}
-                  onChange={(e) => setBudgetRange(e.target.value)}
-                  className="w-full rounded-[2px] border border-[#2C315E] bg-[#1B1E3D] px-4 py-2.5 font-sans text-xs text-white focus:border-[#DFB76C] focus:outline-none transition-all cursor-pointer"
-                >
-                  <option value="BUDGET">Budget (Up to ₹5,000/night)</option>
-                  <option value="MODERATE">Standard (₹5,000 – ₹12,000/night)</option>
-                  <option value="LUXURY">Luxury (₹12,000 – ₹25,000/night)</option>
-                  <option value="ULTRA_LUXURY">Premium Suite (₹25,000+/night)</option>
-                </select>
+                <GooeyMenu
+                  className="w-full"
+                  style={{ width: '100%' }}
+                  surfaceClassName="bg-[#13152C]"
+                  options={[
+                    'Budget (Up to ₹5,000/night)',
+                    'Standard (₹5,000 – ₹12,000/night)',
+                    'Luxury (₹12,000 – ₹25,000/night)',
+                    'Premium Suite (₹25,000+/night)',
+                  ]}
+                  value={
+                    budgetRange === 'BUDGET'
+                      ? 'Budget (Up to ₹5,000/night)'
+                      : budgetRange === 'MODERATE'
+                      ? 'Standard (₹5,000 – ₹12,000/night)'
+                      : budgetRange === 'LUXURY'
+                      ? 'Luxury (₹12,000 – ₹25,000/night)'
+                      : 'Premium Suite (₹25,000+/night)'
+                  }
+                  onSelect={(opt) => {
+                    const map = {
+                      'Budget (Up to ₹5,000/night)': 'BUDGET',
+                      'Standard (₹5,000 – ₹12,000/night)': 'MODERATE',
+                      'Luxury (₹12,000 – ₹25,000/night)': 'LUXURY',
+                      'Premium Suite (₹25,000+/night)': 'ULTRA_LUXURY',
+                    };
+                    setBudgetRange(map[opt] ?? 'LUXURY');
+                  }}
+                  triggerClassName="h-[42px] w-full rounded-[2px] bg-[#1B1E3D] px-4 border border-[#2C315E] hover:border-[#DFB76C]/60 transition-colors flex items-center justify-between"
+                  trigger={
+                    <div className="flex h-full w-full items-center justify-between text-left">
+                      <span className="text-xs font-sans text-white truncate">
+                        {budgetRange === 'BUDGET'
+                          ? 'Budget (Up to ₹5,000/night)'
+                          : budgetRange === 'MODERATE'
+                          ? 'Standard (₹5,000 – ₹12,000/night)'
+                          : budgetRange === 'LUXURY'
+                          ? 'Luxury (₹12,000 – ₹25,000/night)'
+                          : 'Premium Suite (₹25,000+/night)'}
+                      </span>
+                      <ChevronDown size={14} className="text-[#DFB76C]/70 shrink-0 ml-2" />
+                    </div>
+                  }
+                />
               </div>
             </div>
 
