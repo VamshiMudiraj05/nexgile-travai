@@ -226,7 +226,7 @@ export const FrontDeskDashboard = () => {
 
       {/* Luxury Search Bar */}
       <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 p-3.5 rounded-[4px] shadow-sm flex items-center gap-3">
-        <Search className="w-4 h-4 text-[#DFB76C]" />
+        <Search className="w-4 h-4 text-[#DFB76C] stroke-[2.2] shrink-0" />
         <input
           type="text"
           placeholder="Search guest folio, reservation reference #, or suite number..."

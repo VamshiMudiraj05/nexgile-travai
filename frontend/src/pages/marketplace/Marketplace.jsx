@@ -206,7 +206,7 @@ export default function Marketplace() {
           </div>
 
           {/* Guests & Suites (Tactile Liquid GooeyMenu) */}
-          <div className="relative lg:col-span-3 h-14">
+          <div className="relative lg:col-span-2 h-14">
             <GooeyMenu
               className="w-full h-14"
               style={{ width: '100%' }}
@@ -248,13 +248,15 @@ export default function Marketplace() {
           </div>
 
           {/* Search CTA */}
-          <div className="sm:col-span-2 lg:col-span-2 h-14">
+          <div className="sm:col-span-2 lg:col-span-3 h-14">
             <button
               type="submit"
-              className="h-14 w-full rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] active:scale-[0.99] text-[#13152C] font-cinzel text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer transition-all shadow-md shrink-0"
+              className="h-14 w-full rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] active:scale-[0.99] text-[#13152C] font-cinzel text-xs font-bold tracking-[0.16em] uppercase flex items-center justify-center gap-2.5 px-4 cursor-pointer transition-all shadow-md shrink-0 whitespace-nowrap"
             >
-              <Search size={15} />
-              <span>Explore Stays</span>
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#13152C]/10 shrink-0">
+                <Search className="w-3.5 h-3.5 stroke-[2.5] text-[#13152C]" />
+              </div>
+              <span className="truncate">Explore Stays</span>
             </button>
           </div>
         </form>

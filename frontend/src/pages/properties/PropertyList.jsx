@@ -111,8 +111,8 @@ export const PropertyList = () => {
 
       {/* Filters & Search */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#13152C] border border-[#2C315E] p-4 rounded-[4px] shadow-sm">
-        <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#DFB76C]" />
+        <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80 group">
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none" />
           <input
             type="text"
             value={search}

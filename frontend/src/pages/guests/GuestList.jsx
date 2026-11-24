@@ -86,8 +86,8 @@ export const GuestList = () => {
 
       {/* Search Bar */}
       <div className="bg-[#13152C] border border-[#2C315E] p-5 rounded-[4px] shadow-sm">
-        <form onSubmit={handleSearchSubmit} className="relative max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#DFB76C]" />
+        <form onSubmit={handleSearchSubmit} className="relative max-w-md group">
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none" />
           <input
             type="text"
             value={search}

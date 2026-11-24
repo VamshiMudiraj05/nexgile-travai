@@ -203,8 +203,8 @@ export const ReservationList = () => {
               </div>
             </div>
 
-            <form onSubmit={handleSearchSubmit} className="relative w-full md:w-72">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#DFB76C]" />
+            <form onSubmit={handleSearchSubmit} className="relative w-full md:w-72 group">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none" />
               <input
                 type="text"
                 value={search}

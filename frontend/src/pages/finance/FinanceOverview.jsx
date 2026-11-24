@@ -221,8 +221,8 @@ export const FinanceOverview = () => {
           </div>
 
           {/* Search Input */}
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 text-[#DFB76C] absolute left-3 top-1/2 -translate-y-1/2" />
+          <div className="relative group">
+            <Search className="w-3.5 h-3.5 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search reference, guest, suite..."

@@ -216,8 +216,8 @@ export const RoomList = () => {
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto">
-          <form onSubmit={handleSearchSubmit} className="relative flex-1 md:w-60">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#DFB76C]" />
+          <form onSubmit={handleSearchSubmit} className="relative flex-1 md:w-60 group">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none" />
             <input
               type="text"
               value={search}
