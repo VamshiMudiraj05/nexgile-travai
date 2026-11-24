@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -39,6 +39,25 @@ export const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Drag tracking for floating AI Concierge to ensure dragging never triggers accidental click
+  const isDraggingRef = useRef(false);
+  const dragDistanceRef = useRef(0);
+  const [dragBounds, setDragBounds] = useState({ top: -800, bottom: 0, left: -1400, right: 0 });
+
+  useEffect(() => {
+    const updateBounds = () => {
+      setDragBounds({
+        top: -(window.innerHeight - 80),
+        bottom: 0,
+        left: -(window.innerWidth - 180),
+        right: 0,
+      });
+    };
+    updateBounds();
+    window.addEventListener('resize', updateBounds);
+    return () => window.removeEventListener('resize', updateBounds);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -394,18 +413,47 @@ export const AdminLayout = () => {
           <motion.div
             drag
             dragMomentum={false}
-            dragElastic={0.08}
+            dragElastic={0}
+            dragConstraints={dragBounds}
+            onDragStart={() => {
+              isDraggingRef.current = true;
+              dragDistanceRef.current = 0;
+            }}
+            onDrag={(e, info) => {
+              dragDistanceRef.current = Math.hypot(info.offset.x, info.offset.y);
+            }}
+            onDragEnd={(e, info) => {
+              const dist = Math.hypot(info.offset.x, info.offset.y);
+              if (dist > 5) {
+                // Dragged: keep isDraggingRef true briefly to suppress trailing native click event
+                setTimeout(() => {
+                  isDraggingRef.current = false;
+                  dragDistanceRef.current = 0;
+                }, 200);
+              } else {
+                isDraggingRef.current = false;
+                dragDistanceRef.current = 0;
+              }
+            }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 cursor-grab active:cursor-grabbing touch-none select-none"
-            title="Drag to move across screen · Click to open AI Concierge"
+            onClick={(e) => {
+              if (isDraggingRef.current || dragDistanceRef.current > 5) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+              }
+              navigate('/concierge');
+            }}
+            className="fixed bottom-6 right-6 z-50 cursor-grab active:cursor-grabbing touch-none select-none group"
+            title="Drag to move anywhere across screen · Click to open AI Concierge"
           >
             <RainbowButton
-              onClick={() => navigate('/concierge')}
+              asChild={true}
               glow={true}
               speed={3}
               size="default"
-              className="rounded-full shadow-2xl"
+              className="rounded-full shadow-2xl pointer-events-none transition-none active:scale-100"
             >
               <Sparkles className="w-4 h-4 text-[#DFB76C] animate-pulse" />
               <span>AI CONCIERGE</span>
