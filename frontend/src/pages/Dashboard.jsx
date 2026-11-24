@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { getRoleHomePath } from '../utils/roleRouting';
 import {
   Building2,
   BedDouble,
@@ -53,20 +54,8 @@ export default function Dashboard() {
     }
   }, [user?.role, fetchDashboardOverview]);
 
-  if (user?.role === 'FRONT_DESK') {
-    return <Navigate to="/frontdesk/dashboard" replace />;
-  }
-  if (user?.role === 'FINANCE') {
-    return <Navigate to="/finance" replace />;
-  }
-  if (user?.role === 'MAINTENANCE') {
-    return <Navigate to="/maintenance" replace />;
-  }
-  if (user?.role === 'HOUSEKEEPING') {
-    return <Navigate to="/housekeeping" replace />;
-  }
-  if (user?.role === 'TRAVELER') {
-    return <Navigate to="/traveler/dashboard" replace />;
+  if (user?.role && user.role !== 'ADMIN') {
+    return <Navigate to={getRoleHomePath(user.role)} replace />;
   }
 
   if (loading) {

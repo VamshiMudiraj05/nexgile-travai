@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { Meteors } from '@/components/ui/meteors';
+import { getRoleHomePath, isPathCompatibleWithRole } from '../utils/roleRouting';
 
 export const Login = () => {
   const location = useLocation();
@@ -33,16 +34,7 @@ export const Login = () => {
     setIsSubmitting(true);
     try {
       const loggedUser = await login(demoEmail, 'password123');
-      let targetPath = from;
-      if (from === '/dashboard' || !location.state?.from) {
-        if (loggedUser?.role === 'FRONT_DESK') targetPath = '/frontdesk/dashboard';
-        else if (loggedUser?.role === 'FINANCE') targetPath = '/finance';
-        else if (loggedUser?.role === 'MAINTENANCE') targetPath = '/maintenance';
-        else if (loggedUser?.role === 'HOUSEKEEPING') targetPath = '/housekeeping';
-        else if (loggedUser?.role === 'TRAVELER') targetPath = '/marketplace';
-        else if (loggedUser?.role === 'REVENUE_MANAGER') targetPath = '/revenue/recommendations';
-        else targetPath = '/dashboard';
-      }
+      const targetPath = getRoleHomePath(loggedUser?.role);
       navigate(targetPath, { replace: true });
     } catch (err) {
       const errorMsg =
@@ -67,16 +59,8 @@ export const Login = () => {
     setIsSubmitting(true);
     try {
       const loggedUser = await login(email, password);
-      let targetPath = from;
-      if (from === '/dashboard' || !location.state?.from) {
-        if (loggedUser?.role === 'FRONT_DESK') targetPath = '/frontdesk/dashboard';
-        else if (loggedUser?.role === 'FINANCE') targetPath = '/finance';
-        else if (loggedUser?.role === 'MAINTENANCE') targetPath = '/maintenance';
-        else if (loggedUser?.role === 'HOUSEKEEPING') targetPath = '/housekeeping';
-        else if (loggedUser?.role === 'TRAVELER') targetPath = '/marketplace';
-        else if (loggedUser?.role === 'REVENUE_MANAGER') targetPath = '/revenue/recommendations';
-        else targetPath = '/dashboard';
-      }
+      const roleHome = getRoleHomePath(loggedUser?.role);
+      const targetPath = isPathCompatibleWithRole(from, loggedUser?.role) ? from : roleHome;
       navigate(targetPath, { replace: true });
     } catch (err) {
       const errorMsg =

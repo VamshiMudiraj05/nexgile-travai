@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { ROLE_OPTIONS, USER_ROLES } from '../utils/constants';
+import { getRoleHomePath } from '../utils/roleRouting';
 import { Meteors } from '@/components/ui/meteors';
 
 export const Register = () => {
@@ -70,13 +71,7 @@ export const Register = () => {
       // Immediately log the newly created user in and route to their persona workspace
       try {
         const loggedUser = await login(formData.email.trim(), formData.password);
-        let targetPath = '/marketplace';
-        if (loggedUser?.role === 'ADMIN') targetPath = '/dashboard';
-        else if (loggedUser?.role === 'FRONT_DESK') targetPath = '/frontdesk/dashboard';
-        else if (loggedUser?.role === 'REVENUE_MANAGER') targetPath = '/revenue/recommendations';
-        else if (loggedUser?.role === 'FINANCE') targetPath = '/finance';
-        else if (loggedUser?.role === 'HOUSEKEEPING') targetPath = '/housekeeping';
-        else if (loggedUser?.role === 'MAINTENANCE') targetPath = '/maintenance';
+        const targetPath = getRoleHomePath(loggedUser?.role);
 
         setTimeout(() => {
           navigate(targetPath, { replace: true });

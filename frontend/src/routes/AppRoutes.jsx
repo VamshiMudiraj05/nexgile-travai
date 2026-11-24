@@ -4,6 +4,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { AdminLayout } from '../layouts/AdminLayout';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import { useAuth } from '../hooks/useAuth';
+import { getRoleHomePath } from '../utils/roleRouting';
 
 // Public Pages (Code-split for instant initial FCP)
 const LandingPage = lazy(() => import('../pages/LandingPage'));
@@ -55,13 +56,7 @@ const TravelerDashboard = lazy(() => import('../pages/traveler/TravelerDashboard
 
 const RoleIndexRedirect = () => {
   const { user } = useAuth();
-  if (user?.role === 'FRONT_DESK') return <Navigate to="/frontdesk/dashboard" replace />;
-  if (user?.role === 'FINANCE') return <Navigate to="/finance" replace />;
-  if (user?.role === 'MAINTENANCE') return <Navigate to="/maintenance" replace />;
-  if (user?.role === 'HOUSEKEEPING') return <Navigate to="/housekeeping" replace />;
-  if (user?.role === 'TRAVELER') return <Navigate to="/traveler/dashboard" replace />;
-  if (user?.role === 'REVENUE_MANAGER') return <Navigate to="/revenue/recommendations" replace />;
-  return <Navigate to="/dashboard" replace />;
+  return <Navigate to={getRoleHomePath(user?.role)} replace />;
 };
 
 export const AppRoutes = () => {

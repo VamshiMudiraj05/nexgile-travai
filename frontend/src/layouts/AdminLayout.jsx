@@ -35,6 +35,7 @@ import { RainbowButton } from '@/components/ui/rainbow-button';
 import { CurrencySelector } from '../components/CurrencySelector';
 import { WeatherPill } from '../components/WeatherPill';
 import { motion } from 'framer-motion';
+import { getRoleHomePath, isPathCompatibleWithRole } from '../utils/roleRouting';
 
 export const AdminLayout = () => {
   const { user, logout } = useAuth();
@@ -63,7 +64,7 @@ export const AdminLayout = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/login', { replace: true, state: null });
   };
 
   const isTraveler = user?.role === 'TRAVELER';
@@ -247,19 +248,16 @@ export const AdminLayout = () => {
     ? user.name.replace(/\s*\(.*?\)\s*/g, '').trim() || user.name
     : 'Eleanor Vance';
 
-  const homePath = isTraveler
-    ? '/traveler/dashboard'
-    : isRevenueManager
-    ? '/revenue/recommendations'
-    : isFinance
-    ? '/finance'
-    : isHousekeeping
-    ? '/housekeeping'
-    : isMaintenance
-    ? '/maintenance'
-    : isFrontDesk
-    ? '/frontdesk/dashboard'
-    : '/dashboard';
+  const homePath = getRoleHomePath(user?.role);
+
+  // Proactive Route Guard: Prevent role crosstalk or landing on other personas' dashboards
+  useEffect(() => {
+    if (!user) return;
+    const current = location.pathname;
+    if (!isPathCompatibleWithRole(current, user.role)) {
+      navigate(homePath, { replace: true });
+    }
+  }, [user?.role, location.pathname, homePath, navigate]);
 
   // Compute editorial breadcrumb
   const currentPath = location.pathname;

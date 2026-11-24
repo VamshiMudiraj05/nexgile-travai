@@ -15,6 +15,7 @@ import {
   FileText
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { getRoleHomePath } from '../utils/roleRouting';
 import { Meteors } from '@/components/ui/meteors';
 import CurrencySelector from '../components/CurrencySelector';
 
@@ -27,8 +28,9 @@ export default function LandingPage() {
   const handleQuickLogin = async (email, rolePath) => {
     setLoggingInRole(email);
     try {
-      await login(email, 'password123');
-      navigate(rolePath || '/dashboard');
+      const loggedUser = await login(email, 'password123');
+      const targetPath = rolePath || getRoleHomePath(loggedUser?.role);
+      navigate(targetPath, { replace: true });
     } catch (err) {
       console.warn('Direct login fallback, navigating to login page:', err.message);
       navigate('/login', { state: { prefillEmail: email, prefillPassword: 'password123' } });
@@ -68,7 +70,7 @@ export default function LandingPage() {
             {isAuthenticated ? (
               <>
                 <Link
-                  to="/dashboard"
+                  to="/app"
                   className="flex items-center gap-1.5 px-4 py-1.5 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-[11px] font-bold tracking-[0.16em] uppercase shadow-sm transition"
                 >
                   <span>Dashboard</span>
