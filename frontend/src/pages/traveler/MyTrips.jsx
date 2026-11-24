@@ -13,8 +13,10 @@ import {
   Compass,
   Wifi,
   WifiOff,
+  Download,
 } from 'lucide-react';
 import { travelerService } from '../../services/travelerService';
+import { pdfService } from '../../services/pdfService';
 import StatusBadge from '../../components/StatusBadge';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -90,6 +92,42 @@ export default function MyTrips() {
       alert('Failed to cancel booking. Please try again.');
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  const handleDownloadPDF = (trip) => {
+    if (!trip) return;
+    if (trip.product_type === 'FLIGHT') {
+      pdfService.generateBoardingPassPDF({
+        pnr: trip.pnr || trip.booking_reference,
+        booking_reference: trip.booking_reference,
+        airline: trip.airline || trip.supplier_name || 'British Airways',
+        origin: trip.origin || 'NYC',
+        destination: trip.destination || 'LON',
+        flight_number: trip.flight_number || 'BA-178',
+        departure_date: trip.departure_date || trip.check_in_date,
+        departure_time: trip.departure_time || '10:30 AM',
+        gate: 'B12',
+        seat: '4A',
+        passenger_name: trip.guest_name || 'Eleanor Vance',
+      });
+    } else {
+      pdfService.generateHotelTaxInvoicePDF({
+        invoice_number: `INV-${String(trip.id).slice(-6)}`,
+        booking_reference: trip.booking_reference,
+        guest_name: trip.guest_name,
+        property_name: trip.property_name || 'Nexgile Grand Palace & Resort',
+        property_city: trip.property_city || 'Goa',
+        room_number: trip.room_number || '304',
+        room_type: trip.room_type_name || 'Royal Suite',
+        check_in: trip.check_in_date,
+        check_out: trip.check_out_date,
+        nights: trip.nights || 3,
+        total_amount: trip.total_amount,
+        subtotal: (trip.total_amount || 0) * 0.88,
+        tax_total: (trip.total_amount || 0) * 0.12,
+        payment_method: 'Card / Razorpay Settlement',
+      });
     }
   };
 
@@ -341,12 +379,20 @@ export default function MyTrips() {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
+                  <button
+                    onClick={() => handleDownloadPDF(trip)}
+                    className="inline-flex items-center gap-1.5 rounded-[2px] border border-[#DFB76C]/40 bg-[#13152C] px-3.5 py-2 font-cinzel text-[10px] tracking-wider uppercase text-[#DFB76C] hover:bg-[#DFB76C] hover:text-[#13152C] transition-all font-semibold cursor-pointer shadow-sm"
+                    title={trip.product_type === 'FLIGHT' ? 'Download Boarding Pass (PDF)' : 'Download Tax Invoice (PDF)'}
+                  >
+                    <Download size={13} />
+                    <span>PDF</span>
+                  </button>
                   <Link
                     to={`/my-trips/${trip.id}`}
-                    className="inline-flex items-center gap-1.5 rounded-[2px] border border-[#DFB76C]/40 bg-[#13152C] px-4 py-2 font-cinzel text-[11px] tracking-wider uppercase text-[#DFB76C] hover:bg-[#DFB76C] hover:text-[#13152C] transition-all font-semibold"
+                    className="inline-flex items-center gap-1.5 rounded-[2px] border border-[#2C315E] bg-[#13152C] px-3.5 py-2 font-cinzel text-[10px] tracking-wider uppercase text-white/80 hover:text-white hover:border-[#DFB76C]/60 transition-all font-semibold"
                   >
-                    Trip Details &rarr;
+                    Details &rarr;
                   </Link>
                   {trip.status === 'CONFIRMED' && (
                     <button

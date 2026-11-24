@@ -9,8 +9,10 @@ import {
   Plane,
   Car,
   QrCode,
+  Download,
 } from 'lucide-react';
 import { travelerService } from '../../services/travelerService';
+import { pdfService } from '../../services/pdfService';
 import StatusBadge from '../../components/StatusBadge';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -53,6 +55,42 @@ export default function TripDetail() {
     }
   };
 
+  const handleDownloadPDF = () => {
+    if (!trip) return;
+    if (trip.product_type === 'FLIGHT') {
+      pdfService.generateBoardingPassPDF({
+        pnr: trip.pnr || trip.booking_reference,
+        booking_reference: trip.booking_reference,
+        airline: trip.airline || trip.supplier_name || 'British Airways',
+        origin: trip.origin || 'NYC',
+        destination: trip.destination || 'LON',
+        flight_number: trip.flight_number || 'BA-178',
+        departure_date: trip.departure_date || trip.check_in_date,
+        departure_time: trip.departure_time || '10:30 AM',
+        gate: 'B12',
+        seat: '4A',
+        passenger_name: trip.guest_name || 'Eleanor Vance',
+      });
+    } else {
+      pdfService.generateHotelTaxInvoicePDF({
+        invoice_number: `INV-${String(trip.id).slice(-6)}`,
+        booking_reference: trip.booking_reference,
+        guest_name: trip.guest_name,
+        property_name: trip.property_name || 'Nexgile Grand Palace & Resort',
+        property_city: trip.property_city || 'Goa',
+        room_number: trip.room_number || '304',
+        room_type: trip.room_type_name || 'Royal Suite',
+        check_in: trip.check_in_date,
+        check_out: trip.check_out_date,
+        nights: trip.nights || 3,
+        total_amount: trip.total_amount,
+        subtotal: (trip.total_amount || 0) * 0.88,
+        tax_total: (trip.total_amount || 0) * 0.12,
+        payment_method: 'Card / Razorpay Settlement',
+      });
+    }
+  };
+
   if (loading) {
     return <LoadingSpinner text="Retrieving verified reservation folio..." />;
   }
@@ -86,11 +124,20 @@ export default function TripDetail() {
         </Link>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={handleDownloadPDF}
+            className="flex items-center gap-2 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] px-4 py-2 font-cinzel text-[11px] tracking-wider uppercase font-bold transition-all cursor-pointer shadow-sm"
+            title="Download verified document PDF"
+          >
+            <Download size={14} className="text-[#13152C]" />
+            <span>{trip.product_type === 'FLIGHT' ? 'Download Boarding Pass (PDF)' : 'Download Tax Invoice (PDF)'}</span>
+          </button>
+
           <Link
             to={`/concierge?reservation_id=${trip.id}`}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-[11px] font-bold tracking-wider uppercase shadow-sm transition"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-[2px] bg-[#1B1E3D] hover:bg-[#2C315E] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-[11px] font-bold tracking-wider uppercase shadow-sm transition"
           >
-            <Sparkles size={13} className="text-[#13152C]" />
+            <Sparkles size={13} className="text-[#DFB76C]" />
             <span>Ask Concierge</span>
           </Link>
 
@@ -98,7 +145,7 @@ export default function TripDetail() {
             onClick={() => window.print()}
             className="flex items-center gap-2 rounded-[2px] border border-[#2C315E] bg-[#1B1E3D] px-4 py-2 font-cinzel text-[11px] tracking-wider uppercase text-white/90 hover:border-[#DFB76C]/60 hover:text-[#DFB76C] transition-all cursor-pointer shadow-sm"
           >
-            <Printer size={14} className="text-[#DFB76C]" /> Print Receipt
+            <Printer size={14} className="text-[#DFB76C]" /> Print
           </button>
         </div>
       </div>

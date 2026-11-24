@@ -5,6 +5,7 @@ import {
   CreditCard,
   PlusCircle,
   Printer,
+  Download,
   Globe,
   DollarSign,
   CheckCircle2,
@@ -14,6 +15,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { folioService } from '../services/folioService';
+import { pdfService } from '../services/pdfService';
 import { LoadingSpinner } from './LoadingSpinner';
 
 export const FolioModal = ({ isOpen, onClose, reservationId, onFolioUpdated }) => {
@@ -185,6 +187,27 @@ export const FolioModal = ({ isOpen, onClose, reservationId, onFolioUpdated }) =
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleDownloadPDF = () => {
+    pdfService.generateHotelTaxInvoicePDF({
+      invoice_number: invoice?.invoice_number || `INV-${String(reservationId).slice(-6)}`,
+      booking_reference: folio?.booking_reference || `RES-${String(reservationId).slice(-6)}`,
+      folio_id: folio?.id || folio?._id || `FOL-${String(reservationId).slice(-6)}`,
+      guest_name: folio?.guest_name,
+      property_name: folio?.property_name,
+      room_number: folio?.room_number,
+      total_amount: folio?.total_charges || folio?.balance || 0,
+      subtotal: (folio?.total_charges || 0) * 0.88,
+      tax_total: (folio?.total_charges || 0) * 0.12,
+      payment_method: 'Card / Razorpay Settlement',
+      items: (folio?.charges || []).map((c) => ({
+        desc: c.description || c.category,
+        qty: 1,
+        tax: ((c.amount || 0) * 0.12).toFixed(2),
+        amount: Number(c.amount || 0).toFixed(2),
+      })),
+    });
   };
 
   if (!isOpen) return null;
@@ -678,10 +701,18 @@ export const FolioModal = ({ isOpen, onClose, reservationId, onFolioUpdated }) =
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-[#DFB76C]/20 flex justify-end print:hidden">
-                      <button onClick={handlePrint} className="btn-luxury py-2 px-5 text-xs flex items-center gap-2">
-                        <Printer className="w-4 h-4" />
-                        <span>Print Official Tax Invoice</span>
+                    <div className="pt-4 border-t border-[#DFB76C]/20 flex justify-end gap-3 print:hidden">
+                      <button
+                        onClick={handleDownloadPDF}
+                        className="btn-luxury py-2 px-5 text-xs flex items-center gap-2 cursor-pointer shadow-sm"
+                        title="Download Luxury Branded PDF Tax Invoice"
+                      >
+                        <Download className="w-4 h-4 text-[#DFB76C]" />
+                        <span>Download Tax Invoice (PDF)</span>
+                      </button>
+                      <button onClick={handlePrint} className="btn-luxury-secondary py-2 px-4 text-xs flex items-center gap-2 cursor-pointer">
+                        <Printer className="w-4 h-4 text-[#DFB76C]" />
+                        <span>Print</span>
                       </button>
                     </div>
                   </>
