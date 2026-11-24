@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Search,
   MapPin,
@@ -15,9 +15,9 @@ import { travelerService } from '../../services/travelerService';
 import StarRating from '../../components/StarRating';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Calendar as EasyUICalendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
 export default function Marketplace() {
-  const navigate = useNavigate();
   const [properties, setProperties] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -111,7 +111,7 @@ export default function Marketplace() {
   return (
     <div className="space-y-10 max-w-7xl mx-auto pb-16">
       {/* Editorial Hero Banner */}
-      <div className="relative overflow-hidden rounded-[4px] border border-[#2C315E] bg-[#13152C] p-6 md:p-10 shadow-md">
+      <div className="relative z-30 overflow-visible rounded-[4px] border border-[#2C315E] bg-[#13152C] p-6 md:p-10 shadow-md">
         <div className="relative z-10 max-w-3xl">
           <span className="font-cinzel text-[10px] tracking-[0.25em] text-[#DFB76C] uppercase font-semibold block mb-2">
             CURATED LUXURY HOSPITALITY &middot; HOTEL SUITES
@@ -124,43 +124,54 @@ export default function Marketplace() {
           </p>
         </div>
 
-        {/* Unified Luxury Search Bar */}
+        {/* Minimal Aligned Luxury Search Bar */}
         <form
           onSubmit={handleSearchSubmit}
-          className="mt-6 grid grid-cols-1 gap-2.5 rounded-[3px] border border-[#2C315E] bg-[#0B0C1E] p-3 shadow-md sm:grid-cols-2 lg:grid-cols-5"
+          className="mt-6 grid grid-cols-1 gap-2 rounded-[3px] border border-[#2C315E] bg-[#0B0C1E] p-2 shadow-xl sm:grid-cols-2 lg:grid-cols-12 items-center"
         >
           {/* Destination */}
-          <div className="flex items-center gap-2.5 rounded-[2px] bg-[#1B1E3D] px-3.5 py-2 border border-[#2C315E]">
+          <div className="lg:col-span-3 flex h-14 items-center gap-3 rounded-[2px] bg-[#13152C] px-3.5 border border-[#2C315E]/70 focus-within:border-[#DFB76C]/80 transition-colors">
             <MapPin size={16} className="text-[#DFB76C] shrink-0" />
             <div className="min-w-0 flex-1">
-              <label className="block font-cinzel text-[9px] tracking-wider uppercase text-[#DFB76C]">Destination</label>
+              <label className="block font-cinzel text-[9px] font-semibold tracking-wider uppercase text-[#DFB76C]/90 leading-tight">
+                Destination
+              </label>
               <input
                 type="text"
                 placeholder="Udaipur, Goa, Mumbai..."
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full bg-transparent text-xs font-semibold text-white placeholder-white/40 focus:outline-none"
+                className="w-full bg-transparent text-xs font-semibold text-white placeholder-white/35 focus:outline-none truncate pt-0.5"
               />
             </div>
           </div>
 
           {/* Stay Dates (Arrival & Departure with EasyUI Calendar Range Picker) */}
-          <div className="relative sm:col-span-2" ref={datePickerRef}>
+          <div className="relative sm:col-span-2 lg:col-span-4 h-14" ref={datePickerRef}>
             <div
               onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-              className="flex items-center gap-2.5 rounded-[2px] bg-[#1B1E3D] px-3.5 py-2 border border-[#2C315E] hover:border-[#DFB76C]/60 cursor-pointer transition-colors h-full select-none"
+              className={cn(
+                "flex h-14 items-center gap-3 rounded-[2px] bg-[#13152C] px-3.5 border transition-colors cursor-pointer select-none",
+                isDatePickerOpen
+                  ? "border-[#DFB76C] ring-1 ring-[#DFB76C]/30"
+                  : "border-[#2C315E]/70 hover:border-[#DFB76C]/60"
+              )}
             >
               <CalendarIcon size={16} className="text-[#DFB76C] shrink-0" />
               <div className="min-w-0 flex-1 grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block font-cinzel text-[9px] tracking-wider uppercase text-[#DFB76C]">Arrival</label>
-                  <p className="text-xs font-semibold text-white truncate">
+                  <span className="block font-cinzel text-[9px] font-semibold tracking-wider uppercase text-[#DFB76C]/90 leading-tight">
+                    Arrival
+                  </span>
+                  <p className="text-xs font-semibold text-white truncate pt-0.5">
                     {checkIn ? new Date(checkIn + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Select Date'}
                   </p>
                 </div>
-                <div className="border-l border-[#2C315E] pl-2">
-                  <label className="block font-cinzel text-[9px] tracking-wider uppercase text-[#DFB76C]">Departure</label>
-                  <p className="text-xs font-semibold text-white truncate">
+                <div className="border-l border-[#2C315E]/80 pl-2.5">
+                  <span className="block font-cinzel text-[9px] font-semibold tracking-wider uppercase text-[#DFB76C]/90 leading-tight">
+                    Departure
+                  </span>
+                  <p className="text-xs font-semibold text-white truncate pt-0.5">
                     {checkOut ? new Date(checkOut + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Select Date'}
                   </p>
                 </div>
@@ -169,23 +180,25 @@ export default function Marketplace() {
 
             {/* EasyUI Interactive Range Calendar Popover */}
             {isDatePickerOpen && (
-              <div className="absolute left-0 top-full mt-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="absolute left-0 top-[calc(100%+8px)] z-50 animate-in fade-in zoom-in-95 duration-150">
                 <EasyUICalendar
                   mode="range"
                   value={dateRange}
                   onChange={handleRangeSelect}
                   minDate={new Date()}
-                  className="shadow-2xl border-[#DFB76C]/50"
+                  className="shadow-2xl border border-[#DFB76C]/50 bg-[#13152C]"
                 />
               </div>
             )}
           </div>
 
-          {/* Guests & Rooms */}
-          <div className="flex items-center gap-2.5 rounded-[2px] bg-[#1B1E3D] px-3.5 py-2 border border-[#2C315E]">
+          {/* Guests & Suites */}
+          <div className="lg:col-span-3 flex h-14 items-center gap-3 rounded-[2px] bg-[#13152C] px-3.5 border border-[#2C315E]/70 focus-within:border-[#DFB76C]/80 transition-colors">
             <Users size={16} className="text-[#DFB76C] shrink-0" />
             <div className="min-w-0 flex-1">
-              <label className="block font-cinzel text-[9px] tracking-wider uppercase text-[#DFB76C]">Guests &amp; Suites</label>
+              <label className="block font-cinzel text-[9px] font-semibold tracking-wider uppercase text-[#DFB76C]/90 leading-tight">
+                Guests &amp; Suites
+              </label>
               <select
                 value={`${adults}-${rooms}`}
                 onChange={(e) => {
@@ -193,7 +206,7 @@ export default function Marketplace() {
                   setAdults(Number(a));
                   setRooms(Number(r));
                 }}
-                className="w-full bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer [color-scheme:dark]"
+                className="w-full bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer [color-scheme:dark] truncate pt-0.5"
               >
                 <option value="1-1" className="bg-[#13152C] text-white">1 Guest, 1 Suite</option>
                 <option value="2-1" className="bg-[#13152C] text-white">2 Guests, 1 Suite</option>
@@ -204,10 +217,10 @@ export default function Marketplace() {
           </div>
 
           {/* Search CTA */}
-          <div className="flex items-center">
+          <div className="sm:col-span-2 lg:col-span-2 h-14">
             <button
               type="submit"
-              className="w-full h-full py-2.5 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer transition shadow-sm"
+              className="h-14 w-full rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] active:scale-[0.99] text-[#13152C] font-cinzel text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer transition-all shadow-md shrink-0"
             >
               <Search size={15} />
               <span>Explore Stays</span>
