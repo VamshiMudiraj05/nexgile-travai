@@ -205,8 +205,8 @@ export default function Marketplace() {
             )}
           </div>
 
-          {/* Guests & Suites (Tactile Liquid GooeyMenu) */}
-          <div className="relative lg:col-span-2 h-14">
+          {/* Guests & Suites (Tactile Liquid GooeyMenu - Generous Width) */}
+          <div className="relative lg:col-span-3 h-14">
             <GooeyMenu
               className="w-full h-14"
               style={{ width: '100%' }}
@@ -234,10 +234,10 @@ export default function Marketplace() {
                 <div className="flex h-14 w-full items-center gap-3 text-left">
                   <Users size={16} className="text-[#DFB76C] shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <span className="block font-cinzel text-[9px] font-semibold tracking-wider uppercase text-[#DFB76C]/90 leading-tight">
+                    <span className="block font-cinzel text-[9px] font-semibold tracking-wider uppercase text-[#DFB76C]/90 leading-tight whitespace-nowrap">
                       Guests &amp; Suites
                     </span>
-                    <p className="text-xs font-semibold text-white truncate pt-0.5">
+                    <p className="text-xs font-semibold text-white whitespace-nowrap pt-0.5">
                       {guestLabel}
                     </p>
                   </div>
@@ -247,16 +247,16 @@ export default function Marketplace() {
             />
           </div>
 
-          {/* Search CTA */}
-          <div className="sm:col-span-2 lg:col-span-3 h-14">
+          {/* Search CTA (Compact Luxury Button) */}
+          <div className="sm:col-span-2 lg:col-span-2 h-14">
             <button
               type="submit"
-              className="h-14 w-full rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] active:scale-[0.99] text-[#13152C] font-cinzel text-xs font-bold tracking-[0.16em] uppercase flex items-center justify-center gap-2.5 px-4 cursor-pointer transition-all shadow-md shrink-0 whitespace-nowrap"
+              className="h-14 w-full rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] active:scale-[0.99] text-[#13152C] font-cinzel text-xs font-bold tracking-[0.14em] uppercase flex items-center justify-center gap-2 px-3 cursor-pointer transition-all shadow-md shrink-0 whitespace-nowrap"
             >
               <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#13152C]/10 shrink-0">
                 <Search className="w-3.5 h-3.5 stroke-[2.5] text-[#13152C]" />
               </div>
-              <span className="truncate">Explore Stays</span>
+              <span>Explore</span>
             </button>
           </div>
         </form>
