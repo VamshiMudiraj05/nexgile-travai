@@ -1,6 +1,6 @@
 from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, Depends, Path, Query, HTTPException, status
-from app.core.security import get_current_user
+from app.core.security import get_current_user, get_optional_current_user
 from app.schemas.user import UserResponse
 from app.schemas.marketplace import (
     TravelerBookingCreateRequest,
@@ -26,15 +26,25 @@ router = APIRouter(prefix="/traveler", tags=["Traveler Operations & Trips"])
 )
 async def create_traveler_booking(
     payload: TravelerBookingCreateRequest,
-    current_user: UserResponse = Depends(get_current_user),
+    current_user: Optional[UserResponse] = Depends(get_optional_current_user),
 ):
-    """Create a reservation for the authenticated traveler, preventing double bookings."""
-    user_dict = {
-        "_id": current_user.id,
-        "name": current_user.name,
-        "email": current_user.email,
-        "role": current_user.role.value if hasattr(current_user.role, "value") else str(current_user.role)
-    }
+    """Create a reservation for the traveler (supports authenticated and guest checkout)."""
+    if current_user:
+        user_dict = {
+            "_id": current_user.id,
+            "name": current_user.name,
+            "email": current_user.email,
+            "role": current_user.role.value if hasattr(current_user.role, "value") else str(current_user.role)
+        }
+    else:
+        # Fallback to guest traveler info from payload
+        guest_name = payload.guest_name or f"{payload.guest_first_name or 'Resident'} {payload.guest_last_name or 'Guest'}".strip()
+        user_dict = {
+            "_id": "guest_resident",
+            "name": guest_name,
+            "email": payload.guest_email,
+            "role": "TRAVELER"
+        }
     return await TravelerBookingService.create_booking(
         user=user_dict,
         booking_data=payload.model_dump(),

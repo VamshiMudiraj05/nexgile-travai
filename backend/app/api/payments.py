@@ -3,7 +3,7 @@ from typing import Dict, Any, List, Optional
 from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.core.config import settings
-from app.core.security import get_current_user
+from app.core.security import get_current_user, get_optional_current_user
 from app.schemas.user import UserResponse
 from app.schemas.payment import (
     CreditPackage,
@@ -53,7 +53,7 @@ async def get_credit_packages():
 )
 async def create_razorpay_order(
     payload: RazorpayCreateOrderRequest,
-    current_user: UserResponse = Depends(get_current_user),
+    current_user: Optional[UserResponse] = Depends(get_optional_current_user),
 ):
     """
     Initiate a Razorpay Order.
@@ -63,10 +63,16 @@ async def create_razorpay_order(
     amount_inr = 0.0
     description = "Nexgile-TravAI Transaction"
     purchased_credits = None
-    receipt = f"rcpt_{current_user.id[:8]}_{int(datetime.now(timezone.utc).timestamp())}"
+    user_identifier = current_user.id[:8] if current_user else "guest"
+    receipt = f"rcpt_{user_identifier}_{int(datetime.now(timezone.utc).timestamp())}"
 
     # 1. Package purchase scenario (Credit Wallet)
     if payload.package_id:
+        if not current_user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication required to purchase wallet credit packages."
+            )
         pkg = razorpay_service.get_package_by_id(payload.package_id)
         if not pkg:
             raise HTTPException(
@@ -158,7 +164,7 @@ async def create_razorpay_order(
 )
 async def verify_razorpay_payment(
     payload: RazorpayVerifyPaymentRequest,
-    current_user: UserResponse = Depends(get_current_user),
+    current_user: Optional[UserResponse] = Depends(get_optional_current_user),
 ):
     """
     Verify payment signature securely on server-side.
@@ -175,14 +181,17 @@ async def verify_razorpay_payment(
     })
     if existing_successful_tx:
         logger.info(f"Duplicate payment verification request for {payload.razorpay_payment_id} - returning idempotent response.")
-        wallet = await SuperAppService.get_or_create_wallet(str(current_user.id))
+        wallet_balance = None
+        if current_user:
+            wallet = await SuperAppService.get_or_create_wallet(str(current_user.id))
+            wallet_balance = wallet.get("cash_balance")
         return {
             "success": True,
             "message": "Payment was already verified successfully.",
             "order_id": payload.razorpay_order_id,
             "payment_id": payload.razorpay_payment_id,
             "status": "SUCCESSFUL",
-            "wallet_balance": wallet.get("cash_balance"),
+            "wallet_balance": wallet_balance,
             "credits_added": existing_successful_tx.get("purchased_credits"),
             "reservation_id": existing_successful_tx.get("reservation_id"),
             "booking_reference": existing_successful_tx.get("booking_reference")
@@ -223,6 +232,11 @@ async def verify_razorpay_payment(
 
     # Scenario A: Credit Package Purchase (Wallet Top-Up)
     if package_id:
+        if not current_user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authentication required to credit wallet."
+            )
         pkg = razorpay_service.get_package_by_id(package_id)
         if not pkg:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Package details not found.")
@@ -278,8 +292,9 @@ async def verify_razorpay_payment(
                 }}
             )
 
-            # Award loyalty points
-            await LoyaltyService.award_points_for_booking(str(current_user.id), booking_ref, amount_inr)
+            # Award loyalty points if user is logged in
+            if current_user:
+                await LoyaltyService.award_points_for_booking(str(current_user.id), booking_ref, amount_inr)
     else:
         # Generic direct deposit / custom payment fallback
         amount_inr = order_tx.get("amount_inr", 0.0) if order_tx else 0.0

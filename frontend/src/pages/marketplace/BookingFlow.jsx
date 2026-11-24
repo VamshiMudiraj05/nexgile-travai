@@ -157,17 +157,21 @@ export default function BookingFlow() {
         room_type_id: roomTypeId,
         check_in_date: checkIn,
         check_out_date: checkOut,
-        number_of_guests: adults,
+        adults: adults || 1,
+        children: 0,
+        guest_first_name: firstName || 'Resident',
+        guest_last_name: lastName || 'Guest',
         guest_name: `${firstName} ${lastName}`.trim(),
         guest_email: email,
-        guest_phone: phone,
+        guest_phone: phone || '+91 98765 43210',
         special_requests: specialRequests,
+        payment_method: paymentMethod || 'RAZORPAY',
         rate_per_night: roomType?.base_rate || 200,
         total_amount: totalAmount,
       };
 
       const resResponse = await travelerService.createBooking(payload);
-      const reservationId = resResponse.id || resResponse._id;
+      const reservationId = resResponse.reservation_id || resResponse.id || resResponse._id;
 
       if (paymentMethod === 'RAZORPAY') {
         const orderData = await paymentService.createRazorpayOrder({

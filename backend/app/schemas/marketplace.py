@@ -54,12 +54,13 @@ class TravelerBookingCreateRequest(BaseModel):
     check_out_date: str  # YYYY-MM-DD
     adults: int = Field(default=1, ge=1)
     children: int = Field(default=0, ge=0)
-    guest_first_name: str
-    guest_last_name: str
+    guest_first_name: Optional[str] = None
+    guest_last_name: Optional[str] = None
+    guest_name: Optional[str] = None
     guest_email: str
-    guest_phone: str
+    guest_phone: Optional[str] = "+91 98765 43210"
     special_requests: Optional[str] = None
-    payment_method: Optional[str] = "DEMO_CREDIT_CARD"
+    payment_method: Optional[str] = "RAZORPAY"
 
 
 class TravelerBookingResponse(BaseModel):

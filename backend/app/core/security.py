@@ -135,6 +135,36 @@ async def get_current_user(
     )
 
 
+async def get_optional_current_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_bearer)
+) -> Optional[UserResponse]:
+    """Dependency to retrieve currently authenticated user from JWT token if available, otherwise None."""
+    if not credentials or not credentials.credentials:
+        return None
+    try:
+        token = credentials.credentials
+        payload = decode_access_token(token)
+        user_id: Optional[str] = payload.get("sub")
+        if not user_id:
+            return None
+        db = get_database()
+        user_doc = await db.get_collection("users").find_one({"_id": ObjectId(user_id)})
+        if not user_doc or not user_doc.get("is_active", True):
+            return None
+        serialized_user = user_helper(user_doc)
+        return UserResponse(
+            _id=serialized_user["id"],
+            name=serialized_user["name"],
+            email=serialized_user["email"],
+            role=serialized_user["role"],
+            is_active=serialized_user["is_active"],
+            created_at=serialized_user["created_at"],
+            updated_at=serialized_user["updated_at"],
+        )
+    except Exception:
+        return None
+
+
 def require_role(allowed_roles: Union[List[UserRole], List[str]]):
     """Dependency factory to enforce role-based access control."""
     allowed_role_strs = [r.value if isinstance(r, UserRole) else str(r) for r in allowed_roles]

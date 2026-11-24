@@ -75,14 +75,21 @@ class TravelerBookingService:
         room_id = assigned_room["_id"]
 
         # 3. Find or create guest record
-        guest_email = booking_data.get("guest_email", user.get("email")).lower().strip()
+        guest_email = booking_data.get("guest_email", user.get("email", "")).lower().strip()
         guest = await db.guests.find_one({"email": guest_email})
         
         now_iso = datetime.utcnow().isoformat()
+        first_name = booking_data.get("guest_first_name")
+        last_name = booking_data.get("guest_last_name")
+        if not first_name:
+            name_parts = (booking_data.get("guest_name") or user.get("name") or "Resident Guest").split(maxsplit=1)
+            first_name = name_parts[0]
+            last_name = name_parts[1] if len(name_parts) > 1 else "Resident"
+
         if not guest:
             guest_doc = {
-                "first_name": booking_data.get("guest_first_name", user.get("name", "Resident").split()[0]),
-                "last_name": booking_data.get("guest_last_name", "Resident"),
+                "first_name": first_name,
+                "last_name": last_name or "Resident",
                 "email": guest_email,
                 "phone": booking_data.get("guest_phone", "+91 98765 43210"),
                 "address": "",
@@ -120,10 +127,10 @@ class TravelerBookingService:
             "property_name": prop.get("name", "Resort"),
             "property_city": prop.get("city", ""),
             "guest_id": guest_id,
-            "guest_name": f"{booking_data.get('guest_first_name', '')} {booking_data.get('guest_last_name', '')}".strip() or user.get("name", "Guest"),
+            "guest_name": f"{first_name} {last_name}".strip() or user.get("name", "Guest"),
             "guest_email": guest_email,
             "guest_phone": booking_data.get("guest_phone", ""),
-            "user_id": ObjectId(user_id),
+            "user_id": ObjectId(user_id) if ObjectId.is_valid(user_id) else str(user_id),
             "room_id": room_id,
             "room_number": assigned_room.get("room_number", "101"),
             "room_type_id": ObjectId(room_type_id),

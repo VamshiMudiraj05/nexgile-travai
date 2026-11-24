@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     # JWT Security Configuration
     JWT_SECRET: str = "nexgile_travai_jwt_secret_key_change_in_production_2026"
     JWT_ALGORITHM: str = "HS256"
-    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
     
     # CORS Configuration
     CORS_ORIGINS: Union[List[str], str] = [

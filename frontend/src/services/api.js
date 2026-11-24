@@ -37,7 +37,7 @@ api.interceptors.response.use(
       const reqUrl = error.config?.url || '';
       const isAuthEndpoint = reqUrl.includes('/auth/login') || reqUrl.includes('/auth/me');
       const publicPaths = ['/', '/landing', '/login', '/register'];
-      const isPublicPage = publicPaths.includes(window.location.pathname);
+      const isPublicPage = publicPaths.includes(window.location.pathname) || window.location.pathname.startsWith('/marketplace');
 
       // Only redirect if accessing a protected resource from inside the application
       if (!isAuthEndpoint && !isPublicPage) {
