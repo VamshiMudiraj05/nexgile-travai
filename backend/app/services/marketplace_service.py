@@ -107,30 +107,58 @@ class MarketplaceService:
         
         booked_room_ids = {str(r["room_id"]) for r in conflict_res if "room_id" in r}
 
+        # Batch fetch all room types and candidate rooms in 2 queries instead of N*M sequential queries
+        all_prop_ids = []
+        for p in properties:
+            pid = p["_id"]
+            all_prop_ids.extend([pid, str(pid)])
+
+        all_room_types = await db.room_types.find({
+            "property_id": {"$in": all_prop_ids},
+            "is_active": {"$ne": False}
+        }).to_list(length=1000)
+
+        all_rooms = await db.rooms.find({
+            "property_id": {"$in": all_prop_ids},
+            "status": {"$in": ["AVAILABLE", "CLEANING"]}
+        }).to_list(length=3000)
+
+        # Index rooms by (str(property_id), str(room_type_id))
+        rooms_by_rt: Dict[tuple, List[Dict[str, Any]]] = {}
+        for r in all_rooms:
+            pid_str = str(r.get("property_id", ""))
+            rtid_str = str(r.get("room_type_id", ""))
+            key = (pid_str, rtid_str)
+            if key not in rooms_by_rt:
+                rooms_by_rt[key] = []
+            rooms_by_rt[key].append(r)
+
+        # Index room types by str(property_id)
+        room_types_by_prop: Dict[str, List[Dict[str, Any]]] = {}
+        for rt in all_room_types:
+            pid_str = str(rt.get("property_id", ""))
+            if pid_str not in room_types_by_prop:
+                room_types_by_prop[pid_str] = []
+            room_types_by_prop[pid_str].append(rt)
+
         results: List[Dict[str, Any]] = []
 
         for prop in properties:
             prop_id = prop["_id"]
+            prop_id_str = str(prop_id)
             
-            # Fetch room types for this property (support both ObjectId and string property_id)
-            room_types = await db.room_types.find({
-                "property_id": {"$in": [prop_id, str(prop_id)]},
-                "is_active": {"$ne": False}
-            }).to_list(length=50)
+            # Fetch room types from in-memory index
+            room_types = room_types_by_prop.get(prop_id_str, [])
 
             available_rt_items = []
             min_starting_price = float("inf")
 
             for rt in room_types:
                 rt_id = rt["_id"]
+                rt_id_str = str(rt_id)
                 base_rate = float(rt.get("base_rate", 200.0))
 
-                rooms_cursor = db.rooms.find({
-                    "property_id": {"$in": [prop_id, str(prop_id)]},
-                    "room_type_id": {"$in": [rt_id, str(rt_id)]},
-                    "status": {"$in": ["AVAILABLE", "CLEANING"]}
-                })
-                all_candidate_rooms = await rooms_cursor.to_list(length=200)
+                all_candidate_rooms = rooms_by_rt.get((prop_id_str, rt_id_str), [])
                 
                 free_rooms = [r for r in all_candidate_rooms if str(r["_id"]) not in booked_room_ids]
                 free_count = len(free_rooms)
