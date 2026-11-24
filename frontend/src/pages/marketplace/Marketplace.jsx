@@ -9,6 +9,7 @@ import {
   ArrowRight,
   Building2,
   SlidersHorizontal,
+  ChevronDown,
 } from 'lucide-react';
 import { marketplaceService } from '../../services/marketplaceService';
 import { travelerService } from '../../services/travelerService';
@@ -48,6 +49,17 @@ export default function Marketplace() {
     from: checkIn ? new Date(checkIn + 'T00:00:00') : null,
     to: checkOut ? new Date(checkOut + 'T00:00:00') : null,
   };
+
+  const guestLabel =
+    adults === 1 && rooms === 1
+      ? '1 Guest, 1 Suite'
+      : adults === 2 && rooms === 1
+      ? '2 Guests, 1 Suite'
+      : adults === 3 && rooms === 1
+      ? '3 Guests, 1 Suite'
+      : adults === 4 && rooms === 2
+      ? '4 Guests, 2 Suites'
+      : `${adults} Guests, ${rooms} Suite${rooms > 1 ? 's' : ''}`;
 
   const handleRangeSelect = (range) => {
     if (range?.from) {
@@ -193,28 +205,46 @@ export default function Marketplace() {
             )}
           </div>
 
-          {/* Guests & Suites */}
-          <div className="lg:col-span-3 flex h-14 items-center gap-3 rounded-[2px] bg-[#13152C] px-3.5 border border-[#2C315E]/70 focus-within:border-[#DFB76C]/80 transition-colors">
-            <Users size={16} className="text-[#DFB76C] shrink-0" />
-            <div className="min-w-0 flex-1">
-              <label className="block font-cinzel text-[9px] font-semibold tracking-wider uppercase text-[#DFB76C]/90 leading-tight">
-                Guests &amp; Suites
-              </label>
-              <select
-                value={`${adults}-${rooms}`}
-                onChange={(e) => {
-                  const [a, r] = e.target.value.split('-');
-                  setAdults(Number(a));
-                  setRooms(Number(r));
-                }}
-                className="w-full bg-transparent text-xs font-semibold text-white focus:outline-none cursor-pointer [color-scheme:dark] truncate pt-0.5"
-              >
-                <option value="1-1" className="bg-[#13152C] text-white">1 Guest, 1 Suite</option>
-                <option value="2-1" className="bg-[#13152C] text-white">2 Guests, 1 Suite</option>
-                <option value="3-1" className="bg-[#13152C] text-white">3 Guests, 1 Suite</option>
-                <option value="4-2" className="bg-[#13152C] text-white">4 Guests, 2 Suites</option>
-              </select>
-            </div>
+          {/* Guests & Suites (Tactile Liquid GooeyMenu) */}
+          <div className="relative lg:col-span-3 h-14">
+            <GooeyMenu
+              className="w-full h-14"
+              style={{ width: '100%' }}
+              surfaceClassName="bg-[#13152C]"
+              options={[
+                '1 Guest, 1 Suite',
+                '2 Guests, 1 Suite',
+                '3 Guests, 1 Suite',
+                '4 Guests, 2 Suites',
+              ]}
+              value={guestLabel}
+              onSelect={(opt) => {
+                const mapping = {
+                  '1 Guest, 1 Suite': [1, 1],
+                  '2 Guests, 1 Suite': [2, 1],
+                  '3 Guests, 1 Suite': [3, 1],
+                  '4 Guests, 2 Suites': [4, 2],
+                };
+                const [a, r] = mapping[opt] || [2, 1];
+                setAdults(a);
+                setRooms(r);
+              }}
+              triggerClassName="h-14 w-full rounded-[2px] bg-[#13152C] px-3.5 border border-[#2C315E]/70 hover:border-[#DFB76C]/80 transition-colors"
+              trigger={
+                <div className="flex h-14 w-full items-center gap-3 text-left">
+                  <Users size={16} className="text-[#DFB76C] shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <span className="block font-cinzel text-[9px] font-semibold tracking-wider uppercase text-[#DFB76C]/90 leading-tight">
+                      Guests &amp; Suites
+                    </span>
+                    <p className="text-xs font-semibold text-white truncate pt-0.5">
+                      {guestLabel}
+                    </p>
+                  </div>
+                  <ChevronDown size={14} className="text-[#DFB76C] shrink-0 ml-1" />
+                </div>
+              }
+            />
           </div>
 
           {/* Search CTA */}

@@ -202,17 +202,24 @@ export const GooeyMenu = ({
     triggerRef.current?.focus({ preventScroll: true });
   };
 
+  const effectiveWidth =
+    props.width !== undefined
+      ? width
+      : hasCustomTrigger && geometry.width > 120
+      ? geometry.width
+      : width;
+
   const panelHeight = options.length * ROW_H + PANEL_PAD * 2;
   const panelY = geometry.height + GAP;
   const panelX =
     align === 'center'
-      ? (geometry.width - width) / 2
+      ? (geometry.width - effectiveWidth) / 2
       : (align === 'end') !== geometry.rtl
-      ? geometry.width - width
+      ? geometry.width - effectiveWidth
       : 0;
   const totalHeight = panelY + panelHeight + 24;
   const surfaceLeft = Math.min(0, panelX);
-  const surfaceWidth = Math.max(geometry.width, panelX + width) - surfaceLeft;
+  const surfaceWidth = Math.max(geometry.width, panelX + effectiveWidth) - surfaceLeft;
   const cornerNames = [
     'borderTopLeftRadius',
     'borderTopRightRadius',
@@ -230,7 +237,7 @@ export const GooeyMenu = ({
       const [x, y] = geometry.corners[index] || [0, 0];
       return [
         name,
-        `${(x * width) / (geometry.width || 1)}px ${
+        `${(x * effectiveWidth) / (geometry.width || 1)}px ${
           (y * panelHeight) / (geometry.height || 1)
         }px`,
       ];
@@ -248,8 +255,15 @@ export const GooeyMenu = ({
         onKeyDown?.(event);
         handleKeyDown(event);
       }}
-      className={cn('relative inline-flex flex-col items-center select-none z-30', className)}
-      style={{ width: hasCustomTrigger ? 'fit-content' : width, ...style }}
+      className={cn(
+        'relative inline-flex flex-col items-center select-none',
+        open ? 'z-50' : 'z-20',
+        className
+      )}
+      style={{
+        width: style?.width ?? (hasCustomTrigger ? 'fit-content' : effectiveWidth),
+        ...style,
+      }}
     >
       {/* SVG Gooey Metamorphic Matrix Filter */}
       <svg
@@ -291,11 +305,11 @@ export const GooeyMenu = ({
       </svg>
 
       <div
-        className="relative"
+        className={cn('relative', hasCustomTrigger && 'w-full')}
         style={
           hasCustomTrigger
             ? undefined
-            : { width, height: open ? totalHeight : geometry.height }
+            : { width: effectiveWidth, height: open ? totalHeight : geometry.height }
         }
       >
         {/* Gooey Surface Layer - Solid Blobs for fast 60fps GPU rasterization */}
@@ -327,7 +341,7 @@ export const GooeyMenu = ({
             className={cn('absolute top-0 bg-[#13152C] dark:bg-[#13152C]', surfaceClassName)}
             style={{
               left: -surfaceLeft,
-              width,
+              width: effectiveWidth,
               height: panelHeight,
               transformOrigin: '0% 0%',
               willChange: 'transform',
@@ -339,7 +353,7 @@ export const GooeyMenu = ({
                 : {
                     x: 0,
                     y: 0,
-                    scaleX: (geometry.width || 1) / (width || 1),
+                    scaleX: (geometry.width || 1) / (effectiveWidth || 1),
                     scaleY: (geometry.height || 1) / (panelHeight || 1),
                     ...collapsedCorners,
                   }
@@ -369,14 +383,14 @@ export const GooeyMenu = ({
           data-testid="gooey-menu-trigger"
           onClick={() => setOpen((o) => !o)}
           className={cn(
-            'cursor-pointer z-20 flex items-center justify-between bg-transparent focus:outline-none focus-visible:ring-1 focus-visible:ring-[#DFB76C]',
-            hasCustomTrigger ? 'relative border-none p-0' : 'absolute left-0 top-0 px-[20px] border border-[#2C315E]/60',
+            'cursor-pointer z-30 flex items-center justify-between bg-transparent focus:outline-none focus-visible:ring-1 focus-visible:ring-[#DFB76C]',
+            hasCustomTrigger ? 'relative border-none p-0 w-full h-full' : 'absolute left-0 top-0 px-[20px] border border-[#2C315E]/60',
             triggerClassName
           )}
           style={{
             ...(hasCustomTrigger
               ? {}
-              : { width, height: PILL_H, borderRadius: PILL_H / 2 }),
+              : { width: effectiveWidth, height: PILL_H, borderRadius: PILL_H / 2 }),
             ...triggerStyle,
           }}
         >
@@ -423,11 +437,11 @@ export const GooeyMenu = ({
             options.length ? `${listId}-opt-${activeIndex}` : undefined
           }
           data-testid="gooey-menu-options"
-          className="absolute m-0 list-none p-0 z-20 outline-none"
+          className="absolute m-0 list-none p-0 z-30 outline-none"
           style={{
             left: panelX,
             top: panelY,
-            width,
+            width: effectiveWidth,
             paddingTop: PANEL_PAD,
             paddingBottom: PANEL_PAD,
             pointerEvents: open ? 'auto' : 'none',
