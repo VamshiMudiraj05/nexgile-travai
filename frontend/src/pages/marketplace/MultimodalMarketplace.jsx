@@ -6,7 +6,6 @@ import {
   Compass,
   Gift,
   AlertTriangle,
-  ShoppingCart,
   Calendar,
   Clock,
   CheckCircle2,
@@ -23,7 +22,9 @@ import {
   Check,
   DollarSign,
   MapPin,
-  X
+  X,
+  Ticket,
+  Luggage
 } from 'lucide-react';
 import { multimodalService } from '../../services/multimodalService';
 
@@ -232,7 +233,7 @@ export default function MultimodalMarketplace() {
             <span className="px-3 py-0.5 rounded-[2px] text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
               Phase 3 Live
             </span>
-            <span className="px-3 py-0.5 rounded-[2px] text-xs font-semibold bg-blue-500/10 text-[#DFB76C] border border-blue-500/30">
+            <span className="px-3 py-0.5 rounded-[2px] text-xs font-semibold bg-[#DFB76C]/10 text-[#DFB76C] border border-[#DFB76C]/30">
               Multimodal Travel Marketplace
             </span>
           </div>
@@ -249,18 +250,18 @@ export default function MultimodalMarketplace() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setCartDrawerOpen(true)}
-            className="relative flex items-center gap-2.5 px-5 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-white font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] shadow-sm transition"
+            className="relative flex items-center gap-2.5 px-5 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] shadow-sm transition"
           >
-            <ShoppingCart className="w-5 h-5" />
-            <span>Unified Basket</span>
+            <Luggage className="w-5 h-5" />
+            <span>Trip Itinerary</span>
             {totalCartItems > 0 && (
-              <span className="ml-1 px-2 py-0.5 rounded-[2px] bg-[#DFB76C] text-white text-xs font-bold animate-pulse">
+              <span className="ml-1 px-2 py-0.5 rounded-[2px] bg-[#0B0C1E] text-[#DFB76C] text-xs font-bold">
                 {totalCartItems}
               </span>
             )}
             {cart?.total_amount > 0 && (
-              <span className="font-semibold text-blue-100 border-l border-blue-400/40 pl-2">
-                ₹{cart.total_amount.toFixed(2)}
+              <span className="font-semibold text-[#0B0C1E] border-l border-[#0B0C1E]/30 pl-2">
+                ₹{cart.total_amount.toLocaleString('en-IN')}
               </span>
             )}
           </button>
@@ -272,7 +273,7 @@ export default function MultimodalMarketplace() {
         <button
           onClick={() => handleTabChange('flights')}
           className={`flex items-center gap-2 px-4 py-2 rounded-[2px] text-sm font-medium transition whitespace-nowrap ${
-            activeTab === 'flights' ? 'bg-[#DFB76C] text-white font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
+            activeTab === 'flights' ? 'bg-[#DFB76C] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
           }`}
         >
           <Plane className="w-4 h-4" /> Flights & Airline Networks
@@ -281,7 +282,7 @@ export default function MultimodalMarketplace() {
         <button
           onClick={() => handleTabChange('hotels')}
           className={`flex items-center gap-2 px-4 py-2 rounded-[2px] text-sm font-medium transition whitespace-nowrap ${
-            activeTab === 'hotels' ? 'bg-[#DFB76C] text-white font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
+            activeTab === 'hotels' ? 'bg-[#DFB76C] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
           }`}
         >
           <Building2 className="w-4 h-4" /> Estate Hotels & Suites
@@ -290,16 +291,16 @@ export default function MultimodalMarketplace() {
         <button
           onClick={() => handleTabChange('cars')}
           className={`flex items-center gap-2 px-4 py-2 rounded-[2px] text-sm font-medium transition whitespace-nowrap ${
-            activeTab === 'cars' ? 'bg-[#DFB76C] text-white font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
+            activeTab === 'cars' ? 'bg-[#DFB76C] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
           }`}
         >
-          <Car className="w-4 h-4" /> Car Rentals & Chauffeur
+          <Car className="w-4 h-4" /> Chauffeur, Taxi & Fleets
         </button>
 
         <button
           onClick={() => handleTabChange('activities')}
           className={`flex items-center gap-2 px-4 py-2 rounded-[2px] text-sm font-medium transition whitespace-nowrap ${
-            activeTab === 'activities' ? 'bg-[#DFB76C] text-white font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
+            activeTab === 'activities' ? 'bg-[#DFB76C] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
           }`}
         >
           <Compass className="w-4 h-4" /> Tours & VIP Experiences
@@ -308,7 +309,7 @@ export default function MultimodalMarketplace() {
         <button
           onClick={() => handleTabChange('packages')}
           className={`flex items-center gap-2 px-4 py-2 rounded-[2px] text-sm font-medium transition whitespace-nowrap ${
-            activeTab === 'packages' ? 'bg-[#DFB76C] text-white font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
+            activeTab === 'packages' ? 'bg-[#DFB76C] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px]' : 'bg-[#1B1E3D] text-white/70 hover:text-white font-cinzel text-xs tracking-wider uppercase rounded-[2px] border border-[#2C315E]'
           }`}
         >
           <Gift className="w-4 h-4 text-emerald-300" /> Dynamic Bundled Packages
@@ -340,7 +341,7 @@ export default function MultimodalMarketplace() {
                 value={flightOrigin}
                 onChange={(e) => setFlightOrigin(e.target.value.toUpperCase())}
                 placeholder="NYC / JFK"
-                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
             <div>
@@ -352,7 +353,7 @@ export default function MultimodalMarketplace() {
                 value={flightDest}
                 onChange={(e) => setFlightDest(e.target.value.toUpperCase())}
                 placeholder="LON / LHR"
-                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
             <div>
@@ -362,7 +363,7 @@ export default function MultimodalMarketplace() {
               <select
                 value={flightCabin}
                 onChange={(e) => setFlightCabin(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               >
                 <option value="ECONOMY">Economy</option>
                 <option value="BUSINESS">Business Class</option>
@@ -373,7 +374,7 @@ export default function MultimodalMarketplace() {
               <button
                 onClick={fetchFlights}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-[2px] font-medium transition"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] disabled:opacity-50 rounded-[2px] font-cinzel text-xs font-bold tracking-wider uppercase transition shadow-md shadow-[#DFB76C]/20"
               >
                 <Search className="w-4 h-4" />
                 {loading ? 'Searching GDS...' : 'Find Flights'}
@@ -386,7 +387,7 @@ export default function MultimodalMarketplace() {
             {flights.map((fl) => (
               <div
                 key={fl.id}
-                className="bg-[#13152C] border border-[#2C315E] hover:border-blue-500/50 p-5 rounded-[4px] transition shadow-lg hover:shadow-blue-500/10 flex flex-col justify-between"
+                className="bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/40 p-5 rounded-[4px] transition shadow-lg hover:shadow-[#DFB76C]/10 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -404,15 +405,15 @@ export default function MultimodalMarketplace() {
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-between my-4 px-3 py-2 bg-[#13152C] rounded-[2px]">
+                  <div className="flex items-center justify-between my-4 px-3 py-2 bg-[#1B1E3D]/50 rounded-[2px]">
                     <div>
                       <div className="text-lg font-bold text-white">{fl.departure_time}</div>
                       <div className="text-xs text-white/70">{fl.origin}</div>
                     </div>
                     <div className="flex flex-col items-center">
                       <span className="text-xs text-white/50">{fl.duration}</span>
-                      <div className="w-24 h-0.5 bg-[#1B1E3D] my-1 relative">
-                        <div className="w-2 h-2 rounded-[2px] bg-blue-500 absolute -top-0.5 left-1/2 -translate-x-1/2" />
+                      <div className="w-24 h-0.5 bg-[#2C315E] my-1 relative">
+                        <div className="w-2 h-2 rounded-[2px] bg-[#DFB76C] absolute -top-0.5 left-1/2 -translate-x-1/2" />
                       </div>
                       <span className="text-xs text-[#DFB76C]">{fl.stops === 0 ? 'Nonstop' : `${fl.stops} stop`}</span>
                     </div>
@@ -425,8 +426,8 @@ export default function MultimodalMarketplace() {
 
                 <div className="flex items-center justify-between pt-4 border-t border-[#2C315E]">
                   <div>
-                    <span className="text-xs text-white/70">Total Per Traveler</span>
-                    <div className="text-2xl font-bold text-white">₹{fl.price.toFixed(2)}</div>
+                    <span className="text-xs text-white/70">Fare Per Passenger / Seat</span>
+                    <div className="text-2xl font-bold text-white">₹{fl.price.toLocaleString('en-IN')}</div>
                   </div>
                   <button
                     onClick={() =>
@@ -440,9 +441,9 @@ export default function MultimodalMarketplace() {
                         details: fl,
                       })
                     }
-                    className="flex items-center gap-2 px-4 py-2 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] text-sm font-semibold transition shadow-md shadow-blue-600/30"
+                    className="flex items-center gap-2 px-4 py-2 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
                   >
-                    <ShoppingCart className="w-4 h-4" /> Add to Basket
+                    <Ticket className="w-4 h-4" /> Reserve Seat
                   </button>
                 </div>
               </div>
@@ -454,7 +455,7 @@ export default function MultimodalMarketplace() {
       {/* --- TAB 2: ESTATE HOTELS --- */}
       {activeTab === 'hotels' && (
         <div className="space-y-6">
-          <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-[4px] flex items-center justify-between">
+          <div className="p-4 bg-[#1B1E3D] border border-[#2C315E] rounded-[4px] flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Building2 className="w-6 h-6 text-[#DFB76C]" />
               <div>
@@ -553,8 +554,8 @@ export default function MultimodalMarketplace() {
                 type="text"
                 value={carLocation}
                 onChange={(e) => setCarLocation(e.target.value)}
-                placeholder="Miami / Los Angeles"
-                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Miami / Los Angeles / Delhi"
+                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
             <div>
@@ -564,9 +565,9 @@ export default function MultimodalMarketplace() {
               <select
                 value={carCategory}
                 onChange={(e) => setCarCategory(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               >
-                <option value="">All Fleets</option>
+                <option value="">All Fleets & Chauffeurs</option>
                 <option value="LUXURY">Luxury & Exotic</option>
                 <option value="SUV">SUV & 4x4</option>
                 <option value="ELECTRIC">Electric (EV)</option>
@@ -577,17 +578,17 @@ export default function MultimodalMarketplace() {
               <button
                 onClick={fetchCars}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] font-medium transition"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] disabled:opacity-50 font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
               >
                 <Search className="w-4 h-4" />
-                {loading ? 'Searching Fleet...' : 'Search Fleets'}
+                {loading ? 'Searching Fleet...' : 'Search Chauffeur Fleets'}
               </button>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {cars.map((car) => (
-              <div key={car.id} className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden flex flex-col justify-between">
+              <div key={car.id} className="bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/40 rounded-[4px] overflow-hidden flex flex-col justify-between transition shadow-lg hover:shadow-[#DFB76C]/10">
                 <img src={car.image_url} alt={car.model} className="h-44 w-full object-cover" />
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
@@ -605,8 +606,8 @@ export default function MultimodalMarketplace() {
 
                   <div className="flex items-center justify-between pt-4 border-t border-[#2C315E]">
                     <div>
-                      <span className="text-xs text-white/70">Total ({car.pickup_location})</span>
-                      <div className="text-2xl font-bold text-white">₹{car.total_price.toFixed(2)}</div>
+                      <span className="text-xs text-white/70">Total • ₹{car.daily_rate.toLocaleString('en-IN')}/day</span>
+                      <div className="text-2xl font-bold text-white">₹{car.total_price.toLocaleString('en-IN')}</div>
                     </div>
                     <button
                       onClick={() =>
@@ -620,9 +621,9 @@ export default function MultimodalMarketplace() {
                           details: car,
                         })
                       }
-                      className="px-4 py-2 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] text-sm font-semibold transition"
+                      className="flex items-center gap-2 px-4 py-2 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
                     >
-                      Rent Vehicle
+                      <Car className="w-4 h-4" /> Reserve Vehicle
                     </button>
                   </div>
                 </div>
@@ -644,14 +645,14 @@ export default function MultimodalMarketplace() {
                 type="text"
                 value={actDestination}
                 onChange={(e) => setActDestination(e.target.value)}
-                placeholder="Paris / Tokyo / Maui"
-                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-white font-medium focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Paris / Tokyo / Maui / Jaipur"
+                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
             <button
               onClick={fetchActivities}
               disabled={loading}
-              className="py-2.5 px-6 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] font-medium transition flex items-center gap-2"
+              className="py-2.5 px-6 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] disabled:opacity-50 font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20 flex items-center gap-2"
             >
               <Search className="w-4 h-4" /> Search Tours
             </button>
@@ -659,7 +660,7 @@ export default function MultimodalMarketplace() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {activities.map((act) => (
-              <div key={act.id} className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden flex flex-col justify-between">
+              <div key={act.id} className="bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/40 rounded-[4px] overflow-hidden flex flex-col justify-between transition shadow-lg hover:shadow-[#DFB76C]/10">
                 <img src={act.image_url} alt={act.title} className="h-44 w-full object-cover" />
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
@@ -669,7 +670,7 @@ export default function MultimodalMarketplace() {
                     </div>
                     <h3 className="text-base font-bold text-white mb-2">{act.title}</h3>
                     <p className="text-xs text-white/70 mb-3 flex items-center gap-2">
-                      <Clock className="w-3.5 h-3.5" /> {act.duration} • <MapPin className="w-3.5 h-3.5" /> {act.location}
+                      <Clock className="w-3.5 h-3.5 text-[#DFB76C]" /> {act.duration} • <MapPin className="w-3.5 h-3.5 text-[#DFB76C]" /> {act.location}
                     </p>
                     <div className="space-y-1 mb-4">
                       {act.highlights?.map((h, i) => (
@@ -684,7 +685,7 @@ export default function MultimodalMarketplace() {
                   <div className="flex items-center justify-between pt-4 border-t border-[#2C315E]">
                     <div>
                       <span className="text-xs text-white/70">Price Per Guest</span>
-                      <div className="text-2xl font-bold text-white">₹{act.price_per_person.toFixed(2)}</div>
+                      <div className="text-2xl font-bold text-white">₹{act.price_per_person.toLocaleString('en-IN')}</div>
                     </div>
                     <button
                       onClick={() =>
@@ -698,9 +699,9 @@ export default function MultimodalMarketplace() {
                           details: act,
                         })
                       }
-                      className="px-4 py-2 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] text-sm font-semibold transition"
+                      className="flex items-center gap-2 px-4 py-2 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
                     >
-                      Add Activity
+                      <Compass className="w-4 h-4" /> Reserve Experience
                     </button>
                   </div>
                 </div>
@@ -736,7 +737,7 @@ export default function MultimodalMarketplace() {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="px-2.5 py-0.5 rounded-[2px] text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                        Save ₹{pkg.savings_amount.toFixed(0)} ({pkg.savings_pct}%)
+                        Save ₹{pkg.savings_amount.toLocaleString('en-IN')} ({pkg.savings_pct}%)
                       </span>
                       <span className="text-xs text-white/70">{pkg.duration_days} Days / {pkg.duration_days - 1} Nights</span>
                     </div>
@@ -767,8 +768,8 @@ export default function MultimodalMarketplace() {
 
                   <div className="flex items-center justify-between pt-4 border-t border-[#2C315E]">
                     <div>
-                      <div className="text-xs text-white/70 line-through">₹{pkg.original_total.toFixed(2)}</div>
-                      <div className="text-3xl font-extrabold text-emerald-400">₹{pkg.package_price.toFixed(2)}</div>
+                      <div className="text-xs text-white/70 line-through">₹{pkg.original_total.toLocaleString('en-IN')}</div>
+                      <div className="text-3xl font-extrabold text-emerald-400">₹{pkg.package_price.toLocaleString('en-IN')}</div>
                     </div>
                     <button
                       onClick={() =>
@@ -782,7 +783,7 @@ export default function MultimodalMarketplace() {
                           details: pkg,
                         })
                       }
-                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-[2px] text-sm transition shadow-lg shadow-emerald-600/30"
+                      className="px-5 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
                     >
                       Book Complete Package
                     </button>
@@ -890,9 +891,9 @@ export default function MultimodalMarketplace() {
             {/* Header */}
             <div className="p-5 border-b border-[#2C315E] pb-6 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <ShoppingCart className="w-5 h-5 text-[#DFB76C]" />
-                <h2 className="font-bold text-lg text-white">Unified Travel Basket</h2>
-                <span className="px-2 py-0.5 bg-blue-500/20 text-blue-300 rounded text-xs font-semibold">
+                <Luggage className="w-5 h-5 text-[#DFB76C]" />
+                <h2 className="font-bold text-lg text-white">Trip Itinerary Cart</h2>
+                <span className="px-2 py-0.5 bg-[#DFB76C]/20 text-[#DFB76C] rounded text-xs font-semibold">
                   {cart?.items?.length || 0} Items
                 </span>
               </div>
@@ -908,26 +909,26 @@ export default function MultimodalMarketplace() {
             <div className="p-5 flex-1 overflow-y-auto space-y-4">
               {cart?.items?.length === 0 ? (
                 <div className="text-center py-16 text-white/70">
-                  <ShoppingCart className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                  <p className="text-sm">Your multimodal cart is empty.</p>
-                  <p className="text-xs text-white/50 mt-1">Add flights, hotels, car rentals, or tours above!</p>
+                  <Luggage className="w-12 h-12 mx-auto mb-3 opacity-30 text-[#DFB76C]" />
+                  <p className="text-sm">Your trip itinerary is empty.</p>
+                  <p className="text-xs text-white/50 mt-1">Add flights, hotels, chauffeur fleets, or tours above!</p>
                 </div>
               ) : (
                 cart?.items?.map((item) => (
                   <div key={item.item_id} className="bg-[#13152C] p-4 rounded-[2px] border border-[#E5DDCF] relative group">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#1B1E3D] text-blue-300">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/30">
                           {item.product_type}
                         </span>
                         <h4 className="font-semibold text-white text-sm mt-1">{item.title}</h4>
                         <p className="text-xs text-white/70">{item.subtitle}</p>
                         <p className="text-xs text-white/50 mt-1 flex items-center gap-1">
-                          <Calendar className="w-3 h-3" /> {item.dates}
+                          <Calendar className="w-3 h-3 text-[#DFB76C]" /> {item.dates}
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold text-white text-base">₹{item.total_price.toFixed(2)}</div>
+                        <div className="font-bold text-white text-base">₹{item.total_price.toLocaleString('en-IN')}</div>
                         <button
                           onClick={() => handleRemoveFromCart(item.item_id)}
                           className="text-red-400 hover:text-red-300 text-xs mt-2 flex items-center gap-1 ml-auto"
@@ -946,8 +947,8 @@ export default function MultimodalMarketplace() {
               <div className="p-5 bg-[#13152C]/50 border-t border-[#2C315E]/15 space-y-4">
                 {/* Price Freeze Alert */}
                 {cart?.status === 'HELD' ? (
-                  <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-[2px] flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2 text-blue-300">
+                  <div className="p-3 bg-[#DFB76C]/10 border border-[#DFB76C]/30 rounded-[2px] flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2 text-[#DFB76C]">
                       <Lock className="w-4 h-4" /> <span>Rates Frozen for 48 Hours</span>
                     </div>
                     <span className="text-white/70 font-mono">Protected</span>
@@ -955,7 +956,7 @@ export default function MultimodalMarketplace() {
                 ) : (
                   <button
                     onClick={handleHoldPrice}
-                    className="w-full py-2 bg-[#13152C] hover:bg-[#1B1E3D] text-blue-300 border border-blue-500/30 rounded-[2px] text-xs font-semibold flex items-center justify-center gap-1.5 transition"
+                    className="w-full py-2 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/30 rounded-[2px] text-xs font-semibold flex items-center justify-center gap-1.5 transition"
                   >
                     <Lock className="w-3.5 h-3.5" /> Freeze Prices (48-Hour Guarantee)
                   </button>
@@ -987,21 +988,21 @@ export default function MultimodalMarketplace() {
                 <div className="space-y-1.5 text-xs text-white/70 pt-2 border-t border-[#2C315E]">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span className="text-white font-mono">₹{cart.subtotal.toFixed(2)}</span>
+                    <span className="text-white font-mono">₹{cart.subtotal.toLocaleString('en-IN')}</span>
                   </div>
                   {cart.discount_amount > 0 && (
                     <div className="flex justify-between text-emerald-400">
                       <span>Discount ({cart.promo_code})</span>
-                      <span className="font-mono">-₹{cart.discount_amount.toFixed(2)}</span>
+                      <span className="font-mono">-₹{cart.discount_amount.toLocaleString('en-IN')}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span>Supplier Taxes & Port Fees (12%)</span>
-                    <span className="text-white font-mono">${cart.tax_amount.toFixed(2)}</span>
+                    <span className="text-white font-mono">₹{cart.tax_amount.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between text-sm font-bold text-white pt-1 border-t border-[#2C315E]">
                     <span>Total Amount</span>
-                    <span className="text-[#DFB76C] font-mono text-base">₹{cart.total_amount.toFixed(2)}</span>
+                    <span className="text-[#DFB76C] font-mono text-base">₹{cart.total_amount.toLocaleString('en-IN')}</span>
                   </div>
                 </div>
 
@@ -1011,7 +1012,7 @@ export default function MultimodalMarketplace() {
                     setCartDrawerOpen(false);
                     setCheckoutModalOpen(true);
                   }}
-                  className="w-full py-3 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs tracking-wider uppercase font-bold font-bold rounded-[2px] text-sm shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] shadow-lg shadow-[#DFB76C]/20 transition flex items-center justify-center gap-2"
                 >
                   <CreditCard className="w-4 h-4" /> Proceed to One-Click Checkout
                 </button>
@@ -1033,7 +1034,7 @@ export default function MultimodalMarketplace() {
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-blue-500/10 rounded-[2px] text-[#DFB76C]">
+              <div className="p-3 bg-[#DFB76C]/10 rounded-[2px] text-[#DFB76C]">
                 <CreditCard className="w-6 h-6" />
               </div>
               <div>
@@ -1080,12 +1081,12 @@ export default function MultimodalMarketplace() {
 
               <div className="p-3.5 bg-[#1B1E3D] rounded-[2px] border border-[#2C315E] flex justify-between items-center text-sm">
                 <span className="text-white/70">Amount Charged</span>
-                <span className="font-bold text-lg text-emerald-400 font-mono">${cart?.total_amount.toFixed(2)}</span>
+                <span className="font-bold text-lg text-emerald-400 font-mono">₹{cart?.total_amount ? cart.total_amount.toLocaleString('en-IN') : '0'}</span>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs tracking-wider uppercase font-bold font-bold rounded-[2px] text-sm shadow-lg shadow-blue-500/30 transition"
+                className="w-full py-3 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] text-sm shadow-lg shadow-[#DFB76C]/20 transition"
               >
                 Confirm & Issue Multi-Supplier Vouchers
               </button>
@@ -1125,7 +1126,7 @@ export default function MultimodalMarketplace() {
               {checkoutSuccess.vouchers?.map((v) => (
                 <div key={v.id} className="bg-[#13152C] border border-[#2C315E] p-4 rounded-[2px] flex items-center justify-between gap-4">
                   <div className="space-y-1">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-500/20 text-blue-300">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#DFB76C]/20 text-[#DFB76C] border border-[#DFB76C]/30">
                       {v.product_type}
                     </span>
                     <h4 className="font-semibold text-white text-sm">{v.title}</h4>
