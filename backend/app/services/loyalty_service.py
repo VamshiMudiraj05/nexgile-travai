@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from bson import ObjectId
 from app.database.mongodb import get_database
@@ -36,8 +36,8 @@ class LoyaltyService:
                 "points": initial_points,
                 "lifetime_points": initial_lifetime,
                 "tier": tier_info["tier"],
-                "created_at": datetime.utcnow().isoformat(),
-                "updated_at": datetime.utcnow().isoformat()
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat()
             }
             res = await db.loyalty_accounts.insert_one(doc)
             doc["_id"] = res.inserted_id
@@ -49,7 +49,7 @@ class LoyaltyService:
                 "points": initial_points,
                 "reference": "WELCOME-BONUS",
                 "description": "Nexgile-TravAI Member Welcome Reward",
-                "created_at": datetime.utcnow().isoformat()
+                "created_at": datetime.now(timezone.utc).isoformat()
             })
             account = doc
 
@@ -71,7 +71,7 @@ class LoyaltyService:
         """Award loyalty points for completed reservation (1 pt per ₹100 or $1 spent)."""
         db = get_database()
         points_earned = max(int(total_amount / 10), 10)  # Generous point award
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
 
         account = await db.loyalty_accounts.find_one({"user_id": str(user_id)})
         if not account:
@@ -118,7 +118,7 @@ class LoyaltyService:
             "points": int(tx.get("points", 0)),
             "reference": tx.get("reference", ""),
             "description": tx.get("description", "Reward point activity"),
-            "created_at": tx.get("created_at", datetime.utcnow().isoformat())
+            "created_at": tx.get("created_at", datetime.now(timezone.utc).isoformat())
         } for tx in txs]
 
     @staticmethod
@@ -133,7 +133,7 @@ class LoyaltyService:
             )
 
         new_points = int(account.get("points", 0)) - points
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
 
         await db.loyalty_accounts.update_one(
             {"user_id": str(user_id)},

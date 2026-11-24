@@ -1,7 +1,7 @@
 import os
 import re
 import json
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from typing import Dict, Any, List, Optional
 from bson import ObjectId
 import httpx
@@ -24,7 +24,7 @@ class ConciergeService:
         name = user.get("name", "Team Member")
         role = (user.get("role") or "TRAVELER").upper()
 
-        today_str = datetime.utcnow().strftime("%Y-%m-%d")
+        today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
         # 1. Base operational counts across database
         properties_count = await db.properties.count_documents({})

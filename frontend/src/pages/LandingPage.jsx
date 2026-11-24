@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { Meteors } from '@/components/ui/meteors';
+import CurrencySelector from '../components/CurrencySelector';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ export default function LandingPage() {
 
           {/* User Auth CTAs */}
           <div className="flex items-center gap-3">
+            <CurrencySelector />
             {isAuthenticated ? (
               <>
                 <Link

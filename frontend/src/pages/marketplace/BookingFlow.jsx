@@ -15,6 +15,7 @@ import { travelerService } from '../../services/travelerService';
 import { paymentService } from '../../services/paymentService';
 import { useAuth } from '../../hooks/useAuth';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { useCurrency } from '../../context/CurrencyContext';
 import { Calendar } from '@/components/ui/calendar';
 import { WalletBalance, RazorpayMark, RazorpayIcon, PayPalIcon, NexgileMark, WiseMark } from '@/components/ui/wallet-balance';
 
@@ -22,6 +23,7 @@ export default function BookingFlow() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { formatPrice, currency } = useCurrency();
 
   const propertyId = searchParams.get('property_id');
   const roomTypeId = searchParams.get('room_type_id');
@@ -406,7 +408,7 @@ export default function BookingFlow() {
             </div>
             <div className="flex justify-between py-3">
               <span className="font-cinzel text-[10px] uppercase tracking-wider text-white/60">Total Paid</span>
-              <span className="font-editorial text-xl font-bold text-[#DFB76C]">₹{confirmedBooking.total_amount?.toLocaleString()}</span>
+              <span className="font-editorial text-xl font-bold text-[#DFB76C]">{formatPrice(confirmedBooking.total_amount)}</span>
             </div>
           </div>
 
@@ -716,10 +718,10 @@ export default function BookingFlow() {
               {bookingLoading
                 ? 'Securing Room & Capturing Payment...'
                 : paymentMethod === 'RAZORPAY'
-                ? `CONFIRM WITH RAZORPAY (₹${totalAmount.toLocaleString()}) →`
+                ? `CONFIRM WITH RAZORPAY (${formatPrice(totalAmount)}) →`
                 : paymentMethod === 'PAYPAL'
-                ? `CONFIRM WITH PAYPAL (₹${totalAmount.toLocaleString()}) →`
-                : `CONFIRM & PAY ₹${totalAmount.toLocaleString()} →`}
+                ? `CONFIRM WITH PAYPAL (${formatPrice(totalAmount)}) →`
+                : `CONFIRM & PAY ${formatPrice(totalAmount)} →`}
             </button>
           </div>
         </form>
@@ -779,19 +781,19 @@ export default function BookingFlow() {
               </div>
               <div className="flex justify-between py-2.5">
                 <span className="font-cinzel text-[10px] uppercase tracking-wider text-white/60">Rate / Night</span>
-                <span className="font-semibold text-white">₹{roomType?.base_rate?.toLocaleString()}</span>
+                <span className="font-semibold text-white">{formatPrice(roomType?.base_rate)}</span>
               </div>
               <div className="flex justify-between py-2.5">
                 <span className="font-cinzel text-[10px] uppercase tracking-wider text-white/60">Stay Subtotal</span>
-                <span className="font-semibold text-white">₹{baseTotal.toLocaleString()}</span>
+                <span className="font-semibold text-white">{formatPrice(baseTotal)}</span>
               </div>
               <div className="flex justify-between py-2.5">
                 <span className="font-cinzel text-[10px] uppercase tracking-wider text-white/60">GST &amp; Taxes (12%)</span>
-                <span className="font-semibold text-white">₹{taxesTotal.toLocaleString()}</span>
+                <span className="font-semibold text-white">{formatPrice(taxesTotal)}</span>
               </div>
               <div className="flex justify-between py-4 border-t border-[#2C315E]">
                 <span className="font-cinzel text-xs font-bold text-white uppercase tracking-wider">Total Stay Amount</span>
-                <span className="text-2xl font-editorial font-bold text-[#DFB76C]">₹{totalAmount.toLocaleString()}</span>
+                <span className="text-2xl font-editorial font-bold text-[#DFB76C]">{formatPrice(totalAmount)}</span>
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { CurrencyProvider } from './context/CurrencyContext';
 import { AppRoutes } from './routes/AppRoutes';
 import api from './services/api';
 
@@ -13,7 +14,9 @@ export function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppRoutes />
+        <CurrencyProvider>
+          <AppRoutes />
+        </CurrencyProvider>
       </AuthProvider>
     </BrowserRouter>
   );

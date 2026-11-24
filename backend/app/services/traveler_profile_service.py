@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from bson import ObjectId
 from app.database.mongodb import get_database
@@ -32,8 +32,8 @@ class TravelerProfileService:
                 "user_id": str(user_id),
                 "preferences": default_preferences,
                 "phone": user.get("phone", "+91 98765 43210"),
-                "created_at": datetime.utcnow().isoformat(),
-                "updated_at": datetime.utcnow().isoformat()
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat()
             }
             await db.traveler_profiles.insert_one(profile_doc)
 
@@ -73,7 +73,7 @@ class TravelerProfileService:
         """Update traveler preferences and contact info."""
         db = get_database()
         
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
         update_fields: Dict[str, Any] = {"updated_at": now_iso}
 
         if "name" in data and data["name"]:

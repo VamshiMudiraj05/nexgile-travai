@@ -1,4 +1,4 @@
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, timezone
 from typing import Dict, Any, List, Optional
 from bson import ObjectId
 from app.database.mongodb import get_database
@@ -116,7 +116,7 @@ class RevenueService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Room type not found")
 
         previous_rate = float(rt.get("base_rate", 0.0))
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
 
         # Update room type base_rate
         await db.room_types.update_one(

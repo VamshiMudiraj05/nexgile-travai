@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from bson import ObjectId
 from app.database.mongodb import get_database
@@ -22,15 +22,15 @@ class ServiceRequestService:
             "item": doc.get("item", "General Request"),
             "details": doc.get("details", ""),
             "status": doc.get("status", "OPEN"),
-            "created_at": doc.get("created_at", datetime.utcnow().isoformat()),
-            "updated_at": doc.get("updated_at", datetime.utcnow().isoformat()),
+            "created_at": doc.get("created_at", datetime.now(timezone.utc).isoformat()),
+            "updated_at": doc.get("updated_at", datetime.now(timezone.utc).isoformat()),
         }
 
     @staticmethod
     async def create_service_request(user: Dict[str, Any], payload: Dict[str, Any]) -> Dict[str, Any]:
         """Create a new guest service request tied to an active reservation or property."""
         db = get_database()
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
 
         reservation_id = payload.get("reservation_id")
         property_id = payload.get("property_id")
@@ -49,7 +49,7 @@ class ServiceRequestService:
         # If no reservation_id provided, attempt to find user's current or upcoming reservation
         elif not property_id:
             user_id = str(user.get("_id") or user.get("id"))
-            today_str = datetime.utcnow().strftime("%Y-%m-%d")
+            today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
             active_res = await db.reservations.find_one({
                 "$or": [
                     {"user_id": ObjectId(user_id) if ObjectId.is_valid(user_id) else None},

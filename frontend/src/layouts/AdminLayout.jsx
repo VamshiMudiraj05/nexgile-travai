@@ -32,6 +32,7 @@ import {
 import { useAuth } from '../hooks/useAuth';
 import { DynamicIsland } from '@/components/ui/dynamic-island';
 import { RainbowButton } from '@/components/ui/rainbow-button';
+import { CurrencySelector } from '../components/CurrencySelector';
 import { motion } from 'framer-motion';
 
 export const AdminLayout = () => {
@@ -280,7 +281,8 @@ export const AdminLayout = () => {
             <span className="font-cinzel text-[10px] tracking-[0.14em] text-[#DFB76C] ml-1">TRAVAI</span>
           </div>
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <CurrencySelector compact />
           <DynamicIsland
             name={displayName}
             role={user?.role || 'TRAVELER'}
@@ -394,7 +396,8 @@ export const AdminLayout = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <CurrencySelector />
             <DynamicIsland
               name={displayName}
               role={user?.role || 'TRAVELER'}

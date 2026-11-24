@@ -16,8 +16,10 @@ import { travelerService } from '../../services/travelerService';
 import StatusBadge from '../../components/StatusBadge';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useCurrency } from '../../context/CurrencyContext';
 
 export default function MyTrips() {
+  const { formatPrice } = useCurrency();
   const [tripsData, setTripsData] = useState({
     all: [],
     upcoming: [],
@@ -290,7 +292,7 @@ export default function MyTrips() {
                 <div>
                   <span className="block font-cinzel text-[9px] tracking-widest text-white/60 uppercase">Total Paid</span>
                   <p className="font-editorial text-xl font-bold text-[#DFB76C]">
-                    ₹{trip.total_amount?.toLocaleString()}
+                    {formatPrice(trip.total_amount)}
                   </p>
                 </div>
 

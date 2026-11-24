@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from typing import Dict, Any, List, Optional
 from bson import ObjectId
 from app.database.mongodb import get_database
@@ -78,7 +78,7 @@ class TravelerBookingService:
         guest_email = booking_data.get("guest_email", user.get("email", "")).lower().strip()
         guest = await db.guests.find_one({"email": guest_email})
         
-        now_iso = datetime.utcnow().isoformat()
+        now_iso = datetime.now(timezone.utc).isoformat()
         first_name = booking_data.get("guest_first_name")
         last_name = booking_data.get("guest_last_name")
         if not first_name:
@@ -113,7 +113,7 @@ class TravelerBookingService:
         total_amount = round(room_rate_total + taxes_amount, 2)
 
         # 5. Generate human-readable booking reference
-        date_segment = datetime.utcnow().strftime("%Y%m%d")
+        date_segment = datetime.now(timezone.utc).strftime("%Y%m%d")
         count_today = await db.reservations.count_documents({
             "booking_reference": {"$regex": f"^NGX-{date_segment}-"}
         })

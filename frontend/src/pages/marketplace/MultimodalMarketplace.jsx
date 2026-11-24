@@ -32,6 +32,7 @@ import {
 import { multimodalService } from '../../services/multimodalService';
 import { paymentService } from '../../services/paymentService';
 import { useAuth } from '../../hooks/useAuth';
+import { useCurrency } from '../../context/CurrencyContext';
 import { RazorpayIcon, PayPalIcon } from '@/components/ui/wallet-balance';
 
 export default function MultimodalMarketplace() {
@@ -63,6 +64,7 @@ export default function MultimodalMarketplace() {
   const [promoMessage, setPromoMessage] = useState(null);
 
   const { user } = useAuth();
+  const { formatPrice } = useCurrency();
 
   // Checkout modal
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
@@ -403,7 +405,7 @@ export default function MultimodalMarketplace() {
             )}
             {cart?.total_amount > 0 && (
               <span className="font-semibold text-[#0B0C1E] border-l border-[#0B0C1E]/30 pl-2">
-                ₹{cart.total_amount.toLocaleString('en-IN')}
+                {formatPrice(cart.total_amount)}
               </span>
             )}
           </button>
@@ -569,7 +571,7 @@ export default function MultimodalMarketplace() {
                 <div className="flex items-center justify-between pt-4 border-t border-[#2C315E]">
                   <div>
                     <span className="text-xs text-white/70">Fare Per Passenger / Seat</span>
-                    <div className="text-2xl font-bold text-white">₹{fl.price.toLocaleString('en-IN')}</div>
+                    <div className="text-2xl font-bold text-white">{formatPrice(fl.price)}</div>
                   </div>
                   <button
                     onClick={() =>
@@ -777,9 +779,9 @@ export default function MultimodalMarketplace() {
                   {/* Clean Bottom Price & Action Container */}
                   <div className="flex items-center justify-between pt-4 border-t border-[#2C315E] gap-3">
                     <div>
-                      <span className="text-xs text-white/60 block">Daily Rate: ₹{car.daily_rate.toLocaleString('en-IN')}/day</span>
+                      <span className="text-xs text-white/60 block">Daily Rate: {formatPrice(car.daily_rate)}/day</span>
                       <div className="text-2xl font-bold text-white tracking-tight">
-                        ₹{car.total_price.toLocaleString('en-IN')}{' '}
+                        {formatPrice(car.total_price)}{' '}
                         <span className="text-xs font-normal text-white/50">(4-Day Trip)</span>
                       </div>
                     </div>
@@ -989,7 +991,7 @@ export default function MultimodalMarketplace() {
                     className="h-full w-full object-cover group-hover:scale-105 transition duration-500"
                   />
                   <div className="absolute top-3 left-3 px-2.5 py-1 rounded-[2px] bg-emerald-500/90 text-white text-xs font-bold uppercase tracking-wider">
-                    Save ₹{pkg.savings_amount.toLocaleString('en-IN')} ({pkg.savings_pct}%)
+                    Save {formatPrice(pkg.savings_amount)} ({pkg.savings_pct}%)
                   </div>
                   <div className="absolute top-3 right-3 px-2.5 py-1 rounded-[2px] bg-[#0B0C1E]/80 backdrop-blur-sm border border-[#2C315E] text-xs text-white/90 font-medium">
                     {pkg.duration_days} Days / {pkg.duration_days - 1} Nights
@@ -1030,10 +1032,10 @@ export default function MultimodalMarketplace() {
                   <div className="flex items-center justify-between pt-4 border-t border-[#2C315E] gap-3">
                     <div>
                       <div className="text-xs text-white/50 line-through">
-                        Standard: ₹{pkg.original_total.toLocaleString('en-IN')}
+                        Standard: {formatPrice(pkg.original_total)}
                       </div>
                       <div className="text-2xl font-extrabold text-emerald-400 tracking-tight">
-                        ₹{pkg.package_price.toLocaleString('en-IN')}
+                        {formatPrice(pkg.package_price)}
                       </div>
                     </div>
                     <button
@@ -1253,21 +1255,21 @@ export default function MultimodalMarketplace() {
                 <div className="space-y-1.5 text-xs text-white/70 pt-2 border-t border-[#2C315E]">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span className="text-white font-mono">₹{cart.subtotal.toLocaleString('en-IN')}</span>
+                    <span className="text-white font-mono">{formatPrice(cart.subtotal)}</span>
                   </div>
                   {cart.discount_amount > 0 && (
                     <div className="flex justify-between text-emerald-400">
                       <span>Discount ({cart.promo_code})</span>
-                      <span className="font-mono">-₹{cart.discount_amount.toLocaleString('en-IN')}</span>
+                      <span className="font-mono">-{formatPrice(cart.discount_amount)}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
                     <span>Supplier Taxes & Port Fees (12%)</span>
-                    <span className="text-white font-mono">₹{cart.tax_amount.toLocaleString('en-IN')}</span>
+                    <span className="text-white font-mono">{formatPrice(cart.tax_amount)}</span>
                   </div>
                   <div className="flex justify-between text-sm font-bold text-white pt-1 border-t border-[#2C315E]">
                     <span>Total Amount</span>
-                    <span className="text-[#DFB76C] font-mono text-base">₹{cart.total_amount.toLocaleString('en-IN')}</span>
+                    <span className="text-[#DFB76C] font-mono text-base">{formatPrice(cart.total_amount)}</span>
                   </div>
                 </div>
 
@@ -1429,7 +1431,7 @@ export default function MultimodalMarketplace() {
 
               <div className="p-3.5 bg-[#1B1E3D] rounded-[2px] border border-[#2C315E] flex justify-between items-center text-sm">
                 <span className="text-white/70">Amount Charged</span>
-                <span className="font-bold text-lg text-emerald-400 font-mono">₹{cart?.total_amount ? cart.total_amount.toLocaleString('en-IN') : '0'}</span>
+                <span className="font-bold text-lg text-emerald-400 font-mono">{formatPrice(cart?.total_amount || 0)}</span>
               </div>
 
               <button
@@ -1440,10 +1442,10 @@ export default function MultimodalMarketplace() {
                 {checkoutLoading
                   ? 'Securing Seats & Capturing Payment...'
                   : paymentMethod === 'RAZORPAY'
-                  ? `PAY VIA RAZORPAY (₹${(cart?.total_amount || 0).toLocaleString('en-IN')}) →`
+                  ? `PAY VIA RAZORPAY (${formatPrice(cart?.total_amount || 0)}) →`
                   : paymentMethod === 'PAYPAL'
-                  ? `CONFIRM WITH PAYPAL (₹${(cart?.total_amount || 0).toLocaleString('en-IN')}) →`
-                  : `CONFIRM & ISSUE PASSES (₹${(cart?.total_amount || 0).toLocaleString('en-IN')}) →`}
+                  ? `CONFIRM WITH PAYPAL (${formatPrice(cart?.total_amount || 0)}) →`
+                  : `CONFIRM & ISSUE PASSES (${formatPrice(cart?.total_amount || 0)}) →`}
               </button>
             </form>
           </div>
