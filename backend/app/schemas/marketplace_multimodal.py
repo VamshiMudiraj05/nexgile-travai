@@ -183,7 +183,8 @@ class CheckoutRequest(BaseModel):
     traveler_name: str
     traveler_email: str
     traveler_phone: Optional[str] = None
-    payment_method: str = "CARD"
+    payment_method: str = "CARD"  # RAZORPAY, PAYPAL, DEMO_CARD, CORPORATE_ACCOUNT, etc.
+    payment_details: Optional[Dict[str, Any]] = None
     card_number: Optional[str] = None
     billing_address: Optional[str] = None
 
@@ -202,6 +203,11 @@ class VoucherResponse(BaseModel):
     inclusions: List[str] = []
     status: str
     qr_payload: str
+    user_id: Optional[str] = None
+    total_amount: Optional[float] = None
+    payment_status: Optional[str] = "PAID"
+    payment_method: Optional[str] = None
+    details: Optional[Dict[str, Any]] = None
     issued_at: Optional[datetime] = None
 
 

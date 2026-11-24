@@ -249,6 +249,52 @@ class TravelerBookingService:
             else:
                 upcoming.append(trip_item)
 
+        # Also fetch multimodal vouchers (Flights, Cabs/Cars, Tours) for this traveler
+        vouchers = await db.booking_vouchers.find({
+            "$or": [
+                {"user_id": str(user_id)},
+                {"user_id": ObjectId(user_id) if ObjectId.is_valid(user_id) else None}
+            ]
+        }).sort("issued_at", -1).to_list(length=100)
+
+        for v in vouchers:
+            v_type = v.get("product_type", "FLIGHT")
+            dates_str = v.get("valid_dates", today_str)
+            v_title = v.get("title", f"{v_type} Reservation")
+            v_photo = None
+            if v_type == "FLIGHT":
+                v_photo = "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80"
+            elif v_type == "CAR":
+                v_photo = "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80"
+            elif v_type == "ACTIVITY":
+                v_photo = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80"
+
+            voucher_trip = {
+                "id": str(v["_id"]),
+                "booking_reference": v.get("booking_reference", ""),
+                "voucher_code": v.get("voucher_code", ""),
+                "product_type": v_type,
+                "property_id": "",
+                "property_name": v_title,
+                "property_city": v.get("supplier_name", "Travel Partner"),
+                "property_photo": v_photo,
+                "room_type_name": v.get("inclusions", ["Confirmed Booking"])[0] if v.get("inclusions") else "Transport Pass",
+                "room_number": v.get("supplier_confirmation_code", "AUTO"),
+                "check_in_date": dates_str.split(" to ")[0].strip() if " to " in dates_str else dates_str,
+                "check_out_date": dates_str.split(" to ")[1].strip() if " to " in dates_str else dates_str,
+                "nights": 1,
+                "adults": 1,
+                "children": 0,
+                "total_amount": float(v.get("total_amount", 0.0)),
+                "status": "CONFIRMED",
+                "payment_status": v.get("payment_status", "PAID"),
+                "special_requests": f"Supplier Ref: {v.get('supplier_confirmation_code', '')}",
+                "qr_payload": v.get("qr_payload", ""),
+                "details": v.get("details", {}),
+                "created_at": v.get("issued_at")
+            }
+            upcoming.append(voucher_trip)
+
         return {
             "all": upcoming + current + past + cancelled,
             "upcoming": upcoming,
@@ -259,14 +305,52 @@ class TravelerBookingService:
 
     @staticmethod
     async def get_trip_detail(user_id: str, reservation_id: str) -> Dict[str, Any]:
-        """Fetch trip details for a specific reservation."""
+        """Fetch trip details for a specific reservation or multimodal voucher."""
         db = get_database()
         if not ObjectId.is_valid(reservation_id):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid reservation ID")
 
+        # 1. First check hotel reservations
         r = await db.reservations.find_one({"_id": ObjectId(reservation_id)})
         if not r:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip reservation not found")
+            # 2. Check multimodal vouchers
+            v = await db.booking_vouchers.find_one({"_id": ObjectId(reservation_id)})
+            if not v:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip or voucher not found")
+            
+            dates_str = v.get("valid_dates", "")
+            return {
+                "id": str(v["_id"]),
+                "booking_reference": v.get("booking_reference", ""),
+                "voucher_code": v.get("voucher_code", ""),
+                "product_type": v.get("product_type", "FLIGHT"),
+                "property_id": "",
+                "property_name": v.get("title", "Transport Booking"),
+                "property_city": v.get("supplier_name", "Travel Partner"),
+                "property_address": f"Supplier Ref: {v.get('supplier_confirmation_code', '')}",
+                "property_photos": [],
+                "room_id": "",
+                "room_number": v.get("supplier_confirmation_code", "AUTO"),
+                "room_type_name": v.get("inclusions", ["Confirmed"])[0] if v.get("inclusions") else "Transport Pass",
+                "guest_name": v.get("traveler_name", "Resident Guest"),
+                "guest_email": v.get("traveler_email", ""),
+                "guest_phone": "",
+                "check_in_date": dates_str.split(" to ")[0].strip() if " to " in dates_str else dates_str,
+                "check_out_date": dates_str.split(" to ")[1].strip() if " to " in dates_str else dates_str,
+                "nights": 1,
+                "adults": 1,
+                "children": 0,
+                "base_rate": float(v.get("total_amount", 0.0)),
+                "room_rate_total": float(v.get("total_amount", 0.0)),
+                "taxes_amount": 0.0,
+                "total_amount": float(v.get("total_amount", 0.0)),
+                "status": "CONFIRMED",
+                "payment_status": v.get("payment_status", "PAID"),
+                "special_requests": f"Voucher: {v.get('voucher_code')} • QR: {v.get('qr_payload', '')}",
+                "qr_payload": v.get("qr_payload", ""),
+                "details": v.get("details", {}),
+                "created_at": v.get("issued_at")
+            }
 
         # Authorization check: user_id must match unless admin
         if str(r.get("user_id")) != str(user_id):

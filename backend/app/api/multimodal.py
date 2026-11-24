@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from fastapi import APIRouter, Depends, Query, Path, status
 from bson import ObjectId
 
@@ -181,6 +181,17 @@ async def checkout_cart(
 
 
 # --- DIGITAL VOUCHERS ---
+@router.get(
+    "/vouchers/my-vouchers",
+    response_model=List[VoucherResponse],
+    summary="Retrieve all digital vouchers for the authenticated traveler",
+)
+async def get_my_vouchers(
+    user_id: str = Depends(get_optional_user_id),
+):
+    return await MultimodalService.get_user_vouchers(user_id=user_id)
+
+
 @router.get(
     "/vouchers/{voucher_code}",
     response_model=VoucherResponse,

@@ -107,10 +107,19 @@ async def create_razorpay_order(
         booking_ref = res.get("booking_reference", "")
         description = f"Hotel Reservation Checkout - Ref #{booking_ref}"
         receipt = f"rcpt_res_{booking_ref[:20]}"
+    # 3. Multimodal cart / direct journey checkout scenario
+    elif payload.cart_id or (payload.amount and payload.amount > 0):
+        if payload.cart_id and ObjectId.is_valid(payload.cart_id):
+            cart_doc = await db.unified_carts.find_one({"_id": ObjectId(payload.cart_id)})
+            amount_inr = float(cart_doc.get("total_amount", 0.0)) if cart_doc else float(payload.amount or 100.0)
+        else:
+            amount_inr = float(payload.amount or 100.0)
+        description = "Multimodal Travel Journey Checkout (Flights & Cabs)"
+        receipt = f"rcpt_mm_{int(datetime.now(timezone.utc).timestamp())}"
     else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Either package_id or reservation_id must be provided."
+            detail="Either package_id, reservation_id, or cart_id/amount must be provided."
         )
 
     # 3. Create Order via Razorpay Service

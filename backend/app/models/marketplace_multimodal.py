@@ -58,5 +58,10 @@ def voucher_helper(vch: Dict[str, Any]) -> Dict[str, Any]:
         "inclusions": vch.get("inclusions", []),
         "status": vch.get("status", "ISSUED"),  # ISSUED, REDEEMED, VOID
         "qr_payload": vch.get("qr_payload", ""),
+        "user_id": str(vch.get("user_id", "")),
+        "total_amount": float(vch.get("total_amount", 0.0)),
+        "payment_status": vch.get("payment_status", "PAID"),
+        "payment_method": vch.get("payment_method", "CARD"),
+        "details": vch.get("details", {}),
         "issued_at": vch.get("issued_at"),
     }

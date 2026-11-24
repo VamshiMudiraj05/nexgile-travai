@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Calendar,
@@ -6,6 +6,11 @@ import {
   Building2,
   Luggage,
   Sparkles,
+  Plane,
+  Car,
+  Ticket,
+  QrCode,
+  Compass,
 } from 'lucide-react';
 import { travelerService } from '../../services/travelerService';
 import StatusBadge from '../../components/StatusBadge';
@@ -22,6 +27,7 @@ export default function MyTrips() {
   });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('upcoming');
+  const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [cancellingTrip, setCancellingTrip] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -56,7 +62,16 @@ export default function MyTrips() {
     }
   };
 
-  const currentList = tripsData[activeTab] || [];
+  const rawList = tripsData[activeTab] || [];
+  const currentList = useMemo(() => {
+    if (categoryFilter === 'HOTEL') {
+      return rawList.filter((t) => !t.product_type || t.product_type === 'HOTEL');
+    }
+    if (categoryFilter === 'TRANSPORT') {
+      return rawList.filter((t) => t.product_type === 'FLIGHT' || t.product_type === 'CAR');
+    }
+    return rawList;
+  }, [rawList, categoryFilter]);
 
   return (
     <div className="space-y-8 pb-12 text-[#FAF6F0]">
@@ -64,53 +79,85 @@ export default function MyTrips() {
       <div className="flex flex-col justify-between gap-6 border-b border-[#2C315E] pb-6 md:flex-row md:items-end">
         <div>
           <span className="font-cinzel text-[10px] tracking-[0.25em] text-[#DFB76C] uppercase font-semibold">
-            MY BOOKINGS
+            MY JOURNEYS & ITINERARIES
           </span>
           <h1 className="mt-1 font-editorial text-3xl md:text-4xl text-white tracking-tight font-bold">
-            My Trips & Stays
+            My Trips & Passes
           </h1>
           <p className="mt-1 font-sans text-xs md:text-sm text-white/70 max-w-2xl">
-            View your upcoming hotel stays, active room bookings, and past trips.
+            View your verified resort reservations, flight tickets, private airport transfers, and digital passes.
           </p>
         </div>
 
-        <Link
-          to="/marketplace"
-          className="inline-flex items-center gap-2 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] px-5 py-2.5 font-cinzel text-xs tracking-widest uppercase font-bold transition-all shadow-sm rounded-[2px]"
-        >
-          <Luggage size={14} className="text-[#13152C]" /> Book a New Stay →
-        </Link>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Link
+            to="/marketplace/multimodal"
+            className="inline-flex items-center gap-1.5 bg-[#1B1E3D] hover:bg-[#2C315E] text-[#DFB76C] border border-[#2C315E] px-4 py-2 font-cinzel text-xs tracking-wider uppercase font-bold transition-all rounded-[2px]"
+          >
+            <Plane size={13} className="text-[#DFB76C]" /> Book Flight / Cab →
+          </Link>
+          <Link
+            to="/marketplace"
+            className="inline-flex items-center gap-1.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] px-4 py-2 font-cinzel text-xs tracking-wider uppercase font-bold transition-all shadow-sm rounded-[2px]"
+          >
+            <Luggage size={13} className="text-[#13152C]" /> Book Hotel Stay →
+          </Link>
+        </div>
       </div>
 
-      {/* Luxury Tabs */}
-      <div className="flex border-b border-[#2C315E] gap-4 md:gap-8 overflow-x-auto">
-        {[
-          { key: 'upcoming', label: 'Upcoming Stays', count: tripsData.upcoming?.length },
-          { key: 'current', label: 'Currently Staying', count: tripsData.current?.length },
-          { key: 'past', label: 'Past Stays', count: tripsData.past?.length },
-          { key: 'cancelled', label: 'Cancelled', count: tripsData.cancelled?.length },
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`flex items-center gap-2.5 pb-3 font-cinzel text-xs tracking-wider uppercase transition-all border-b-2 -mb-[2px] whitespace-nowrap cursor-pointer ${
-              activeTab === tab.key
-                ? 'border-[#DFB76C] text-[#DFB76C] font-bold'
-                : 'border-transparent text-white/60 hover:text-white'
-            }`}
-          >
-            <span>{tab.label}</span>
-            {tab.count !== undefined && (
-              <span className={`px-2 py-0.5 text-[10px] font-sans rounded-[2px] ${
+      {/* Luxury Tabs & Category Filters */}
+      <div className="space-y-4 border-b border-[#2C315E] pb-3">
+        <div className="flex gap-4 md:gap-8 overflow-x-auto">
+          {[
+            { key: 'upcoming', label: 'Upcoming Journeys', count: tripsData.upcoming?.length },
+            { key: 'current', label: 'Currently Active', count: tripsData.current?.length },
+            { key: 'past', label: 'Past Trips', count: tripsData.past?.length },
+            { key: 'cancelled', label: 'Cancelled', count: tripsData.cancelled?.length },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`flex items-center gap-2.5 pb-2 font-cinzel text-xs tracking-wider uppercase transition-all border-b-2 -mb-[2px] whitespace-nowrap cursor-pointer ${
                 activeTab === tab.key
-                  ? 'bg-[#1B1E3D] text-[#DFB76C] border border-[#2C315E]'
-                  : 'bg-[#13152C] text-white/50 border border-[#2C315E]/60'
-              }`}>
-                {tab.count}
-              </span>
-            )}
-          </button>
-        ))}
+                  ? 'border-[#DFB76C] text-[#DFB76C] font-bold'
+                  : 'border-transparent text-white/60 hover:text-white'
+              }`}
+            >
+              <span>{tab.label}</span>
+              {tab.count !== undefined && (
+                <span className={`px-2 py-0.5 text-[10px] font-sans rounded-[2px] ${
+                  activeTab === tab.key
+                    ? 'bg-[#1B1E3D] text-[#DFB76C] border border-[#2C315E]'
+                    : 'bg-[#13152C] text-white/50 border border-[#2C315E]/60'
+                }`}>
+                  {tab.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Category Pills */}
+        <div className="flex items-center gap-2 pt-1 text-xs">
+          <span className="font-cinzel text-[10px] tracking-wider uppercase text-white/50">Filter:</span>
+          {[
+            { key: 'ALL', label: 'All Products' },
+            { key: 'HOTEL', label: 'Hotels & Resorts' },
+            { key: 'TRANSPORT', label: 'Flights & Cabs' },
+          ].map((cat) => (
+            <button
+              key={cat.key}
+              onClick={() => setCategoryFilter(cat.key)}
+              className={`px-2.5 py-1 rounded-[2px] text-[11px] font-cinzel transition-all cursor-pointer ${
+                categoryFilter === cat.key
+                  ? 'bg-[#DFB76C] text-[#0B0C1E] font-bold shadow-sm'
+                  : 'bg-[#1B1E3D] text-white/70 hover:text-white border border-[#2C315E]'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* List */}
@@ -156,21 +203,44 @@ export default function MyTrips() {
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-[#DFB76C]/40">
-                      <Building2 size={44} />
+                      {trip.product_type === 'FLIGHT' ? (
+                        <Plane size={48} className="text-[#DFB76C]" />
+                      ) : trip.product_type === 'CAR' ? (
+                        <Car size={48} className="text-[#DFB76C]" />
+                      ) : (
+                        <Building2 size={44} />
+                      )}
                     </div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0D0E20]/90 via-transparent to-black/30 pointer-events-none" />
 
-                  <div className="absolute top-3.5 left-3.5">
+                  <div className="absolute top-3.5 left-3.5 flex items-center gap-1.5">
+                    {trip.product_type === 'FLIGHT' ? (
+                      <span className="px-2 py-0.5 rounded-[2px] bg-sky-950/90 border border-sky-400/40 text-sky-300 font-cinzel text-[10px] font-bold">
+                        ✈️ FLIGHT
+                      </span>
+                    ) : trip.product_type === 'CAR' ? (
+                      <span className="px-2 py-0.5 rounded-[2px] bg-emerald-950/90 border border-emerald-400/40 text-emerald-300 font-cinzel text-[10px] font-bold">
+                        🚗 CHAUFFEUR
+                      </span>
+                    ) : null}
                     <StatusBadge status={trip.status} />
                   </div>
-                  <div className="absolute top-3.5 right-3.5 rounded-[2px] bg-[#0D0E20]/90 px-3 py-1 font-mono text-[11px] font-bold text-[#DFB76C] backdrop-blur-md border border-[#DFB76C]/30">
-                    REF: {trip.booking_reference}
+
+                  <div className="absolute top-3.5 right-3.5 flex flex-col items-end gap-1">
+                    <span className="rounded-[2px] bg-[#0D0E20]/90 px-3 py-1 font-mono text-[11px] font-bold text-[#DFB76C] backdrop-blur-md border border-[#DFB76C]/30">
+                      REF: {trip.booking_reference}
+                    </span>
+                    {trip.voucher_code && (
+                      <span className="rounded-[2px] bg-[#13152C]/90 px-2 py-0.5 font-mono text-[10px] text-emerald-400 border border-emerald-500/30">
+                        PASS: {trip.voucher_code}
+                      </span>
+                    )}
                   </div>
 
                   {activeTab === 'upcoming' && idx === 0 && (
                     <div className="absolute bottom-3 left-3.5 flex items-center gap-1.5 px-2.5 py-1 bg-[#DFB76C] text-[#13152C] font-cinzel text-[10px] tracking-wider uppercase font-bold rounded-[2px]">
-                      <Sparkles size={12} /> Next Trip
+                      <Sparkles size={12} /> Next Journey
                     </div>
                   )}
                 </div>
@@ -179,23 +249,37 @@ export default function MyTrips() {
                 <div className="p-6 space-y-4">
                   <div>
                     <div className="flex items-center gap-1.5 font-cinzel text-[10px] tracking-widest text-[#DFB76C] uppercase font-semibold">
-                      <MapPin size={12} /> {trip.property_city}
+                      {trip.product_type === 'FLIGHT' ? (
+                        <Plane size={12} />
+                      ) : trip.product_type === 'CAR' ? (
+                        <Car size={12} />
+                      ) : (
+                        <MapPin size={12} />
+                      )}
+                      <span>{trip.property_city || 'Confirmed Partner'}</span>
                     </div>
                     <h3 className="mt-1 font-editorial text-2xl font-bold text-white tracking-tight group-hover:text-[#DFB76C] transition-colors">
                       {trip.property_name}
                     </h3>
                     <p className="mt-0.5 font-sans text-xs text-white/70">
-                      <span className="font-semibold text-white">{trip.room_type_name}</span> • Room {trip.room_number || 'Assigned at check-in'}
+                      <span className="font-semibold text-white">{trip.room_type_name}</span>
+                      {trip.product_type === 'FLIGHT' ? (
+                        <span> &bull; Seat {trip.room_number || 'Auto-Assigned'}</span>
+                      ) : trip.product_type === 'CAR' ? (
+                        <span> &bull; Fleet Conf: {trip.room_number || 'Verified'}</span>
+                      ) : (
+                        <span> &bull; Room {trip.room_number || 'Assigned at check-in'}</span>
+                      )}
                     </p>
                   </div>
 
                   <div className="flex items-center gap-2.5 rounded-[2px] bg-[#1B1E3D] p-3 border border-[#2C315E] font-sans text-xs text-white/90">
                     <Calendar size={15} className="text-[#DFB76C] shrink-0" />
                     <span className="font-medium">
-                      {trip.check_in_date} &rarr; {trip.check_out_date}
+                      {trip.check_in_date} {trip.check_out_date && trip.check_out_date !== trip.check_in_date ? `→ ${trip.check_out_date}` : ''}
                     </span>
                     <span className="ml-auto font-cinzel text-[10px] tracking-wider uppercase text-white/60">
-                      ({trip.nights} Nights)
+                      {trip.product_type === 'FLIGHT' ? 'Flight Departure' : trip.product_type === 'CAR' ? 'Fleet Booking' : `(${trip.nights} Nights)`}
                     </span>
                   </div>
                 </div>

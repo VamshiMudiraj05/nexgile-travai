@@ -561,15 +561,19 @@ class MultimodalService:
 
         traveler_name = checkout_data.get("traveler_name", "Valued Guest")
         traveler_email = checkout_data.get("traveler_email", "guest@example.com")
+        payment_method = checkout_data.get("payment_method", "CARD")
+        payment_details = checkout_data.get("payment_details", {})
 
         vouchers = []
         for it in cart["items"]:
             v_code = f"VCH-{now.strftime('%Y%m')}-{uuid.uuid4().hex[:8].upper()}"
             sup_code = f"SUP-{uuid.uuid4().hex[:6].upper()}"
+            item_total = round(float(it.get("unit_price", 0.0)) * int(it.get("quantity", 1)), 2)
 
             v_doc = {
                 "voucher_code": v_code,
                 "booking_reference": master_pnr,
+                "user_id": str(user_id) if user_id else "guest",
                 "product_type": it["product_type"],
                 "supplier_name": it["details"].get("provider") or it["details"].get("airline") or "Nexgile Estate Partner",
                 "supplier_confirmation_code": sup_code,
@@ -579,6 +583,10 @@ class MultimodalService:
                 "valid_dates": it["dates"],
                 "inclusions": [it.get("subtitle", "Confirmed Reservation")],
                 "status": "ISSUED",
+                "payment_status": "PAID",
+                "payment_method": payment_method,
+                "total_amount": item_total,
+                "details": it.get("details", {}),
                 "qr_payload": f"https://travai.nexgile.com/verify?code={v_code}&pnr={master_pnr}",
                 "issued_at": now,
             }
@@ -587,13 +595,31 @@ class MultimodalService:
             v_doc["_id"] = res.inserted_id
             vouchers.append(voucher_helper(v_doc))
 
+        # Record payment transaction for audit and billing
+        order_tx_id = payment_details.get("razorpay_order_id") or payment_details.get("paypal_order_id") or f"TX-MM-{master_pnr}"
+        await db.payment_transactions.update_one(
+            {"order_id": order_tx_id},
+            {"$set": {
+                "order_id": order_tx_id,
+                "user_id": str(user_id) if user_id else "guest",
+                "amount_inr": cart["total_amount"],
+                "currency": cart.get("currency", "INR"),
+                "status": "SUCCESSFUL",
+                "payment_method": payment_method,
+                "master_pnr": master_pnr,
+                "vouchers_count": len(vouchers),
+                "updated_at": now,
+            }},
+            upsert=True
+        )
+
         # Mark cart as checked out
         await db.unified_carts.update_one(
             {"_id": ObjectId(cart["id"])},
             {"$set": {"status": "CHECKED_OUT", "updated_at": now}}
         )
 
-        logger.info(f"Unified Checkout Completed: {master_pnr} with {len(vouchers)} vouchers issued for {traveler_name}.")
+        logger.info(f"Unified Checkout Completed: {master_pnr} with {len(vouchers)} vouchers issued for {traveler_name} via {payment_method}.")
 
         return {
             "status": "CONFIRMED",
@@ -604,6 +630,26 @@ class MultimodalService:
             "vouchers": vouchers,
             "confirmation_message": f"All travel bookings confirmed! {len(vouchers)} digital vouchers issued with instant supplier confirmations.",
         }
+
+    @staticmethod
+    async def get_user_vouchers(user_id: str, email: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Retrieve all active vouchers for a traveler."""
+        db = get_database()
+        query_conditions = []
+        if user_id and user_id != "guest_traveler":
+            query_conditions.append({"user_id": str(user_id)})
+        if email:
+            query_conditions.append({"traveler_email": email})
+
+        if not query_conditions:
+            return []
+
+        cursor = db.booking_vouchers.find({"$or": query_conditions}).sort("issued_at", -1)
+        raw_vouchers = await cursor.to_list(length=100)
+        return [voucher_helper(v) for v in raw_vouchers]
+
+    # Alias checkout to checkout_cart for API compatibility
+    checkout = checkout_cart
 
     @staticmethod
     async def get_voucher(voucher_code: str) -> Dict[str, Any]:

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Plane,
   Building2,
@@ -29,6 +30,9 @@ import {
   Gauge
 } from 'lucide-react';
 import { multimodalService } from '../../services/multimodalService';
+import { paymentService } from '../../services/paymentService';
+import { useAuth } from '../../hooks/useAuth';
+import { RazorpayIcon, PayPalIcon } from '@/components/ui/wallet-balance';
 
 export default function MultimodalMarketplace() {
   const [activeTab, setActiveTab] = useState('flights');
@@ -58,12 +62,21 @@ export default function MultimodalMarketplace() {
   const [promoCodeInput, setPromoCodeInput] = useState('TRAVAI20');
   const [promoMessage, setPromoMessage] = useState(null);
 
+  const { user } = useAuth();
+
   // Checkout modal
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
-  const [travelerName, setTravelerName] = useState('Eleanor Vance');
-  const [travelerEmail, setTravelerEmail] = useState('eleanor.vance@nexgile.com');
-  const [paymentMethod, setPaymentMethod] = useState('CARD');
+  const [travelerName, setTravelerName] = useState(user?.name || 'Resident Guest');
+  const [travelerEmail, setTravelerEmail] = useState(user?.email || 'guest@nexgile.com');
+  const [paymentMethod, setPaymentMethod] = useState('RAZORPAY');
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState(null);
   const [checkoutSuccess, setCheckoutSuccess] = useState(null);
+
+  useEffect(() => {
+    if (user?.name) setTravelerName(user.name);
+    if (user?.email) setTravelerEmail(user.email);
+  }, [user]);
 
   // Disruption simulation state
   const [disruptionType, setDisruptionType] = useState('FLIGHT_DELAY');
@@ -196,17 +209,142 @@ export default function MultimodalMarketplace() {
 
   const handleCheckoutSubmit = async (e) => {
     e.preventDefault();
+    setCheckoutLoading(true);
+    setCheckoutError(null);
+
+    const totalAmount = cart?.total_amount || 0;
+
     try {
-      const res = await multimodalService.checkout({
-        traveler_name: travelerName,
-        traveler_email: travelerEmail,
-        payment_method: paymentMethod,
-      });
-      setCheckoutSuccess(res);
-      setCheckoutModalOpen(false);
-      fetchCart();
+      if (paymentMethod === 'RAZORPAY') {
+        const orderData = await paymentService.createRazorpayOrder({
+          amount: totalAmount,
+          cart_id: cart?.id,
+          notes: {
+            traveler_name: travelerName,
+            traveler_email: travelerEmail,
+            items_count: cart?.items?.length || 1,
+          },
+        });
+
+        const scriptLoaded = await paymentService.loadRazorpayScript();
+
+        if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
+          const options = {
+            key: orderData.key_id,
+            amount: orderData.amount,
+            currency: 'INR',
+            name: 'Nexgile TravAI Multimodal',
+            description: `Multimodal Journey Checkout (${cart?.items?.length || 1} Items)`,
+            order_id: orderData.order_id,
+            prefill: {
+              name: travelerName || 'Resident Guest',
+              email: travelerEmail || 'traveler@nexgile.com',
+            },
+            theme: { color: '#DFB76C' },
+            handler: async function (response) {
+              try {
+                setCheckoutLoading(true);
+                await paymentService.verifyRazorpayPayment({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                });
+                const res = await multimodalService.checkout({
+                  traveler_name: travelerName,
+                  traveler_email: travelerEmail,
+                  payment_method: 'RAZORPAY',
+                  payment_details: {
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                  },
+                });
+                setCheckoutSuccess(res);
+                setCheckoutModalOpen(false);
+                fetchCart();
+              } catch (verifyErr) {
+                console.error('Razorpay verification error:', verifyErr);
+                setCheckoutError('Payment verification failed. Please try again.');
+              } finally {
+                setCheckoutLoading(false);
+              }
+            },
+            modal: {
+              ondismiss: function () {
+                setCheckoutLoading(false);
+                setCheckoutError('Razorpay payment was dismissed.');
+              },
+            },
+          };
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+          return;
+        } else {
+          // Razorpay Sandbox Simulator
+          const mockPaymentId = `pay_test_${Math.random().toString(36).substring(2, 12)}`;
+          await paymentService.verifyRazorpayPayment({
+            razorpay_order_id: orderData.order_id,
+            razorpay_payment_id: mockPaymentId,
+            razorpay_signature: 'rzp_test_sig_ok',
+          });
+          const res = await multimodalService.checkout({
+            traveler_name: travelerName,
+            traveler_email: travelerEmail,
+            payment_method: 'RAZORPAY',
+            payment_details: {
+              razorpay_order_id: orderData.order_id,
+              razorpay_payment_id: mockPaymentId,
+            },
+          });
+          setCheckoutSuccess(res);
+          setCheckoutModalOpen(false);
+          fetchCart();
+          return;
+        }
+      } else if (paymentMethod === 'PAYPAL') {
+        const orderRes = await paymentService.createPayPalOrder({
+          amount: totalAmount,
+          currency: 'INR',
+          description: `Multimodal Journey Checkout (${cart?.items?.length || 1} Items)`,
+        });
+
+        if (orderRes?.approval_url) {
+          window.location.href = orderRes.approval_url;
+          return;
+        } else {
+          // PayPal Sandbox capture
+          await paymentService.capturePayPalOrder({
+            order_id: orderRes.order_id,
+            reservation_id: cart?.id || "MULTIMODAL_HOLD",
+          });
+          const res = await multimodalService.checkout({
+            traveler_name: travelerName,
+            traveler_email: travelerEmail,
+            payment_method: 'PAYPAL',
+            payment_details: {
+              paypal_order_id: orderRes.order_id,
+            },
+          });
+          setCheckoutSuccess(res);
+          setCheckoutModalOpen(false);
+          fetchCart();
+          return;
+        }
+      } else {
+        // Direct Demo Simulation
+        const res = await multimodalService.checkout({
+          traveler_name: travelerName,
+          traveler_email: travelerEmail,
+          payment_method: 'DEMO_CARD',
+        });
+        setCheckoutSuccess(res);
+        setCheckoutModalOpen(false);
+        fetchCart();
+      }
     } catch (err) {
-      alert('Checkout error: ' + (err.response?.data?.detail || err.message));
+      console.error('Checkout error:', err);
+      setCheckoutError(err.response?.data?.detail || err.message || 'Checkout failed.');
+    } finally {
+      setCheckoutLoading(false);
     }
   };
 
@@ -1178,7 +1316,7 @@ export default function MultimodalMarketplace() {
                   required
                   value={travelerName}
                   onChange={(e) => setTravelerName(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-sm text-white"
+                  className="w-full px-3 py-2 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-sm"
                 />
               </div>
 
@@ -1189,22 +1327,105 @@ export default function MultimodalMarketplace() {
                   required
                   value={travelerEmail}
                   onChange={(e) => setTravelerEmail(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-sm text-white"
+                  className="w-full px-3 py-2 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/80 uppercase mb-1">Payment Method</label>
-                <select
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-sm text-white"
-                >
-                  <option value="CARD">Credit / Debit Card (Visa, MC, Amex)</option>
-                  <option value="CORPORATE_ACCOUNT">Direct Corporate Master Account</option>
-                  <option value="LOYALTY_POINTS">TravAI Loyalty Points + Cash</option>
-                </select>
+                <label className="block text-xs font-semibold text-white/80 uppercase mb-2">Select Payment Gateway</label>
+                <div className="grid grid-cols-1 gap-2.5">
+                  {/* Razorpay */}
+                  <div
+                    onClick={() => setPaymentMethod('RAZORPAY')}
+                    className={`flex cursor-pointer items-center justify-between rounded-[3px] border p-3 transition-all ${
+                      paymentMethod === 'RAZORPAY'
+                        ? 'border-[#DFB76C] bg-[#1B1E3D]'
+                        : 'border-[#2C315E] bg-[#0E1022] hover:border-[#DFB76C]/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-[3px] bg-[#0C2340] border border-[#0C83FD]/40">
+                        <RazorpayIcon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                          Razorpay <span className="text-[9px] text-amber-400 font-mono">(Test)</span>
+                        </p>
+                        <p className="text-[10px] text-white/60 font-cinzel">UPI &bull; NetBanking &bull; Cards</p>
+                      </div>
+                    </div>
+                    <input
+                      type="radio"
+                      name="multimodal_payment"
+                      checked={paymentMethod === 'RAZORPAY'}
+                      onChange={() => setPaymentMethod('RAZORPAY')}
+                      className="accent-[#DFB76C]"
+                    />
+                  </div>
+
+                  {/* PayPal */}
+                  <div
+                    onClick={() => setPaymentMethod('PAYPAL')}
+                    className={`flex cursor-pointer items-center justify-between rounded-[3px] border p-3 transition-all ${
+                      paymentMethod === 'PAYPAL'
+                        ? 'border-[#DFB76C] bg-[#1B1E3D]'
+                        : 'border-[#2C315E] bg-[#0E1022] hover:border-[#DFB76C]/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-[3px] bg-[#001c38] border border-[#0079C1]/40">
+                        <PayPalIcon className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                          PayPal <span className="text-[9px] text-amber-400 font-mono">(Sandbox)</span>
+                        </p>
+                        <p className="text-[10px] text-white/60 font-cinzel">PayPal Wallet &bull; Global Cards</p>
+                      </div>
+                    </div>
+                    <input
+                      type="radio"
+                      name="multimodal_payment"
+                      checked={paymentMethod === 'PAYPAL'}
+                      onChange={() => setPaymentMethod('PAYPAL')}
+                      className="accent-[#DFB76C]"
+                    />
+                  </div>
+
+                  {/* Direct Simulation */}
+                  <div
+                    onClick={() => setPaymentMethod('DEMO_CARD')}
+                    className={`flex cursor-pointer items-center justify-between rounded-[3px] border p-3 transition-all ${
+                      paymentMethod === 'DEMO_CARD'
+                        ? 'border-[#DFB76C] bg-[#1B1E3D]'
+                        : 'border-[#2C315E] bg-[#0E1022] hover:border-[#DFB76C]/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-[3px] bg-[#0B0C1E] text-[#DFB76C] border border-[#2C315E]">
+                        <CreditCard size={15} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-white">Direct Card Simulation</p>
+                        <p className="text-[10px] text-white/60 font-cinzel">Instant 1-Click Sandbox</p>
+                      </div>
+                    </div>
+                    <input
+                      type="radio"
+                      name="multimodal_payment"
+                      checked={paymentMethod === 'DEMO_CARD'}
+                      onChange={() => setPaymentMethod('DEMO_CARD')}
+                      className="accent-[#DFB76C]"
+                    />
+                  </div>
+                </div>
               </div>
+
+              {checkoutError && (
+                <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs rounded-[2px]">
+                  {checkoutError}
+                </div>
+              )}
 
               <div className="p-3.5 bg-[#1B1E3D] rounded-[2px] border border-[#2C315E] flex justify-between items-center text-sm">
                 <span className="text-white/70">Amount Charged</span>
@@ -1213,9 +1434,16 @@ export default function MultimodalMarketplace() {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] text-sm shadow-lg shadow-[#DFB76C]/20 transition"
+                disabled={checkoutLoading}
+                className="w-full py-3 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] text-sm shadow-lg shadow-[#DFB76C]/20 transition cursor-pointer disabled:opacity-50"
               >
-                Confirm & Issue Multi-Supplier Vouchers
+                {checkoutLoading
+                  ? 'Securing Seats & Capturing Payment...'
+                  : paymentMethod === 'RAZORPAY'
+                  ? `PAY VIA RAZORPAY (₹${(cart?.total_amount || 0).toLocaleString('en-IN')}) →`
+                  : paymentMethod === 'PAYPAL'
+                  ? `CONFIRM WITH PAYPAL (₹${(cart?.total_amount || 0).toLocaleString('en-IN')}) →`
+                  : `CONFIRM & ISSUE PASSES (₹${(cart?.total_amount || 0).toLocaleString('en-IN')}) →`}
               </button>
             </form>
           </div>
@@ -1268,12 +1496,20 @@ export default function MultimodalMarketplace() {
               ))}
             </div>
 
-            <button
-              onClick={() => setCheckoutSuccess(null)}
-              className="w-full py-2.5 bg-[#1B1E3D] hover:bg-[#1B1E3D] text-white rounded-[2px] text-sm font-semibold transition"
-            >
-              Done & Return to Travel Hub
-            </button>
+            <div className="space-y-2.5 mt-4">
+              <Link
+                to="/my-trips"
+                className="w-full flex items-center justify-center gap-2 py-3 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
+              >
+                <Luggage className="w-4 h-4" /> View in My Trips & Digital Passes &rarr;
+              </Link>
+              <button
+                onClick={() => setCheckoutSuccess(null)}
+                className="w-full py-2.5 bg-[#1B1E3D] hover:bg-[#2C315E] text-white/80 rounded-[2px] text-xs font-cinzel font-semibold transition cursor-pointer"
+              >
+                Done & Return to Travel Hub
+              </button>
+            </div>
           </div>
         </div>
       )}

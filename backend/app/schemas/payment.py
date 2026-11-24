@@ -25,6 +25,8 @@ class PaymentConfigResponse(BaseModel):
 class RazorpayCreateOrderRequest(BaseModel):
     package_id: Optional[str] = Field(default=None, description="Credit package ID for wallet top-up")
     reservation_id: Optional[str] = Field(default=None, description="Reservation ID for hotel booking checkout")
+    cart_id: Optional[str] = Field(default=None, description="Unified Multimodal Cart ID")
+    amount: Optional[float] = Field(default=None, description="Direct checkout amount in INR")
     notes: Optional[Dict[str, Any]] = None
 
 

@@ -6,6 +6,9 @@ import {
   CheckCircle,
   Printer,
   Sparkles,
+  Plane,
+  Car,
+  QrCode,
 } from 'lucide-react';
 import { travelerService } from '../../services/travelerService';
 import StatusBadge from '../../components/StatusBadge';
@@ -108,52 +111,78 @@ export default function TripDetail() {
             <div className="flex items-center gap-3">
               <StatusBadge status={trip.status} />
               <span className="font-cinzel text-[10px] tracking-[0.2em] text-[#DFB76C] uppercase font-semibold">
-                Confirmed Booking
+                {trip.product_type === 'FLIGHT'
+                  ? '✈️ Confirmed Flight Itinerary'
+                  : trip.product_type === 'CAR'
+                  ? '🚗 Confirmed Airport Chauffeur'
+                  : 'Confirmed Hotel Booking'}
               </span>
             </div>
             <h1 className="mt-3 font-editorial text-3xl md:text-4xl text-white tracking-tight font-bold">
               {trip.property_name}
             </h1>
             <p className="mt-1 flex items-center gap-1.5 font-sans text-xs text-white/70">
-              <MapPin size={14} className="text-[#DFB76C]" />
+              {trip.product_type === 'FLIGHT' ? (
+                <Plane size={14} className="text-[#DFB76C]" />
+              ) : trip.product_type === 'CAR' ? (
+                <Car size={14} className="text-[#DFB76C]" />
+              ) : (
+                <MapPin size={14} className="text-[#DFB76C]" />
+              )}
               {trip.property_address || trip.property_city}
             </p>
           </div>
 
-          <div className="rounded-[2px] border border-[#DFB76C]/40 bg-[#1B1E3D] p-4 text-right">
-            <span className="font-cinzel text-[9px] uppercase tracking-widest text-white/60 block">
-              Booking Reference
-            </span>
-            <p className="mt-0.5 font-mono text-base font-bold text-[#DFB76C]">
-              {trip.booking_reference}
-            </p>
+          <div className="flex flex-col items-end gap-2">
+            <div className="rounded-[2px] border border-[#DFB76C]/40 bg-[#1B1E3D] p-4 text-right">
+              <span className="font-cinzel text-[9px] uppercase tracking-widest text-white/60 block">
+                Booking Reference
+              </span>
+              <p className="mt-0.5 font-mono text-base font-bold text-[#DFB76C]">
+                {trip.booking_reference}
+              </p>
+            </div>
+            {trip.voucher_code && (
+              <div className="rounded-[2px] border border-emerald-500/40 bg-emerald-950/40 px-3 py-1.5 text-right font-mono text-xs text-emerald-300 flex items-center gap-2">
+                <QrCode size={14} className="text-emerald-400" />
+                <span>PASS: {trip.voucher_code}</span>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Stay Grid Info */}
+        {/* Stay / Trip Grid Info */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-[2px] bg-[#1B1E3D] p-5 border border-[#2C315E]">
             <span className="font-cinzel text-[10px] tracking-wider text-[#DFB76C] uppercase block font-semibold">
-              Check-In Date
+              {trip.product_type === 'FLIGHT' ? 'Departure Date' : trip.product_type === 'CAR' ? 'Pickup Date' : 'Check-In Date'}
             </span>
             <p className="mt-2 font-editorial text-2xl font-bold text-white">{trip.check_in_date}</p>
-            <p className="mt-1 font-sans text-[11px] text-white/60">Check-in from 3:00 PM</p>
+            <p className="mt-1 font-sans text-[11px] text-white/60">
+              {trip.product_type === 'FLIGHT' ? 'Scheduled departure' : trip.product_type === 'CAR' ? 'Chauffeur pickup' : 'Check-in from 3:00 PM'}
+            </p>
           </div>
 
           <div className="rounded-[2px] bg-[#1B1E3D] p-5 border border-[#2C315E]">
             <span className="font-cinzel text-[10px] tracking-wider text-[#DFB76C] uppercase block font-semibold">
-              Check-Out Date
+              {trip.product_type === 'FLIGHT' ? 'Arrival / Return' : trip.product_type === 'CAR' ? 'Drop-Off Date' : 'Check-Out Date'}
             </span>
-            <p className="mt-2 font-editorial text-2xl font-bold text-white">{trip.check_out_date}</p>
-            <p className="mt-1 font-sans text-[11px] text-white/60">Check-out before 11:00 AM</p>
+            <p className="mt-2 font-editorial text-2xl font-bold text-white">{trip.check_out_date || trip.check_in_date}</p>
+            <p className="mt-1 font-sans text-[11px] text-white/60">
+              {trip.product_type === 'FLIGHT' ? 'Terminal gate access' : trip.product_type === 'CAR' ? 'Final drop-off' : 'Check-out before 11:00 AM'}
+            </p>
           </div>
 
           <div className="rounded-[2px] bg-[#1B1E3D] p-5 border border-[#2C315E]">
             <span className="font-cinzel text-[10px] tracking-wider text-[#DFB76C] uppercase block font-semibold">
-              Room & Suite
+              {trip.product_type === 'FLIGHT' ? 'Flight & Seat' : trip.product_type === 'CAR' ? 'Fleet & Category' : 'Room & Suite'}
             </span>
             <p className="mt-2 font-editorial text-2xl font-bold text-white">
-              Room {trip.room_number || 'Pending Check-in'}
+              {trip.product_type === 'FLIGHT'
+                ? `Seat ${trip.room_number || 'Auto'}`
+                : trip.product_type === 'CAR'
+                ? `Fleet ${trip.room_number || 'Confirmed'}`
+                : `Room ${trip.room_number || 'Pending Check-in'}`}
             </p>
             <p className="mt-1 font-sans text-[11px] text-white/70 truncate">{trip.room_type_name}</p>
           </div>

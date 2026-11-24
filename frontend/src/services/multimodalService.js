@@ -62,6 +62,11 @@ export const multimodalService = {
     return response.data;
   },
 
+  getMyVouchers: async () => {
+    const response = await api.get('/multimodal/vouchers/my-vouchers');
+    return response.data;
+  },
+
   // Disruption Handling
   resolveDisruption: async (payload) => {
     const response = await api.post('/multimodal/disruptions/resolve', payload);
