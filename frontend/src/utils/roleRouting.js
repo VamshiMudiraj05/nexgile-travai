@@ -57,32 +57,47 @@ export const isPathCompatibleWithRole = (pathname, role) => {
     const frontDeskAllowed = [
       '/frontdesk',
       '/reservations',
+      '/housekeeping',
+      '/maintenance',
       '/guests',
+      '/corporate',
+      '/operations',
       '/rooms',
       '/properties',
-      '/operations',
     ];
     return frontDeskAllowed.some((prefix) => pathname.startsWith(prefix));
   }
 
   if (role === 'FINANCE') {
-    return pathname.startsWith('/finance') || pathname.startsWith('/corporate');
+    const financeAllowed = [
+      '/finance',
+      '/reservations',
+      '/corporate',
+      '/analytics',
+    ];
+    return financeAllowed.some((prefix) => pathname.startsWith(prefix));
   }
 
   if (role === 'HOUSEKEEPING') {
-    return pathname.startsWith('/housekeeping') || pathname.startsWith('/rooms');
+    const housekeepingAllowed = ['/housekeeping', '/rooms'];
+    return housekeepingAllowed.some((prefix) => pathname.startsWith(prefix));
   }
 
   if (role === 'MAINTENANCE') {
-    return pathname.startsWith('/maintenance') || pathname.startsWith('/rooms');
+    const maintenanceAllowed = ['/maintenance', '/rooms'];
+    return maintenanceAllowed.some((prefix) => pathname.startsWith(prefix));
   }
 
   if (role === 'REVENUE_MANAGER') {
-    return (
-      pathname.startsWith('/revenue') ||
-      pathname.startsWith('/analytics') ||
-      pathname.startsWith('/distribution')
-    );
+    const revenueAllowed = [
+      '/revenue',
+      '/analytics',
+      '/distribution',
+      '/properties',
+      '/corporate',
+      '/marketplace',
+    ];
+    return revenueAllowed.some((prefix) => pathname.startsWith(prefix));
   }
 
   return false;

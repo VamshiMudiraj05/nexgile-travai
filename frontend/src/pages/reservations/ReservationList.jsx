@@ -142,7 +142,7 @@ export const ReservationList = () => {
             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
               {/* Property Selector */}
               <div className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-[#DFB76C]" />
+                <Building2 className="w-4 h-4 text-[#DFB76C] shrink-0" />
                 <select
                   value={selectedPropertyId}
                   onChange={(e) => {
@@ -161,8 +161,8 @@ export const ReservationList = () => {
               </div>
 
               {/* Status Filter */}
-              <div className="flex items-center gap-2 z-20">
-                <Filter className="w-4 h-4 text-[#DFB76C]" />
+              <div className="flex items-center gap-2 relative z-30">
+                <Filter className="w-4 h-4 text-[#DFB76C] shrink-0" />
                 <GooeyMenu
                   width={210}
                   options={[

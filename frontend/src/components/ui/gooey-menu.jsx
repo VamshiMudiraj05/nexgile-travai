@@ -309,7 +309,7 @@ export const GooeyMenu = ({
         style={
           hasCustomTrigger
             ? undefined
-            : { width: effectiveWidth, height: open ? totalHeight : geometry.height }
+            : { width: effectiveWidth, height: geometry.height }
         }
       >
         {/* Gooey Surface Layer - Solid Blobs for fast 60fps GPU rasterization */}
