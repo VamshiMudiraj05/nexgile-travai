@@ -40,8 +40,8 @@ export default function BookingFlow() {
   const [confirmedBooking, setConfirmedBooking] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  // Payment method selection: "PAYPAL" or "DEMO_CARD"
-  const [paymentMethod, setPaymentMethod] = useState('PAYPAL');
+  // Payment method selection: "RAZORPAY" or "DEMO_CARD"
+  const [paymentMethod, setPaymentMethod] = useState('RAZORPAY');
 
   // Form fields
   const [firstName, setFirstName] = useState(user?.name?.split(' ')[0] || '');
@@ -78,61 +78,12 @@ export default function BookingFlow() {
   };
 
   useEffect(() => {
-    const isPaypalReturn = searchParams.get('paypal_return') === 'true';
-    const isPaypalCancel = searchParams.get('paypal_cancel') === 'true';
-    const reservationId = searchParams.get('reservation_id');
-    const paypalToken = searchParams.get('token'); // PayPal Order ID
-
-    if (isPaypalReturn && reservationId) {
-      handlePayPalReturn(paypalToken, reservationId);
-    } else if (isPaypalCancel) {
-      setErrorMessage('PayPal checkout was cancelled. You can retry payment anytime.');
-      if (propertyId && roomTypeId) {
-        fetchDetails();
-      } else {
-        setLoading(false);
-      }
-    } else if (propertyId && roomTypeId) {
+    if (propertyId && roomTypeId) {
       fetchDetails();
     } else {
       setLoading(false);
     }
   }, [searchParams, propertyId, roomTypeId]);
-
-  const handlePayPalReturn = async (orderId, resId) => {
-    try {
-      setLoading(true);
-      if (orderId) {
-        try {
-          await paymentService.capturePayPalOrder({
-            order_id: orderId,
-            reservation_id: resId,
-          });
-        } catch (capErr) {
-          console.warn('PayPal capture during return callback:', capErr);
-        }
-      }
-
-      const resData = await travelerService.getTripDetail(resId);
-      setConfirmedBooking({
-        booking_reference: resData.booking_reference,
-        property_name: resData.property?.name || resData.property_name || 'Confirmed Stay',
-        room_number: resData.room?.room_number || resData.room_number || 'TBD',
-        room_type_name: resData.room_type?.name || resData.room_type_name || 'Standard Suite',
-        guest_name: resData.guest_name || `${resData.guest?.first_name || ''} ${resData.guest?.last_name || ''}`.trim() || 'Traveler',
-        check_in_date: resData.check_in_date,
-        check_out_date: resData.check_out_date,
-        nights: resData.number_of_nights || 1,
-        total_amount: resData.total_amount,
-        payment_method: 'PAYPAL',
-      });
-    } catch (err) {
-      console.error('Failed to verify PayPal return flow:', err);
-      setErrorMessage('Could not verify PayPal payment status. Please check My Trips.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchDetails = async () => {
     try {
@@ -189,19 +140,78 @@ export default function BookingFlow() {
       const resResponse = await travelerService.createBooking(payload);
       const reservationId = resResponse.id || resResponse._id;
 
-      if (paymentMethod === 'PAYPAL') {
-        const orderRes = await paymentService.createPayPalOrder({
+      if (paymentMethod === 'RAZORPAY') {
+        const orderData = await paymentService.createRazorpayOrder({
           reservation_id: reservationId,
-          amount: totalAmount,
-          currency: 'INR',
-          description: `Stay at ${property?.name || 'Hotel'} - ${roomType?.name || 'Suite'}`,
-          return_url: `${window.location.origin}/marketplace/checkout?paypal_return=true&reservation_id=${reservationId}`,
-          cancel_url: `${window.location.origin}/marketplace/checkout?paypal_cancel=true&property_id=${propertyId}&room_type_id=${roomTypeId}&check_in=${checkIn}&check_out=${checkOut}`,
         });
 
-        if (orderRes?.approval_url) {
-          window.location.href = orderRes.approval_url;
+        const scriptLoaded = await paymentService.loadRazorpayScript();
+
+        if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
+          const options = {
+            key: orderData.key_id,
+            amount: orderData.amount,
+            currency: 'INR',
+            name: 'Nexgile TravAI',
+            description: `Reservation #${resResponse.booking_reference}`,
+            order_id: orderData.order_id,
+            handler: async function (response) {
+              try {
+                setBookingLoading(true);
+                await paymentService.verifyRazorpayPayment({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  reservation_id: reservationId,
+                });
+                setConfirmedBooking({
+                  booking_reference: resResponse.booking_reference,
+                  property_name: property?.name || 'Confirmed Stay',
+                  room_number: resResponse.room?.room_number || resResponse.room_number || 'Auto-Assigned',
+                  room_type_name: roomType?.name || 'Standard Suite',
+                  guest_name: `${firstName} ${lastName}`.trim(),
+                  check_in_date: checkIn,
+                  check_out_date: checkOut,
+                  nights,
+                  total_amount: totalAmount,
+                  payment_method: 'RAZORPAY',
+                });
+              } catch (verifyErr) {
+                console.error('Razorpay verification error:', verifyErr);
+                setErrorMessage('Payment verification failed. Please contact support.');
+              } finally {
+                setBookingLoading(false);
+              }
+            },
+            prefill: {
+              name: `${firstName} ${lastName}`.trim(),
+              email,
+              contact: phone,
+            },
+            theme: { color: '#DFB76C' },
+            modal: {
+              ondismiss: function () {
+                setErrorMessage('Razorpay payment was cancelled. You can retry checkout anytime.');
+                setBookingLoading(false);
+              },
+            },
+          };
+          const rzp = new window.Razorpay(options);
+          rzp.on('payment.failed', function (err) {
+            setErrorMessage(`Payment failed: ${err.error?.description || 'Transaction declined.'}`);
+            setBookingLoading(false);
+          });
+          rzp.open();
           return;
+        } else {
+          // Razorpay Test Mode Simulator (active before live test key is added)
+          const mockPaymentId = `pay_test_${Math.random().toString(36).substring(2, 12)}`;
+          await paymentService.verifyRazorpayPayment({
+            razorpay_order_id: orderData.order_id,
+            razorpay_payment_id: mockPaymentId,
+            razorpay_signature: 'rzp_test_sig_ok',
+            reservation_id: reservationId,
+          });
         }
       }
 
@@ -255,7 +265,7 @@ export default function BookingFlow() {
               {confirmedBooking.booking_reference}
             </p>
             <div className="mt-2 inline-flex items-center gap-1.5 rounded-[2px] bg-[#13152C] border border-[#2C315E] px-3 py-1 text-[10px] font-cinzel font-semibold text-white">
-              <Lock size={11} className="text-[#DFB76C]" /> Paid via {paymentMethod === 'PAYPAL' ? 'PayPal Express' : 'Direct Card Simulation'}
+              <Lock size={11} className="text-[#DFB76C]" /> Paid via {paymentMethod === 'RAZORPAY' ? 'Razorpay Express' : 'Direct Card Simulation'}
             </div>
           </div>
 
@@ -434,29 +444,29 @@ export default function BookingFlow() {
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {/* PayPal Option */}
+              {/* Razorpay Option */}
               <div
-                onClick={() => setPaymentMethod('PAYPAL')}
+                onClick={() => setPaymentMethod('RAZORPAY')}
                 className={`flex cursor-pointer items-center justify-between rounded-[3px] border p-5 transition-all ${
-                  paymentMethod === 'PAYPAL'
+                  paymentMethod === 'RAZORPAY'
                     ? 'border-[#DFB76C] bg-[#1B1E3D] shadow-sm'
                     : 'border-[#2C315E] bg-[#13152C] hover:border-[#DFB76C]/50'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-[3px] bg-[#0B0C1E] text-[#DFB76C] font-editorial font-bold text-lg">
-                    P
+                    R
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">PayPal Sandbox</p>
-                    <p className="text-[10px] text-white/60 font-cinzel">Official PayPal Gateway</p>
+                    <p className="text-xs font-bold text-white">Razorpay (Test Mode)</p>
+                    <p className="text-[10px] text-white/60 font-cinzel">UPI &bull; NetBanking &bull; Cards</p>
                   </div>
                 </div>
                 <input
                   type="radio"
                   name="payment_method"
-                  checked={paymentMethod === 'PAYPAL'}
-                  onChange={() => setPaymentMethod('PAYPAL')}
+                  checked={paymentMethod === 'RAZORPAY'}
+                  onChange={() => setPaymentMethod('RAZORPAY')}
                   className="accent-[#DFB76C]"
                 />
               </div>
@@ -489,20 +499,20 @@ export default function BookingFlow() {
               </div>
             </div>
 
-            {paymentMethod === 'PAYPAL' ? (
+            {paymentMethod === 'RAZORPAY' ? (
               <div className="rounded-[3px] border border-[#2C315E] bg-[#1B1E3D] p-4 text-xs text-white/80 space-y-1">
                 <p className="font-cinzel font-bold text-[#DFB76C]">
-                  PayPal Sandbox Checkout Active
+                  Razorpay Test Gateway Active
                 </p>
                 <p className="text-[11px] text-white/60 leading-relaxed">
-                  Your transaction is authenticated securely through PayPal Sandbox REST API with live order approval.
+                  Your transaction is processed via Razorpay Test Mode with server-side HMAC-SHA256 signature verification. Real money is never charged.
                 </p>
               </div>
             ) : (
               <div className="rounded-[3px] border border-[#2C315E] bg-[#1B1E3D] p-4 text-xs text-white/80 space-y-1">
-                <p className="font-cinzel font-bold text-[#DFB76C]">Controlled Mock Payment</p>
+                <p className="font-cinzel font-bold text-[#DFB76C]">Direct Test Checkout</p>
                 <p className="text-[11px] text-white/60">
-                  Instant sandbox folio creation without external payment gateway redirect.
+                  Instant sandbox booking confirmation without launching payment window.
                 </p>
               </div>
             )}
@@ -514,8 +524,8 @@ export default function BookingFlow() {
             >
               {bookingLoading
                 ? 'Securing Room & Capturing Payment...'
-                : paymentMethod === 'PAYPAL'
-                ? `CONFIRM WITH PAYPAL (₹${totalAmount.toLocaleString()}) →`
+                : paymentMethod === 'RAZORPAY'
+                ? `CONFIRM WITH RAZORPAY (₹${totalAmount.toLocaleString()}) →`
                 : `CONFIRM & PAY ₹${totalAmount.toLocaleString()} →`}
             </button>
           </div>

@@ -193,7 +193,7 @@ class FolioService:
 
     @staticmethod
     async def add_payment(folio_id: str, payload: Dict[str, Any]) -> Dict[str, Any]:
-        """Record a guest payment (Card, Cash, PayPal, Loyalty Points, Direct Bill)."""
+        """Record a guest payment (Card, Cash, Razorpay, Loyalty Points, Direct Bill)."""
         db = get_database()
         query = {"_id": ObjectId(folio_id)} if ObjectId.is_valid(folio_id) else {"_id": folio_id}
         folio = await db.folios.find_one(query)

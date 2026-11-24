@@ -523,7 +523,7 @@ export const FolioModal = ({ isOpen, onClose, reservationId, onFolioUpdated }) =
                     >
                       <option value="CARD">Credit / Debit Card (Terminal / POS)</option>
                       <option value="CASH">Cash Settlement</option>
-                      <option value="PAYPAL">PayPal Digital Wallet</option>
+                      <option value="RAZORPAY">Razorpay Payment Gateway</option>
                       <option value="LOYALTY_POINTS">Loyalty Points Redemption</option>
                       <option value="DIRECT_BILL">Direct Bill / Corporate Master Folio</option>
                       <option value="BANK_TRANSFER">Bank Wire Transfer</option>

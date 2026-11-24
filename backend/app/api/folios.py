@@ -115,7 +115,7 @@ async def record_payment(
     payload: FolioPaymentCreate = ...,
     current_user: UserResponse = Depends(get_current_user),
 ):
-    """Record guest settlement (Credit Card, Cash, PayPal, Loyalty, Direct Bill)."""
+    """Record guest settlement (Credit Card, Cash, Razorpay, Loyalty, Direct Bill)."""
     return await FolioService.add_payment(
         folio_id=folio_id,
         payload=payload.model_dump(),

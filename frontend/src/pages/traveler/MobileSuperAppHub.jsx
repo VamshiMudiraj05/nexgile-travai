@@ -27,16 +27,23 @@ import {
   X
 } from 'lucide-react';
 import { superappService } from '../../services/superappService';
+import { paymentService } from '../../services/paymentService';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function MobileSuperAppHub() {
   const [activeTab, setActiveTab] = useState('wallet');
 
   // Wallet states
+  const { user } = useAuth();
   const [wallet, setWallet] = useState(null);
   const [walletLoading, setWalletLoading] = useState(false);
   const [topUpOpen, setTopUpOpen] = useState(false);
-  const [topUpAmount, setTopUpAmount] = useState(100);
-  const [topUpMethod, setTopUpMethod] = useState('APPLE_PAY');
+  const [creditPackages, setCreditPackages] = useState([]);
+  const [selectedPackageId, setSelectedPackageId] = useState('pkg_silver');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paymentStatusMsg, setPaymentStatusMsg] = useState(null);
+  const [paymentError, setPaymentError] = useState(null);
+  const [topUpAmount, setTopUpAmount] = useState(1500);
   const [convertPointsInput, setConvertPointsInput] = useState(5000);
   const [convertLoading, setConvertLoading] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
@@ -71,7 +78,20 @@ export default function MobileSuperAppHub() {
     fetchLanguages();
     fetchTranslations('en');
     fetchTenants();
+    fetchCreditPackages();
   }, []);
+
+  const fetchCreditPackages = async () => {
+    try {
+      const pkgs = await paymentService.getCreditPackages();
+      if (Array.isArray(pkgs) && pkgs.length > 0) {
+        setCreditPackages(pkgs);
+        setSelectedPackageId(pkgs[1]?.id || pkgs[0]?.id);
+      }
+    } catch (err) {
+      console.warn('Failed to load credit packages:', err);
+    }
+  };
 
   const fetchWallet = async () => {
     setWalletLoading(true);
@@ -123,13 +143,98 @@ export default function MobileSuperAppHub() {
 
   const handleTopUpSubmit = async (e) => {
     e.preventDefault();
+    setPaymentError(null);
+    setPaymentStatusMsg(null);
+
+    const chosenPkg = creditPackages.find((p) => p.id === selectedPackageId);
+    if (!chosenPkg) {
+      setPaymentError('Please select a valid credit package.');
+      return;
+    }
+
     try {
-      const updated = await superappService.topUpWallet(Number(topUpAmount), topUpMethod);
-      setWallet(updated);
-      setTopUpOpen(false);
-      alert(`Wallet topped up with ₹{topUpAmount} via ${topUpMethod}!`);
+      setIsProcessingPayment(true);
+      setPaymentStatusMsg('Initiating Razorpay Order...');
+
+      // 1. Create order on backend (amount strictly verified server-side from package details)
+      const orderData = await paymentService.createRazorpayOrder({
+        package_id: chosenPkg.id,
+      });
+
+      // 2. Load Razorpay Checkout Script
+      const scriptLoaded = await paymentService.loadRazorpayScript();
+
+      if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
+        setPaymentStatusMsg('Awaiting Razorpay Checkout completion...');
+        const options = {
+          key: orderData.key_id,
+          amount: orderData.amount,
+          currency: 'INR',
+          name: 'Nexgile TravAI',
+          description: chosenPkg.description,
+          order_id: orderData.order_id,
+          handler: async function (response) {
+            try {
+              setPaymentStatusMsg('Verifying payment signature with server...');
+              const verifyRes = await paymentService.verifyRazorpayPayment({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                package_id: chosenPkg.id,
+              });
+              setPaymentStatusMsg(`Payment verified! +${verifyRes.credits_added} credits added to your wallet.`);
+              await fetchWallet();
+              setTimeout(() => {
+                setTopUpOpen(false);
+                setPaymentStatusMsg(null);
+              }, 1800);
+            } catch (vErr) {
+              setPaymentError('Signature verification failed. Please try again or contact support.');
+            } finally {
+              setIsProcessingPayment(false);
+            }
+          },
+          prefill: {
+            name: user?.name || 'Traveler',
+            email: user?.email || '',
+            contact: '+919876543210',
+          },
+          theme: { color: '#DFB76C' },
+          modal: {
+            ondismiss: function () {
+              setPaymentError('Razorpay checkout was cancelled. No credits were added.');
+              setIsProcessingPayment(false);
+            },
+          },
+        };
+        const rzp = new window.Razorpay(options);
+        rzp.on('payment.failed', function (resp) {
+          setPaymentError(`Payment failed: ${resp.error?.description || 'Transaction declined.'}`);
+          setIsProcessingPayment(false);
+        });
+        rzp.open();
+      } else {
+        // Razorpay Test Mode Simulator (active when test keys are placeholders)
+        setPaymentStatusMsg('Executing Test Mode simulation & signature verification...');
+        const mockPaymentId = `pay_test_${Math.random().toString(36).substring(2, 12)}`;
+        const verifyRes = await paymentService.verifyRazorpayPayment({
+          razorpay_order_id: orderData.order_id,
+          razorpay_payment_id: mockPaymentId,
+          razorpay_signature: 'rzp_test_sig_ok',
+          package_id: chosenPkg.id,
+        });
+        setPaymentStatusMsg(`Test payment verified! +${verifyRes.credits_added} credits added to wallet.`);
+        await fetchWallet();
+        setTimeout(() => {
+          setTopUpOpen(false);
+          setPaymentStatusMsg(null);
+        }, 1600);
+        setIsProcessingPayment(false);
+      }
     } catch (err) {
-      alert('Top-up error: ' + err.message);
+      console.error('Failed to complete Razorpay payment:', err);
+      setPaymentError(err.response?.data?.detail || 'Failed to complete Razorpay checkout.');
+      setIsProcessingPayment(false);
     }
   };
 
@@ -597,52 +702,139 @@ export default function MobileSuperAppHub() {
         </div>
       )}
 
-      {/* --- TOP-UP WALLET MODAL --- */}
+      {/* --- TOP-UP WALLET MODAL (RAZORPAY TEST GATEWAY) --- */}
       {topUpOpen && (
-        <div className="fixed inset-0 z-50 bg-[#0B0C1E]/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] max-w-md w-full p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 bg-[#0B0C1E]/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button
-              onClick={() => setTopUpOpen(false)}
-              className="absolute top-4 right-4 text-white/70 hover:text-white"
+              onClick={() => {
+                if (!isProcessingPayment) {
+                  setTopUpOpen(false);
+                  setPaymentError(null);
+                  setPaymentStatusMsg(null);
+                }
+              }}
+              disabled={isProcessingPayment}
+              className="absolute top-4 right-4 text-white/70 hover:text-white disabled:opacity-30"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-bold text-white mb-1">Top Up Stored Wallet</h3>
-            <p className="text-xs text-white/70 mb-4">Add instant funds to your universal travel balance.</p>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="flex h-6 w-6 items-center justify-center rounded-[2px] bg-[#1B1E3D] text-[#DFB76C] font-editorial font-bold text-xs border border-[#DFB76C]/40">
+                R
+              </span>
+              <h3 className="text-lg font-editorial font-bold text-white">Purchase Travel Credits</h3>
+            </div>
+            <p className="text-xs text-white/60 mb-4 font-sans">
+              Select a verified credit package to top up your universal travel balance via Razorpay Test Mode.
+            </p>
+
+            {paymentStatusMsg && (
+              <div className="mb-4 rounded-[3px] border border-emerald-500/40 bg-emerald-950/40 p-3 text-xs text-emerald-300 flex items-center gap-2 animate-in fade-in">
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                <span>{paymentStatusMsg}</span>
+              </div>
+            )}
+
+            {paymentError && (
+              <div className="mb-4 rounded-[3px] border border-red-500/40 bg-red-950/40 p-3 text-xs text-red-300 flex items-center gap-2 animate-in fade-in">
+                <AlertTriangle className="w-4 h-4 shrink-0 text-red-400" />
+                <span>{paymentError}</span>
+              </div>
+            )}
 
             <form onSubmit={handleTopUpSubmit} className="space-y-4 text-xs">
               <div>
-                <label className="block text-white/70 uppercase font-semibold mb-1">Deposit Amount (₹)</label>
-                <input
-                  type="number"
-                  min="10"
-                  max="5000"
-                  required
-                  value={topUpAmount}
-                  onChange={(e) => setTopUpAmount(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-white font-mono text-base"
-                />
+                <label className="block text-white/70 font-cinzel text-[10px] uppercase font-bold tracking-wider mb-2">
+                  Select Credit Package (Pricing Verified on Server)
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {(creditPackages.length > 0 ? creditPackages : [
+                    { id: 'pkg_starter', name: 'Bronze Traveler', total_credits: 500, price_inr: 500, badge: 'Entry' },
+                    { id: 'pkg_silver', name: 'Silver Wanderer', total_credits: 1650, price_inr: 1500, badge: '+10% Bonus' },
+                    { id: 'pkg_gold', name: 'Gold Executive', total_credits: 5750, price_inr: 5000, badge: '+15% Bonus' },
+                    { id: 'pkg_platinum', name: 'Royal Sanctuary', total_credits: 12000, price_inr: 10000, badge: '+20% VIP' },
+                  ]).map((pkg) => {
+                    const isSelected = selectedPackageId === pkg.id;
+                    return (
+                      <div
+                        key={pkg.id}
+                        onClick={() => !isProcessingPayment && setSelectedPackageId(pkg.id)}
+                        className={`p-3.5 rounded-[3px] border cursor-pointer transition-all flex flex-col justify-between ${
+                          isSelected
+                            ? 'border-[#DFB76C] bg-[#1B1E3D] shadow-md ring-1 ring-[#DFB76C]/30'
+                            : 'border-[#2C315E] bg-[#13152C] hover:border-[#DFB76C]/50'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-1 mb-2">
+                          <span className="font-bold text-white text-xs leading-tight">{pkg.name}</span>
+                          {pkg.badge && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-[2px] bg-[#DFB76C]/20 text-[#DFB76C] border border-[#DFB76C]/40 whitespace-nowrap">
+                              {pkg.badge}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-baseline justify-between mt-auto pt-2 border-t border-[#2C315E]/60">
+                          <div>
+                            <span className="text-base font-extrabold text-[#DFB76C] font-mono">
+                              +{pkg.total_credits.toLocaleString()}
+                            </span>
+                            <span className="text-[10px] text-white/50 block">Credits</span>
+                          </div>
+                          <span className="text-sm font-bold text-white font-mono">
+                            ₹{pkg.price_inr.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
-              <div>
-                <label className="block text-white/70 uppercase font-semibold mb-1">Payment Method</label>
-                <select
-                  value={topUpMethod}
-                  onChange={(e) => setTopUpMethod(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] text-white"
-                >
-                  <option value="APPLE_PAY">Apple Pay (Instant One-Touch)</option>
-                  <option value="GOOGLE_PAY">Google Pay</option>
-                  <option value="CREDIT_CARD">Credit Card (Visa / Mastercard / Amex)</option>
-                </select>
-              </div>
+              {/* Package Summary Box */}
+              {(() => {
+                const pkg = (creditPackages.length > 0 ? creditPackages : [
+                  { id: 'pkg_starter', name: 'Bronze Traveler', credits: 500, bonus_credits: 0, total_credits: 500, price_inr: 500 },
+                  { id: 'pkg_silver', name: 'Silver Wanderer', credits: 1500, bonus_credits: 150, total_credits: 1650, price_inr: 1500 },
+                  { id: 'pkg_gold', name: 'Gold Executive', credits: 5000, bonus_credits: 750, total_credits: 5750, price_inr: 5000 },
+                  { id: 'pkg_platinum', name: 'Royal Sanctuary', credits: 10000, bonus_credits: 2000, total_credits: 12000, price_inr: 10000 },
+                ]).find((p) => p.id === selectedPackageId);
+
+                return (
+                  <div className="rounded-[3px] bg-[#1B1E3D] border border-[#2C315E] p-3.5 space-y-2">
+                    <div className="flex justify-between text-white/70">
+                      <span>Base Credits:</span>
+                      <span className="font-mono text-white">+{pkg?.credits?.toLocaleString() || 0}</span>
+                    </div>
+                    {pkg?.bonus_credits > 0 && (
+                      <div className="flex justify-between text-emerald-400">
+                        <span>Free Promotional Bonus:</span>
+                        <span className="font-mono font-bold">+{pkg.bonus_credits.toLocaleString()}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-white font-bold border-t border-[#2C315E] pt-2">
+                      <span className="text-[#DFB76C]">Total Wallet Addition:</span>
+                      <span className="font-mono text-[#DFB76C] text-sm">+{pkg?.total_credits?.toLocaleString()} Credits</span>
+                    </div>
+                    <div className="flex justify-between text-white/80 text-[11px] pt-1">
+                      <span>Gateway Mode:</span>
+                      <span className="text-amber-400 font-mono">Razorpay Test Mode (Simulated / Test Cards)</span>
+                    </div>
+                  </div>
+                );
+              })()}
 
               <button
                 type="submit"
-                className="w-full py-2.5 bg-[#13152C] hover:bg-[#1B1E3D] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs tracking-wider uppercase font-bold font-bold rounded-[2px] text-xs transition"
+                disabled={isProcessingPayment}
+                className="w-full py-3.5 bg-gradient-to-r from-[#DFB76C] to-[#C99E50] hover:from-[#E5C17D] hover:to-[#D4AA5E] text-[#13152C] font-cinzel text-xs tracking-wider uppercase font-extrabold rounded-[2px] transition shadow-md disabled:opacity-50 cursor-pointer"
               >
-                Confirm Deposit of ₹{topUpAmount}.00
+                {isProcessingPayment
+                  ? 'Processing Razorpay Order...'
+                  : `PROCEED WITH RAZORPAY (₹${
+                      (creditPackages.find((p) => p.id === selectedPackageId)?.price_inr || 1500).toLocaleString()
+                    }) →`}
               </button>
             </form>
           </div>

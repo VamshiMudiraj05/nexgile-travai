@@ -20,7 +20,7 @@ class ChargeCategory(str, Enum):
 class PaymentMethodEnum(str, Enum):
     CARD = "CARD"
     CASH = "CASH"
-    PAYPAL = "PAYPAL"
+    RAZORPAY = "RAZORPAY"
     BANK_TRANSFER = "BANK_TRANSFER"
     CRYPTO = "CRYPTO"
     DIRECT_BILL = "DIRECT_BILL"

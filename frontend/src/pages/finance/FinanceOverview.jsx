@@ -288,7 +288,7 @@ export const FinanceOverview = () => {
               <tbody className="divide-y divide-[#ECE5DA]/60">
                 {filteredReservations.map((res) => {
                   const isPaid = res.payment_status === 'PAID';
-                  const hasPaypal = res.payment_details?.gateway === 'PAYPAL';
+                  const hasRazorpay = res.payment_details?.gateway === 'RAZORPAY';
                   const total = Number(res.total_amount) || 0;
                   const tax = Number(res.taxes) || (total * 0.12);
                   const sub = Number(res.subtotal) || (total - tax);
@@ -334,7 +334,7 @@ export const FinanceOverview = () => {
                         {isPaid ? (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[3px] bg-emerald-50 border border-emerald-300 text-emerald-800 text-[10px] font-cinzel font-bold">
                             <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                            {hasPaypal ? 'PayPal (Paid)' : 'Settled'}
+                            {hasRazorpay ? 'Razorpay (Paid)' : 'Settled'}
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[3px] bg-amber-50 border border-amber-300 text-amber-800 text-[10px] font-cinzel font-bold">

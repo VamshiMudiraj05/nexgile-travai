@@ -95,6 +95,11 @@ async def connect_to_mongo():
         # 11. traveler_profiles: unique user_id
         await db.traveler_profiles.create_index([("user_id", pymongo.ASCENDING)], unique=True, name="unique_traveler_profile_user")
 
+        # 12. payment_transactions: order_id unique, payment_id, user_id
+        await db.payment_transactions.create_index([("order_id", pymongo.ASCENDING)], unique=True, name="unique_payment_tx_order_id")
+        await db.payment_transactions.create_index([("payment_id", pymongo.ASCENDING)], name="idx_payment_tx_payment_id")
+        await db.payment_transactions.create_index([("user_id", pymongo.ASCENDING)], name="idx_payment_tx_user_id")
+
         logger.info("Ensured all Phase 2, 4, and 5 collection indexes on MongoDB.")
         await seed_default_users(db)
     except Exception as e:
