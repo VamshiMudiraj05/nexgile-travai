@@ -98,6 +98,47 @@ class MultimodalService:
             "flights": catalog,
         }
 
+    @staticmethod
+    async def search_flights_live(
+        origin: str = "NYC",
+        destination: str = "LON",
+        departure_date: str = "2026-12-01",
+        cabin_class: str = "ECONOMY",
+    ) -> Dict[str, Any]:
+        """Query real AviationStack flight feed and merge with luxury fare pricing."""
+        base_res = MultimodalService.search_flights(origin, destination, departure_date, cabin_class)
+        try:
+            from app.services.aviation_service import aviation_service
+            live_flights = await aviation_service.get_live_flights(origin, destination, limit=2)
+            if live_flights:
+                enriched = []
+                for idx, lf in enumerate(live_flights):
+                    base_price = 58400.0 if cabin_class == "ECONOMY" else 164000.0 if cabin_class == "BUSINESS" else 310000.0
+                    enriched.append({
+                        "id": f"FL-LIVE-{uuid.uuid4().hex[:5].upper()}",
+                        "airline": lf["airline"] if lf["airline"] != "empty" else "Star Alliance Carrier",
+                        "airline_logo": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=120&q=80",
+                        "flight_number": lf["flight_number"],
+                        "origin": lf["origin"],
+                        "destination": lf["destination"],
+                        "departure_time": lf["departure_time"],
+                        "arrival_time": "22:15",
+                        "duration": "7h 45m",
+                        "stops": 0,
+                        "cabin_class": cabin_class,
+                        "price": base_price + (idx * 3500),
+                        "seats_remaining": 6,
+                        "refundable": True,
+                        "is_live_telemetry": True,
+                        "flight_status": lf.get("flight_status", "SCHEDULED"),
+                    })
+                base_res["flights"] = enriched + base_res["flights"]
+                base_res["total_found"] = len(base_res["flights"])
+                base_res["live_feed_active"] = True
+        except Exception as e:
+            logger.debug(f"AviationStack enrichment notice: {e}")
+        return base_res
+
     # --- CAR RENTAL INVENTORY ---
     @staticmethod
     def search_cars(

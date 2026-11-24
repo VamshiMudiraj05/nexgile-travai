@@ -33,6 +33,7 @@ import { useAuth } from '../hooks/useAuth';
 import { DynamicIsland } from '@/components/ui/dynamic-island';
 import { RainbowButton } from '@/components/ui/rainbow-button';
 import { CurrencySelector } from '../components/CurrencySelector';
+import { WeatherPill } from '../components/WeatherPill';
 import { motion } from 'framer-motion';
 
 export const AdminLayout = () => {
@@ -397,6 +398,7 @@ export const AdminLayout = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <WeatherPill city="Goa" />
             <CurrencySelector />
             <DynamicIsland
               name={displayName}

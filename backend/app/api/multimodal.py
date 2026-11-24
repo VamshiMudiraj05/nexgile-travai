@@ -50,7 +50,7 @@ async def search_flights(
     departure_date: str = Query("2026-12-01", description="Departure date (YYYY-MM-DD)"),
     cabin_class: str = Query("ECONOMY", description="Cabin class: ECONOMY, BUSINESS, FIRST"),
 ):
-    return MultimodalService.search_flights(
+    return await MultimodalService.search_flights_live(
         origin=origin,
         destination=destination,
         departure_date=departure_date,

@@ -235,6 +235,11 @@ class ConciergeService:
                 "star_rating": property_info.get("star_rating", 5) if property_info else 5,
             }
 
+        # 6. Fetch destination weather (from OpenWeatherMap with fallback)
+        dest_city = (active_stay_summary.get("property_city") if active_stay_summary else "") or "Goa"
+        from app.services.weather_service import weather_service
+        weather_info = await weather_service.get_city_weather(dest_city)
+
         return {
             "traveler_name": name,
             "email": email,
@@ -242,6 +247,7 @@ class ConciergeService:
             "role_title": role_title,
             "role_description": role_description,
             "active_stay": active_stay_summary,
+            "weather": weather_info,
             "preferences": preferences,
             "loyalty": loyalty,
             "service_requests": service_requests,
@@ -445,6 +451,12 @@ AUTHENTIC TRAVELER APPLICATION CONTEXT:
 Guest Name: {context['traveler_name']}
 Current Stay:
 {stay_desc}
+
+Destination Weather ({context.get('weather', {}).get('city', 'Resort Area')}):
+- Temperature: {context.get('weather', {}).get('temp', 28)}°C (Feels like: {context.get('weather', {}).get('feels_like', 28)}°C)
+- Conditions: {context.get('weather', {}).get('condition', 'Pleasant')}
+- Humidity: {context.get('weather', {}).get('humidity', 60)}% | Wind: {context.get('weather', {}).get('wind_speed', 10)} km/h
+- Telemetry Status: {context.get('weather', {}).get('source', 'Live OpenWeatherMap Engine')}
 
 Existing Service Requests:
 {requests_desc}

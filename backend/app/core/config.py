@@ -39,6 +39,12 @@ class Settings(BaseSettings):
     LLM_MODEL: str = "gpt-4o-mini"
     LLM_BASE_URL: str = "https://api.openai.com/v1"
 
+    # External Travel & Weather Integrations
+    OPENWEATHER_API_KEY: Optional[str] = "b38f55c39c10d63b977dfa9dab3bb33f"
+    OPENWEATHER_BASE_URL: str = "https://api.openweathermap.org/data/2.5"
+    AVIATIONSTACK_API_KEY: Optional[str] = "65a1d25fdeeb0e848489ffc54a5bd4ed"
+    AVIATIONSTACK_BASE_URL: str = "http://api.aviationstack.com/v1"
+
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
