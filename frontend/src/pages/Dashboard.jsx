@@ -49,12 +49,12 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (user?.role === 'ADMIN' || !user?.role) {
+    if (user?.role === 'ADMIN' || user?.role === 'REVENUE_MANAGER' || !user?.role) {
       fetchDashboardOverview();
     }
   }, [user?.role, fetchDashboardOverview]);
 
-  if (user?.role && user.role !== 'ADMIN') {
+  if (user?.role && user.role !== 'ADMIN' && user.role !== 'REVENUE_MANAGER') {
     return <Navigate to={getRoleHomePath(user.role)} replace />;
   }
 

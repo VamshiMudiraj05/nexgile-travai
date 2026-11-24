@@ -30,7 +30,6 @@ export const isPathCompatibleWithRole = (pathname, role) => {
     pathname === '/' ||
     pathname === '/login' ||
     pathname === '/register' ||
-    pathname === '/dashboard' ||
     pathname === '/app'
   ) {
     return false;
@@ -38,6 +37,11 @@ export const isPathCompatibleWithRole = (pathname, role) => {
 
   // System Administrator has access to all operational consoles
   if (role === 'ADMIN') return true;
+
+  // Root dashboard overview is accessible to Admin and Revenue Manager
+  if (pathname === '/dashboard') {
+    return role === 'REVENUE_MANAGER' || role === 'ADMIN';
+  }
 
   if (role === 'TRAVELER') {
     const travelerAllowed = [

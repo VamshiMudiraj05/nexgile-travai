@@ -188,8 +188,9 @@ class PropertyService:
         items: List[PropertyResponse] = []
         for prop in properties:
             p_id = str(prop["_id"])
-            total_rooms = await db.rooms.count_documents({"property_id": p_id})
-            total_room_types = await db.room_types.count_documents({"property_id": p_id})
+            p_match = {"property_id": {"$in": [prop["_id"], p_id]}}
+            total_rooms = await db.rooms.count_documents(p_match)
+            total_room_types = await db.room_types.count_documents(p_match)
             items.append(PropertyResponse(**property_helper(prop, total_rooms, total_room_types)))
             
         return PaginatedPropertyResponse(
@@ -210,8 +211,9 @@ class PropertyService:
         if not prop:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Property not found")
             
-        total_rooms = await db.rooms.count_documents({"property_id": property_id})
-        total_room_types = await db.room_types.count_documents({"property_id": property_id})
+        p_match = {"property_id": {"$in": [ObjectId(property_id), property_id]}}
+        total_rooms = await db.rooms.count_documents(p_match)
+        total_room_types = await db.room_types.count_documents(p_match)
         return PropertyResponse(**property_helper(prop, total_rooms, total_room_types))
 
     @staticmethod

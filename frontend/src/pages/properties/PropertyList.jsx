@@ -7,6 +7,7 @@ import {
   MapPin, 
   Star, 
   BedDouble, 
+  Layers,
   Edit3, 
   Trash2, 
   ExternalLink,
@@ -229,9 +230,19 @@ export const PropertyList = () => {
                       </td>
 
                       <td className="py-4 px-4">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] text-xs font-semibold text-white">
-                          <BedDouble className="w-3.5 h-3.5 text-[#DFB76C]" />
-                          <span>{prop.total_rooms || 0} Units</span>
+                        <div className="flex flex-col gap-1">
+                          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] w-fit shadow-xs">
+                            <BedDouble className="w-4 h-4 text-[#DFB76C] shrink-0" />
+                            <span className="text-xs font-semibold text-white tracking-wide">
+                              {prop.total_rooms || 0} <span className="text-white/60 font-normal">Units</span>
+                            </span>
+                          </div>
+                          {prop.total_room_types > 0 && (
+                            <div className="flex items-center gap-1.5 text-[11px] text-[#DFB76C]/80 pl-0.5">
+                              <Layers className="w-3 h-3 text-[#DFB76C]/60 shrink-0" />
+                              <span>{prop.total_room_types} Suite {prop.total_room_types > 1 ? 'Classes' : 'Class'}</span>
+                            </div>
+                          )}
                         </div>
                       </td>
 

@@ -86,6 +86,28 @@ export default function SvgAreaChart({
           );
         })}
 
+        {/* Y-axis scale indicator */}
+        {[0, 0.5, 1].map((ratio) => {
+          const y = padding + chartHeight * (1 - ratio);
+          const scaleVal = minVal + range * ratio;
+          const displayVal =
+            unit === '%'
+              ? `${Math.round(scaleVal)}%`
+              : `${unit}${scaleVal >= 1000 ? (scaleVal / 1000).toFixed(0) + 'k' : Math.round(scaleVal)}`;
+          return (
+            <text
+              key={ratio}
+              x={padding + 4}
+              y={y - 4}
+              fill="#8E92BC"
+              fontSize="8.5"
+              fontFamily="sans-serif"
+            >
+              {displayVal}
+            </text>
+          );
+        })}
+
         {/* Filled Area */}
         <path d={areaD} fill={`url(#${gradientId})`} />
 
@@ -97,6 +119,31 @@ export default function SvgAreaChart({
           strokeWidth="2"
           strokeLinecap="round"
         />
+
+        {/* X-axis date labels */}
+        {points
+          .filter(
+            (_, idx) =>
+              idx % Math.max(1, Math.ceil(points.length / 5)) === 0 ||
+              idx === points.length - 1
+          )
+          .map((pt, idx) => {
+            const rawVal = String(pt.item[xKey] || '');
+            const labelStr = rawVal.length > 5 ? rawVal.slice(5) : rawVal;
+            return (
+              <text
+                key={idx}
+                x={pt.x}
+                y={height - 4}
+                textAnchor="middle"
+                fill="#8E92BC"
+                fontSize="8.5"
+                fontFamily="sans-serif"
+              >
+                {labelStr}
+              </text>
+            );
+          })}
 
         {/* Data points */}
         {points.map((pt) => {
@@ -138,10 +185,9 @@ export default function SvgAreaChart({
             {points[hoveredIdx].item[xKey]}
           </p>
           <p className="font-editorial text-sm font-bold text-white">
-            {unit}
-            {typeof points[hoveredIdx].val === 'number'
-              ? points[hoveredIdx].val.toLocaleString()
-              : points[hoveredIdx].val}
+            {unit === '%'
+              ? `${typeof points[hoveredIdx].val === 'number' ? points[hoveredIdx].val.toLocaleString() : points[hoveredIdx].val}%`
+              : `${unit}${typeof points[hoveredIdx].val === 'number' ? points[hoveredIdx].val.toLocaleString() : points[hoveredIdx].val}`}
           </p>
         </div>
       )}

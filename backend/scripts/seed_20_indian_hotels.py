@@ -44,8 +44,8 @@ HOTELS_DATA = [
                 "children_capacity": 1,
                 "bed_type": "KING",
                 "bed_count": 1,
-                "base_price": 28500.0,
-                "base_rate": 28500.0,
+                "base_price": 14500.0,
+                "base_rate": 14500.0,
                 "amenities": ["Lake Pichola View", "Terrace", "Espresso Machine", "Marble Bath", "Smart TV"],
                 "size": "650 sq ft",
                 "images": [{"url": "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80", "public_id": "udr_room1"}]
@@ -59,8 +59,8 @@ HOTELS_DATA = [
                 "children_capacity": 2,
                 "bed_type": "KING",
                 "bed_count": 2,
-                "base_price": 55000.0,
-                "base_rate": 55000.0,
+                "base_price": 28000.0,
+                "base_rate": 28000.0,
                 "amenities": ["Private Infinity Pool", "Private Courtyard", "Butler Service", "Jacuzzi", "Dining Room"],
                 "size": "2600 sq ft",
                 "images": [{"url": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80", "public_id": "udr_room2"}]

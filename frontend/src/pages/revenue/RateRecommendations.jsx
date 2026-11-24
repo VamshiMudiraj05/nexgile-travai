@@ -574,17 +574,17 @@ export default function RateRecommendations() {
                 </div>
 
                 {/* Actions */}
-                <div className="mt-6 flex items-center gap-3 border-t border-[#2C315E] pt-4">
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 border-t border-[#2C315E] pt-4">
                   <button
                     onClick={() => handleApply(rec)}
                     disabled={applyingId === rec.room_type_id}
-                    className="flex-1 btn-luxury-primary text-[11px] py-2 cursor-pointer"
+                    className="w-full h-10 px-3.5 py-2 rounded-[2px] bg-[#DFB76C] hover:bg-[#F2D59B] text-[#13152C] font-cinzel text-xs font-bold uppercase tracking-wider inline-flex items-center justify-center transition shadow-sm cursor-pointer disabled:opacity-50"
                   >
-                    {applyingId === rec.room_type_id ? 'Applying Rate...' : 'Apply Recommendation →'}
+                    {applyingId === rec.room_type_id ? 'Applying Rate...' : 'Apply Rate →'}
                   </button>
                   <button
                     onClick={() => handleIgnore(rec.room_type_id)}
-                    className="btn-luxury-secondary text-[11px] py-2 px-3 cursor-pointer"
+                    className="w-full h-10 px-3.5 py-2 rounded-[2px] bg-[#1B1E3D] hover:bg-[#24284F] text-[#FAF6F0] border border-[#2C315E] hover:border-[#DFB76C]/60 font-cinzel text-xs font-bold uppercase tracking-wider inline-flex items-center justify-center transition cursor-pointer"
                   >
                     Dismiss
                   </button>

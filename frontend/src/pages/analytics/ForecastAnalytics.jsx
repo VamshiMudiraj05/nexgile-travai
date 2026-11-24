@@ -173,7 +173,7 @@ export default function ForecastAnalytics() {
                   data={data.forecast}
                   xKey="date"
                   yKey="occupancy"
-                  color="#13152C"
+                  color="#38BDF8"
                   unit="%"
                   height={240}
                 />

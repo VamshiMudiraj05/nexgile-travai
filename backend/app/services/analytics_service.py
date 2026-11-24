@@ -397,8 +397,8 @@ class AnalyticsService:
         }).to_list(length=500)
         
         avg_booking_val = sum(float(r.get("total_amount", 0.0)) / max(int(r.get("nights", 1)), 1) for r in past_res) / max(len(past_res), 1)
-        if avg_booking_val <= 0:
-            avg_booking_val = 250.0
+        if avg_booking_val <= 0 or avg_booking_val < 1500.0:
+            avg_booking_val = 4500.0
 
         forecast_list = []
         today = date.today()

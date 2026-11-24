@@ -146,7 +146,7 @@ export const AdminLayout = () => {
       group: 'REVENUE INTELLIGENCE',
       items: [
         { name: 'Rate Recommendations', path: '/revenue/recommendations', icon: Sparkle },
-        { name: 'Revenue Overview', path: '/dashboard', icon: LayoutDashboard },
+        { name: 'Revenue Overview', path: '/revenue/overview', icon: LayoutDashboard },
       ],
     },
     {

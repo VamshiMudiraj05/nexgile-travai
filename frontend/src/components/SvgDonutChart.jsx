@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 
-const LUXURY_PALETTE = [
-  '#13152C', // Deep navy
-  '#DFB76C', // Antique gold
-  '#3E7D59', // Muted sage
-  '#9A4E2B', // Terracotta
-  '#B88E43', // Dark gold
-  '#2C315E', // Navy border/tone
-  '#78746D', // Warm stone
+const CHANNEL_PALETTE = [
+  '#DFB76C', // Gold - Direct Web
+  '#38BDF8', // Sky Blue - OTA / Extranet
+  '#10B981', // Emerald - Corporate Travel
+  '#A78BFA', // Purple - Travel Agent / GDS
+  '#F59E0B', // Amber - Mobile Super App
+  '#F472B6', // Rose - Walk-in & Direct Phone
+  '#34D399', // Mint - Wholesale & Group
 ];
 
 export default function SvgDonutChart({
   data = [],
   nameKey = 'source',
   valueKey = 'count',
-  size = 180,
-  strokeWidth = 20,
-  centerLabel = 'Total',
+  size = 200,
+  strokeWidth = 24,
+  centerLabel = 'Total Bookings',
+  palette = CHANNEL_PALETTE,
+  className = '',
 }) {
   const [hoveredIdx, setHoveredIdx] = useState(null);
 
@@ -24,7 +26,7 @@ export default function SvgDonutChart({
 
   if (!data || data.length === 0 || total === 0) {
     return (
-      <div className="flex h-48 items-center justify-center text-xs font-cinzel uppercase tracking-wider text-[#13152C]/40">
+      <div className={`flex h-48 items-center justify-center rounded-[3px] bg-[#0D0E20]/80 border border-[#2C315E] text-xs font-cinzel uppercase tracking-wider text-white/50 ${className}`}>
         No channel segments recorded
       </div>
     );
@@ -47,26 +49,29 @@ export default function SvgDonutChart({
       pct: (pct * 100).toFixed(1),
       strokeDasharray,
       strokeDashoffset,
-      color: LUXURY_PALETTE[idx % LUXURY_PALETTE.length],
+      color: palette[idx % palette.length],
       idx,
     };
   });
 
+  const activeSlice = hoveredIdx !== null ? slices[hoveredIdx] : null;
+
   return (
-    <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:justify-around bg-[#FFFFFF] p-4 rounded-[3px] border border-[#DFB76C]/20">
-      {/* Donut SVG */}
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
-          {/* Background circle */}
+    <div className={`relative flex flex-col items-center justify-between gap-6 sm:flex-row p-5 rounded-[4px] bg-[#0D0E20]/80 border border-[#2C315E] w-full ${className}`}>
+      {/* Circular SVG Donut */}
+      <div className="relative shrink-0" style={{ width: size, height: size }}>
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90 overflow-visible">
+          {/* Subtle track background circle */}
           <circle
             cx={size / 2}
             cy={size / 2}
             r={radius}
             fill="transparent"
-            stroke="#F4EFE6"
+            stroke="#1B1E3D"
             strokeWidth={strokeWidth}
           />
-          {/* Segments */}
+
+          {/* Slices */}
           {slices.map((slice) => {
             const isHovered = hoveredIdx === slice.idx;
             return (
@@ -77,11 +82,15 @@ export default function SvgDonutChart({
                 r={radius}
                 fill="transparent"
                 stroke={slice.color}
-                strokeWidth={isHovered ? strokeWidth + 3 : strokeWidth}
+                strokeWidth={isHovered ? strokeWidth + 4 : strokeWidth}
                 strokeDasharray={slice.strokeDasharray}
                 strokeDashoffset={slice.strokeDashoffset}
-                strokeLinecap="round"
+                strokeLinecap="butt"
                 className="cursor-pointer transition-all duration-200"
+                style={{
+                  filter: isHovered ? `drop-shadow(0 0 8px ${slice.color})` : undefined,
+                  opacity: hoveredIdx !== null && !isHovered ? 0.6 : 1,
+                }}
                 onMouseEnter={() => setHoveredIdx(slice.idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
               />
@@ -89,39 +98,54 @@ export default function SvgDonutChart({
           })}
         </svg>
 
-        {/* Center Label */}
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="font-cinzel text-[9px] font-bold uppercase tracking-[0.2em] text-[#13152C]/60">
-            {hoveredIdx !== null ? slices[hoveredIdx].item[nameKey] : centerLabel}
+        {/* Center Readout */}
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center px-2">
+          <span className="font-cinzel text-[8.5px] font-bold uppercase tracking-[0.2em] text-[#DFB76C] truncate max-w-[120px]">
+            {activeSlice ? activeSlice.item[nameKey] : centerLabel}
           </span>
-          <span className="font-editorial text-xl font-normal text-[#13152C]">
-            {hoveredIdx !== null ? slices[hoveredIdx].val : total}
+          <span className="font-editorial text-2xl font-bold text-white mt-0.5">
+            {activeSlice ? activeSlice.val : total}
+          </span>
+          <span className="text-[10px] font-sans text-white/60">
+            {activeSlice ? `${activeSlice.pct}% of total` : 'Direct & Channels'}
           </span>
         </div>
       </div>
 
-      {/* Legend List */}
-      <div className="flex flex-col gap-2 min-w-[140px]">
-        {slices.map((slice) => (
-          <div
-            key={slice.idx}
-            className={`flex items-center gap-2.5 rounded-[2px] px-2.5 py-1 text-xs transition-colors cursor-pointer ${
-              hoveredIdx === slice.idx ? 'bg-[#F4EFE6]' : 'hover:bg-[#FAF6F0]'
-            }`}
-            onMouseEnter={() => setHoveredIdx(slice.idx)}
-            onMouseLeave={() => setHoveredIdx(null)}
-          >
-            <span
-              className="h-2 w-2 rounded-full flex-shrink-0"
-              style={{ backgroundColor: slice.color }}
-            />
-            <span className="font-sans text-xs text-[#13152C]/80 font-medium truncate max-w-[90px]">
-              {slice.item[nameKey]}
-            </span>
-            <span className="ml-auto font-sans font-semibold text-[#13152C]">{slice.val}</span>
-            <span className="text-[#13152C]/50 text-[10px]">({slice.pct}%)</span>
-          </div>
-        ))}
+      {/* Legend & Channel Breakdown List */}
+      <div className="flex flex-col gap-2 min-w-[200px] flex-1">
+        <span className="font-cinzel text-[9.5px] font-semibold text-[#DFB76C] tracking-widest uppercase mb-1">
+          Channel Contributions
+        </span>
+        {slices.map((slice) => {
+          const isHovered = hoveredIdx === slice.idx;
+          return (
+            <div
+              key={slice.idx}
+              className={`flex items-center gap-2.5 rounded-[3px] px-3 py-1.5 text-xs transition-all cursor-pointer border ${
+                isHovered
+                  ? 'bg-[#1B1E3D] border-[#DFB76C]/60 text-white shadow-sm'
+                  : 'bg-[#13152C]/60 border-[#2C315E]/60 text-white/80 hover:bg-[#1B1E3D] hover:text-white'
+              }`}
+              onMouseEnter={() => setHoveredIdx(slice.idx)}
+              onMouseLeave={() => setHoveredIdx(null)}
+            >
+              <span
+                className="h-2.5 w-2.5 rounded-full shrink-0 shadow-xs"
+                style={{ backgroundColor: slice.color }}
+              />
+              <span className="font-sans text-xs font-medium truncate max-w-[130px]">
+                {slice.item[nameKey]}
+              </span>
+              <div className="ml-auto flex items-baseline gap-2">
+                <span className="font-sans font-bold text-white">{slice.val}</span>
+                <span className="text-[#DFB76C] font-mono text-[11px] font-medium">
+                  {slice.pct}%
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

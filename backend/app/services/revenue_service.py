@@ -36,7 +36,7 @@ class RevenueService:
                 if prop:
                     prop_name = prop.get("name", "Grand Resort")
 
-            current_rate = float(rt.get("base_rate", 200.0))
+            current_rate = float(rt.get("base_rate", 3500.0))
             
             # Count total rooms for this room type
             total_rooms_rt = await db.rooms.count_documents({"room_type_id": rt_id})

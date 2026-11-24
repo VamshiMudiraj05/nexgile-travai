@@ -209,12 +209,11 @@ export default function RevenueAnalytics() {
               <span className="eyebrow-label text-[#DFB76C]">ESTATE BREAKDOWN</span>
               <h3 className="font-editorial text-xl font-bold text-white mt-0.5">Revenue by Property</h3>
               <p className="text-xs text-white/60 mb-5">Contribution per hotel property</p>
-              <div className="h-60">
+              <div className="min-h-[260px]">
                 <SvgBarChart
                   data={data.revenue_by_property}
                   xKey="property_name"
                   yKey="revenue"
-                  barColor="#13152C"
                   unit="₹"
                   height={240}
                 />

@@ -104,6 +104,7 @@ export const AppRoutes = () => {
           <Route path="reservations/:id" element={<ReservationDetail />} />
 
           {/* Phase 4: Business Intelligence & Pricing */}
+          <Route path="revenue/overview" element={<Dashboard />} />
           <Route path="analytics/revenue" element={<RevenueAnalytics />} />
           <Route path="analytics/occupancy" element={<OccupancyAnalytics />} />
           <Route path="analytics/bookings" element={<BookingAnalytics />} />
