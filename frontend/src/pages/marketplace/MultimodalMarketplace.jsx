@@ -24,7 +24,9 @@ import {
   MapPin,
   X,
   Ticket,
-  Luggage
+  Luggage,
+  Users,
+  Gauge
 } from 'lucide-react';
 import { multimodalService } from '../../services/multimodalService';
 
@@ -542,7 +544,7 @@ export default function MultimodalMarketplace() {
         </div>
       )}
 
-      {/* --- TAB 3: CAR RENTALS --- */}
+      {/* --- TAB 3: CAR RENTALS & CHAUFFEUR TAXIS --- */}
       {activeTab === 'cars' && (
         <div className="space-y-6">
           <div className="bg-[#13152C] p-5 rounded-[4px] border border-[#E5DDCF] grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -578,7 +580,7 @@ export default function MultimodalMarketplace() {
               <button
                 onClick={fetchCars}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] disabled:opacity-50 font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] disabled:opacity-50 font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20 whitespace-nowrap"
               >
                 <Search className="w-4 h-4" />
                 {loading ? 'Searching Fleet...' : 'Search Chauffeur Fleets'}
@@ -586,28 +588,60 @@ export default function MultimodalMarketplace() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Balanced 2-Column Responsive Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {cars.map((car) => (
-              <div key={car.id} className="bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/40 rounded-[4px] overflow-hidden flex flex-col justify-between transition shadow-lg hover:shadow-[#DFB76C]/10">
-                <img src={car.image_url} alt={car.model} className="h-44 w-full object-cover" />
+              <div
+                key={car.id}
+                className="group bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/40 rounded-[4px] overflow-hidden flex flex-col justify-between transition shadow-lg hover:shadow-[#DFB76C]/10"
+              >
+                <div className="overflow-hidden h-52 w-full relative">
+                  <img
+                    src={car.image_url}
+                    alt={car.model}
+                    className="h-full w-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-[2px] bg-[#0B0C1E]/80 backdrop-blur-sm border border-[#2C315E] text-xs font-semibold text-[#DFB76C]">
+                    {car.provider}
+                  </div>
+                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-[2px] bg-[#0B0C1E]/80 backdrop-blur-sm border border-[#2C315E] text-xs font-mono font-bold text-white/90">
+                    {car.category}
+                  </div>
+                </div>
+
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center justify-between text-xs text-white/70 mb-1">
-                      <span className="font-semibold text-[#DFB76C]">{car.provider}</span>
-                      <span className="px-2 py-0.5 rounded bg-[#1B1E3D] text-white/80 font-mono text-xs">{car.category}</span>
-                    </div>
-                    <h3 className="text-lg font-bold text-white mb-2">{car.model}</h3>
-                    <div className="flex items-center gap-4 text-xs text-white/80 mb-4">
-                      <span>👤 {car.seats} Seats</span>
-                      <span>⚙️ {car.transmission}</span>
-                      <span>{car.unlimited_mileage ? '🛣️ Unlimited Miles' : 'Limited Miles'}</span>
+                    <h3 className="text-xl font-bold text-white mb-1.5">{car.model}</h3>
+                    <p className="text-xs text-white/60 mb-3 flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-[#DFB76C] flex-shrink-0" />
+                      <span>{car.pickup_location}</span>
+                    </p>
+
+                    {/* Specifications Pill Bar */}
+                    <div className="grid grid-cols-3 gap-2 py-2.5 px-3 mb-4 bg-[#1B1E3D]/60 rounded-[2px] border border-[#2C315E]/50 text-xs">
+                      <div className="flex items-center gap-1.5 text-white/80">
+                        <Users className="w-3.5 h-3.5 text-[#DFB76C] flex-shrink-0" />
+                        <span className="truncate">{car.seats} Seats</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-white/80">
+                        <Gauge className="w-3.5 h-3.5 text-[#DFB76C] flex-shrink-0" />
+                        <span className="truncate">{car.transmission}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-white/80">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                        <span className="truncate">{car.unlimited_mileage ? 'Unlimited Mi' : 'Standard Mi'}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-[#2C315E]">
+                  {/* Clean Bottom Price & Action Container */}
+                  <div className="flex items-center justify-between pt-4 border-t border-[#2C315E] gap-3">
                     <div>
-                      <span className="text-xs text-white/70">Total • ₹{car.daily_rate.toLocaleString('en-IN')}/day</span>
-                      <div className="text-2xl font-bold text-white">₹{car.total_price.toLocaleString('en-IN')}</div>
+                      <span className="text-xs text-white/60 block">Daily Rate: ₹{car.daily_rate.toLocaleString('en-IN')}/day</span>
+                      <div className="text-2xl font-bold text-white tracking-tight">
+                        ₹{car.total_price.toLocaleString('en-IN')}{' '}
+                        <span className="text-xs font-normal text-white/50">(4-Day Trip)</span>
+                      </div>
                     </div>
                     <button
                       onClick={() =>
@@ -621,9 +655,9 @@ export default function MultimodalMarketplace() {
                           details: car,
                         })
                       }
-                      className="flex items-center gap-2 px-4 py-2 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
+                      className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] transition shadow-md shadow-[#DFB76C]/20 whitespace-nowrap"
                     >
-                      <Car className="w-4 h-4" /> Reserve Vehicle
+                      <Car className="w-4 h-4 flex-shrink-0" /> Reserve Fleet
                     </button>
                   </div>
                 </div>
@@ -714,6 +748,29 @@ export default function MultimodalMarketplace() {
       {/* --- TAB 5: DYNAMIC PACKAGES --- */}
       {activeTab === 'packages' && (
         <div className="space-y-6">
+          {/* Packages Search Bar */}
+          <div className="bg-[#13152C] p-5 rounded-[4px] border border-[#E5DDCF] flex flex-col md:flex-row gap-4 items-end">
+            <div className="flex-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-white/70 mb-1">
+                Destination / Vacation Region
+              </label>
+              <input
+                type="text"
+                value={pkgDestination}
+                onChange={(e) => setPkgDestination(e.target.value)}
+                placeholder="Cancun / Maui / Jaipur / Maldives"
+                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
+              />
+            </div>
+            <button
+              onClick={fetchPackages}
+              disabled={loading}
+              className="py-2.5 px-6 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] disabled:opacity-50 font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20 flex items-center gap-2 whitespace-nowrap"
+            >
+              <Search className="w-4 h-4" /> {loading ? 'Searching Packages...' : 'Search Packages'}
+            </button>
+          </div>
+
           <div className="bg-emerald-500/10 border border-emerald-500/20 p-5 rounded-[4px] flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Gift className="w-8 h-8 text-emerald-400" />
@@ -724,52 +781,70 @@ export default function MultimodalMarketplace() {
                 </p>
               </div>
             </div>
-            <span className="px-3 py-1 bg-[#DFB76C] text-white font-bold text-xs rounded-[2px] uppercase tracking-wider">
+            <span className="px-3 py-1 bg-[#DFB76C] text-[#0B0C1E] font-bold text-xs rounded-[2px] uppercase tracking-wider">
               20% Instant Savings
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {packages.map((pkg) => (
-              <div key={pkg.id} className="bg-[#13152C] border border-[#2C315E] rounded-[4px] overflow-hidden flex flex-col justify-between shadow-xl">
-                <img src={pkg.image_url} alt={pkg.title} className="h-52 w-full object-cover" />
+              <div
+                key={pkg.id}
+                className="group bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/40 rounded-[4px] overflow-hidden flex flex-col justify-between shadow-xl transition hover:shadow-[#DFB76C]/10"
+              >
+                <div className="overflow-hidden h-52 w-full relative">
+                  <img
+                    src={pkg.image_url}
+                    alt={pkg.title}
+                    className="h-full w-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-[2px] bg-emerald-500/90 text-white text-xs font-bold uppercase tracking-wider">
+                    Save ₹{pkg.savings_amount.toLocaleString('en-IN')} ({pkg.savings_pct}%)
+                  </div>
+                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-[2px] bg-[#0B0C1E]/80 backdrop-blur-sm border border-[#2C315E] text-xs text-white/90 font-medium">
+                    {pkg.duration_days} Days / {pkg.duration_days - 1} Nights
+                  </div>
+                </div>
+
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="px-2.5 py-0.5 rounded-[2px] text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                        Save ₹{pkg.savings_amount.toLocaleString('en-IN')} ({pkg.savings_pct}%)
-                      </span>
-                      <span className="text-xs text-white/70">{pkg.duration_days} Days / {pkg.duration_days - 1} Nights</span>
-                    </div>
                     <h3 className="text-xl font-bold text-white mb-3">{pkg.title}</h3>
 
-                    <div className="bg-[#1B1E3D]/70 p-3.5 rounded-[2px] space-y-2 mb-4 text-xs">
+                    <div className="bg-[#1B1E3D]/70 p-3.5 rounded-[2px] space-y-2 mb-4 text-xs border border-[#2C315E]/40">
                       <div className="flex items-center gap-2 text-white/80">
-                        <Building2 className="w-4 h-4 text-[#DFB76C]" /> <strong>Hotel:</strong> {pkg.hotel_name}
+                        <Building2 className="w-4 h-4 text-[#DFB76C] flex-shrink-0" />{' '}
+                        <span><strong>Hotel:</strong> {pkg.hotel_name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-white/80">
-                        <Plane className="w-4 h-4 text-[#DFB76C]" /> <strong>Flight:</strong> Roundtrip via {pkg.flight_airline}
+                        <Plane className="w-4 h-4 text-[#DFB76C] flex-shrink-0" />{' '}
+                        <span><strong>Flight:</strong> Roundtrip via {pkg.flight_airline}</span>
                       </div>
                       {pkg.car_model && (
                         <div className="flex items-center gap-2 text-white/80">
-                          <Car className="w-4 h-4 text-emerald-400" /> <strong>Fleet:</strong> {pkg.car_model} included
+                          <Car className="w-4 h-4 text-emerald-400 flex-shrink-0" />{' '}
+                          <span><strong>Fleet:</strong> {pkg.car_model} included</span>
                         </div>
                       )}
                     </div>
 
-                    <div className="space-y-1 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-1.5 mb-4">
                       {pkg.inclusions?.map((inc, i) => (
-                        <div key={i} className="text-xs text-white/70 flex items-center gap-1.5">
-                          <Check className="w-3.5 h-3.5 text-emerald-400" /> {inc}
+                        <div key={i} className="text-xs text-white/70 flex items-start gap-1.5">
+                          <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />{' '}
+                          <span>{inc}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-[#2C315E]">
+                  <div className="flex items-center justify-between pt-4 border-t border-[#2C315E] gap-3">
                     <div>
-                      <div className="text-xs text-white/70 line-through">₹{pkg.original_total.toLocaleString('en-IN')}</div>
-                      <div className="text-3xl font-extrabold text-emerald-400">₹{pkg.package_price.toLocaleString('en-IN')}</div>
+                      <div className="text-xs text-white/50 line-through">
+                        Standard: ₹{pkg.original_total.toLocaleString('en-IN')}
+                      </div>
+                      <div className="text-2xl font-extrabold text-emerald-400 tracking-tight">
+                        ₹{pkg.package_price.toLocaleString('en-IN')}
+                      </div>
                     </div>
                     <button
                       onClick={() =>
@@ -783,9 +858,9 @@ export default function MultimodalMarketplace() {
                           details: pkg,
                         })
                       }
-                      className="px-5 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
+                      className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20 whitespace-nowrap"
                     >
-                      Book Complete Package
+                      <Luggage className="w-4 h-4 flex-shrink-0" /> Book Package
                     </button>
                   </div>
                 </div>
