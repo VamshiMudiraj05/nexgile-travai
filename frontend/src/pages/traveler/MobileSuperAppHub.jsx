@@ -24,6 +24,8 @@ import {
   ChevronRight,
   ExternalLink,
   Smartphone,
+  Download,
+  WifiOff,
   X
 } from 'lucide-react';
 import { superappService } from '../../services/superappService';
@@ -48,6 +50,36 @@ export default function MobileSuperAppHub() {
   const [convertPointsInput, setConvertPointsInput] = useState(5000);
   const [convertLoading, setConvertLoading] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+
+  // PWA Home Screen Installation Prompt
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [isAppInstalled, setIsAppInstalled] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    window.addEventListener('appinstalled', () => {
+      setIsAppInstalled(true);
+      setInstallPrompt(null);
+    });
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!installPrompt) {
+      alert('📱 Nexgile-TravAI PWA is ready! You can install it anytime from your browser menu (Share → "Add to Home Screen").');
+      return;
+    }
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setIsAppInstalled(true);
+      setInstallPrompt(null);
+    }
+  };
 
   // Memoized cards for EasyUI WalletBalance interactive pouch
   const walletAccounts = React.useMemo(() => [
@@ -367,9 +399,18 @@ export default function MobileSuperAppHub() {
         </div>
 
         <div className="flex items-center gap-3">
+          {!isAppInstalled && (
+            <button
+              onClick={handleInstallClick}
+              className="flex items-center gap-2 px-3.5 py-2.5 bg-[#1B1E3D] hover:bg-[#2C315E] text-[#DFB76C] border border-[#DFB76C]/40 font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition cursor-pointer"
+              title="Install Nexgile-TravAI PWA to Home Screen"
+            >
+              <Download className="w-4 h-4 text-[#DFB76C]" /> Install SuperApp
+            </button>
+          )}
           <button
             onClick={() => setTopUpOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-white font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] shadow-sm transition"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] shadow-sm transition cursor-pointer"
           >
             <Plus className="w-4 h-4" /> Top Up Stored Wallet
           </button>

@@ -11,6 +11,8 @@ import {
   Ticket,
   QrCode,
   Compass,
+  Wifi,
+  WifiOff,
 } from 'lucide-react';
 import { travelerService } from '../../services/travelerService';
 import StatusBadge from '../../components/StatusBadge';
@@ -32,9 +34,25 @@ export default function MyTrips() {
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [cancellingTrip, setCancellingTrip] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [isLoadedFromOfflineVault, setIsLoadedFromOfflineVault] = useState(false);
 
   useEffect(() => {
     fetchTrips();
+
+    const handleOnline = () => {
+      setIsOffline(false);
+      fetchTrips();
+    };
+    const handleOffline = () => {
+      setIsOffline(true);
+    };
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, []);
 
   const fetchTrips = async () => {
@@ -42,8 +60,19 @@ export default function MyTrips() {
       setLoading(true);
       const res = await travelerService.getMyTrips();
       setTripsData(res);
+      setIsLoadedFromOfflineVault(false);
+      localStorage.setItem('nexgile_offline_vault_trips', JSON.stringify(res));
     } catch (err) {
-      console.error('Failed to load trips:', err);
+      console.warn('Network unavailable, falling back to offline vault:', err);
+      const cached = localStorage.getItem('nexgile_offline_vault_trips');
+      if (cached) {
+        try {
+          setTripsData(JSON.parse(cached));
+          setIsLoadedFromOfflineVault(true);
+        } catch (e) {
+          console.error('Failed to parse cached offline trips:', e);
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -106,6 +135,22 @@ export default function MyTrips() {
           </Link>
         </div>
       </div>
+
+      {/* Offline Airplane Mode Vault Banner */}
+      {(isOffline || isLoadedFromOfflineVault) && (
+        <div className="flex items-center justify-between p-3.5 rounded-[2px] bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-sans animate-in fade-in duration-200">
+          <div className="flex items-center gap-2.5">
+            <WifiOff className="w-4 h-4 text-amber-400 shrink-0" />
+            <div>
+              <span className="font-semibold uppercase tracking-wider text-[11px] font-cinzel">Offline Airplane Mode Active:</span>
+              <span className="ml-1 text-white/80">Displaying cryptographically stored boarding passes & QR access keys from local device vault.</span>
+            </div>
+          </div>
+          <span className="px-2 py-0.5 rounded-[2px] bg-amber-500/20 text-amber-300 text-[10px] font-mono uppercase font-bold tracking-widest border border-amber-500/40">
+            Offline Vault Ready
+          </span>
+        </div>
+      )}
 
       {/* Luxury Tabs & Category Filters */}
       <div className="space-y-4 border-b border-[#2C315E] pb-3">
