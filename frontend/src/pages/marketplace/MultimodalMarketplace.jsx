@@ -48,6 +48,7 @@ export default function MultimodalMarketplace() {
   const [carCategory, setCarCategory] = useState('');
 
   const [actDestination, setActDestination] = useState('Paris');
+  const [actCategory, setActCategory] = useState('');
   const [pkgDestination, setPkgDestination] = useState('Cancun');
 
   // Loading & cart states
@@ -120,6 +121,7 @@ export default function MultimodalMarketplace() {
     try {
       const res = await multimodalService.searchActivities({
         destination: actDestination,
+        category: actCategory || undefined,
       });
       setActivities(res.activities || []);
     } catch (err) {
@@ -667,13 +669,13 @@ export default function MultimodalMarketplace() {
         </div>
       )}
 
-      {/* --- TAB 4: TOURS & EXPERIENCES --- */}
+      {/* --- TAB 4: TOURS & VIP EXPERIENCES --- */}
       {activeTab === 'activities' && (
         <div className="space-y-6">
-          <div className="bg-[#13152C] p-5 rounded-[4px] border border-[#E5DDCF] flex flex-col md:flex-row gap-4 items-end">
-            <div className="flex-1">
+          <div className="bg-[#13152C] p-5 rounded-[4px] border border-[#E5DDCF] grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-white/70 mb-1">
-                Destination City
+                Destination City / Region
               </label>
               <input
                 type="text"
@@ -683,43 +685,93 @@ export default function MultimodalMarketplace() {
                 className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
               />
             </div>
-            <button
-              onClick={fetchActivities}
-              disabled={loading}
-              className="py-2.5 px-6 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] disabled:opacity-50 font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20 flex items-center gap-2"
-            >
-              <Search className="w-4 h-4" /> Search Tours
-            </button>
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-white/70 mb-1">
+                Experience Category
+              </label>
+              <select
+                value={actCategory}
+                onChange={(e) => setActCategory(e.target.value)}
+                className="w-full px-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] text-white rounded-[2px] font-medium focus:ring-1 focus:ring-[#DFB76C] focus:border-[#DFB76C] focus:outline-none"
+              >
+                <option value="">All VIP Experiences</option>
+                <option value="CRUISE">Yacht & Private Catamaran</option>
+                <option value="EXCURSION">Private Helicopter & Air</option>
+                <option value="CULINARY">Michelin-Starred Culinary</option>
+                <option value="ADVENTURE">Safari & Desert Expeditions</option>
+              </select>
+            </div>
+            <div>
+              <button
+                onClick={fetchActivities}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] disabled:opacity-50 font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20 whitespace-nowrap"
+              >
+                <Search className="w-4 h-4" />
+                {loading ? 'Searching Experiences...' : 'Search VIP Tours'}
+              </button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Balanced 2-Column Responsive Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {activities.map((act) => (
-              <div key={act.id} className="bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/40 rounded-[4px] overflow-hidden flex flex-col justify-between transition shadow-lg hover:shadow-[#DFB76C]/10">
-                <img src={act.image_url} alt={act.title} className="h-44 w-full object-cover" />
+              <div
+                key={act.id}
+                className="group bg-[#13152C] border border-[#2C315E] hover:border-[#DFB76C]/40 rounded-[4px] overflow-hidden flex flex-col justify-between transition shadow-lg hover:shadow-[#DFB76C]/10"
+              >
+                <div className="overflow-hidden h-52 w-full relative">
+                  <img
+                    src={act.image_url}
+                    alt={act.title}
+                    className="h-full w-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-[2px] bg-[#0B0C1E]/80 backdrop-blur-sm border border-[#2C315E] text-xs font-semibold text-emerald-400">
+                    {act.category}
+                  </div>
+                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded-[2px] bg-[#0B0C1E]/80 backdrop-blur-sm border border-[#2C315E] text-xs font-bold text-amber-400">
+                    ★ {act.rating} ({act.review_count} Reviews)
+                  </div>
+                </div>
+
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center justify-between text-xs text-white/70 mb-1">
-                      <span className="font-semibold text-emerald-400">{act.category}</span>
-                      <span className="text-amber-400 font-bold">★ {act.rating} ({act.review_count})</span>
+                    <h3 className="text-xl font-bold text-white mb-2">{act.title}</h3>
+
+                    {/* Metadata Badge Bar */}
+                    <div className="grid grid-cols-3 gap-2 py-2 px-3 mb-3 bg-[#1B1E3D]/60 rounded-[2px] border border-[#2C315E]/50 text-xs">
+                      <div className="flex items-center gap-1.5 text-white/80">
+                        <Clock className="w-3.5 h-3.5 text-[#DFB76C] flex-shrink-0" />
+                        <span className="truncate">{act.duration}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-white/80">
+                        <MapPin className="w-3.5 h-3.5 text-[#DFB76C] flex-shrink-0" />
+                        <span className="truncate">{act.location}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-white/80">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                        <span className="truncate">Free Cancellation</span>
+                      </div>
                     </div>
-                    <h3 className="text-base font-bold text-white mb-2">{act.title}</h3>
-                    <p className="text-xs text-white/70 mb-3 flex items-center gap-2">
-                      <Clock className="w-3.5 h-3.5 text-[#DFB76C]" /> {act.duration} • <MapPin className="w-3.5 h-3.5 text-[#DFB76C]" /> {act.location}
-                    </p>
-                    <div className="space-y-1 mb-4">
+
+                    {/* Curated Inclusions */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-1.5 mb-4">
                       {act.highlights?.map((h, i) => (
-                        <div key={i} className="text-xs text-white/80 flex items-center gap-1.5">
-                          <Check className="w-3 h-3 text-emerald-400 flex-shrink-0" />
+                        <div key={i} className="text-xs text-white/75 flex items-start gap-1.5">
+                          <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
                           <span>{h}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-[#2C315E]">
+                  {/* Clean Bottom Price & Action Container */}
+                  <div className="flex items-center justify-between pt-4 border-t border-[#2C315E] gap-3">
                     <div>
-                      <span className="text-xs text-white/70">Price Per Guest</span>
-                      <div className="text-2xl font-bold text-white">₹{act.price_per_person.toLocaleString('en-IN')}</div>
+                      <span className="text-xs text-white/60 block">Price Per Guest (All-Inclusive)</span>
+                      <div className="text-2xl font-bold text-white tracking-tight">
+                        ₹{act.price_per_person.toLocaleString('en-IN')}
+                      </div>
                     </div>
                     <button
                       onClick={() =>
@@ -733,9 +785,9 @@ export default function MultimodalMarketplace() {
                           details: act,
                         })
                       }
-                      className="flex items-center gap-2 px-4 py-2 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs tracking-wider uppercase font-bold rounded-[2px] transition shadow-md shadow-[#DFB76C]/20"
+                      className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition shadow-md shadow-[#DFB76C]/20 whitespace-nowrap"
                     >
-                      <Compass className="w-4 h-4" /> Reserve Experience
+                      <Compass className="w-4 h-4 flex-shrink-0" /> Reserve Experience
                     </button>
                   </div>
                 </div>
