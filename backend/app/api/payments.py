@@ -279,6 +279,7 @@ async def verify_razorpay_payment(
             await db.reservations.update_one(
                 {"_id": ObjectId(reservation_id)},
                 {"$set": {
+                    "status": "CONFIRMED",
                     "payment_status": "PAID",
                     "payment_details": {
                         "gateway": "RAZORPAY",

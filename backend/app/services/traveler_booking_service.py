@@ -146,8 +146,8 @@ class TravelerBookingService:
             "taxes_amount": taxes_amount,
             "fees_amount": 0.0,
             "total_amount": total_amount,
-            "status": "CONFIRMED",
-            "payment_status": "PAID",
+            "status": "PENDING_PAYMENT" if booking_data.get("payment_method") == "RAZORPAY" else "CONFIRMED",
+            "payment_status": "UNPAID" if booking_data.get("payment_method") == "RAZORPAY" else "PAID",
             "special_requests": booking_data.get("special_requests"),
             "created_at": now_iso,
             "updated_at": now_iso
@@ -156,8 +156,9 @@ class TravelerBookingService:
         res = await db.reservations.insert_one(reservation_doc)
         res_id = res.inserted_id
 
-        # Automatically credit initial loyalty points for traveler
-        await LoyaltyService.award_points_for_booking(user_id, booking_ref, total_amount)
+        # For direct card simulation, award points immediately; for Razorpay, points are awarded on payment verification
+        if booking_data.get("payment_method") != "RAZORPAY":
+            await LoyaltyService.award_points_for_booking(user_id, booking_ref, total_amount)
 
         # Auto-create guest billing folio
         try:

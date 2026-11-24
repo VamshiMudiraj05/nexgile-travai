@@ -233,8 +233,9 @@ export default function BookingFlow() {
             theme: { color: '#DFB76C' },
             modal: {
               ondismiss: function () {
-                setErrorMessage('Razorpay payment was cancelled. You can retry checkout anytime.');
+                setErrorMessage('Razorpay payment was cancelled. Room reservation has been released.');
                 setBookingLoading(false);
+                travelerService.cancelBooking(reservationId, 'Checkout dismissed before payment').catch(() => {});
               },
             },
           };
@@ -242,6 +243,7 @@ export default function BookingFlow() {
           rzp.on('payment.failed', function (err) {
             setErrorMessage(`Payment failed: ${err.error?.description || 'Transaction declined.'}`);
             setBookingLoading(false);
+            travelerService.cancelBooking(reservationId, 'Payment failed').catch(() => {});
           });
           rzp.open();
           return;
