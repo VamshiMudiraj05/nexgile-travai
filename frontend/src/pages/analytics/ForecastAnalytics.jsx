@@ -101,11 +101,14 @@ export default function ForecastAnalytics() {
             className="rounded-[3px] border border-[#2C315E] bg-[#1B1E3D] px-3.5 py-2 text-xs font-semibold text-white focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C]"
           >
             <option value="">All Hotel Estates (Consolidated)</option>
-            {properties.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name} ({p.city})
-              </option>
-            ))}
+            {properties.map((p) => {
+              const pId = p.id || p._id;
+              return (
+                <option key={pId} value={pId}>
+                  {p.name} ({p.city})
+                </option>
+              );
+            })}
           </select>
         </div>
 

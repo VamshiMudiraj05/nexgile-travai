@@ -45,7 +45,7 @@ async def get_revenue_analytics(
     start_date: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
     end_date: Optional[str] = Query(None, description="End date (YYYY-MM-DD)"),
     room_type_id: Optional[str] = Query(None, description="Filter by room type ID"),
-    current_user: dict = Depends(require_role([UserRole.ADMIN, UserRole.REVENUE_MANAGER, UserRole.FINANCE])),
+    current_user: dict = Depends(require_role(STAFF_ROLES)),
 ):
     """Calculate ADR, RevPAR, Revenue by Property, Room Type, and Date."""
     return await AnalyticsService.get_revenue_analytics(
@@ -65,7 +65,7 @@ async def get_occupancy_analytics(
     property_id: Optional[str] = Query(None, description="Filter by property ID"),
     start_date: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
     end_date: Optional[str] = Query(None, description="End date (YYYY-MM-DD)"),
-    current_user: dict = Depends(require_role([UserRole.ADMIN, UserRole.REVENUE_MANAGER, UserRole.FRONT_DESK])),
+    current_user: dict = Depends(require_role(STAFF_ROLES)),
 ):
     """Compute current, average, peak, and lowest occupancy rates + trend."""
     return await AnalyticsService.get_occupancy_analytics(
@@ -102,7 +102,7 @@ async def get_booking_analytics(
 async def get_forecast(
     property_id: Optional[str] = Query(None, description="Filter by property ID"),
     horizon: int = Query(7, description="Forecast horizon in days (7 to 30)"),
-    current_user: dict = Depends(require_role([UserRole.ADMIN, UserRole.REVENUE_MANAGER])),
+    current_user: dict = Depends(require_role(STAFF_ROLES)),
 ):
     """Compute statistical projection for occupancy, revenue, and bookings."""
     return await AnalyticsService.get_forecast(
