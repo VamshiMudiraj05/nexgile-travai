@@ -6,11 +6,15 @@ def property_helper(prop: Dict[str, Any], total_rooms: int = 0, total_room_types
     if not prop:
         return {}
     
+    raw_type = (prop.get("property_type") or "HOTEL").upper().strip()
+    valid_types = {"HOTEL", "RESORT", "PALACE", "BOUTIQUE", "HERITAGE", "HOSTEL", "APARTMENT", "VILLA", "ESTATE", "OTHER"}
+    safe_type = raw_type if raw_type in valid_types else "OTHER"
+    
     return {
         "id": str(prop.get("_id")),
         "name": prop.get("name"),
         "property_code": prop.get("property_code"),
-        "property_type": prop.get("property_type", "HOTEL"),
+        "property_type": safe_type,
         "description": prop.get("description"),
         "address": prop.get("address"),
         "city": prop.get("city"),

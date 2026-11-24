@@ -217,13 +217,13 @@ export const RoomList = () => {
 
         <div className="flex items-center gap-3 w-full md:w-auto">
           <form onSubmit={handleSearchSubmit} className="relative flex-1 md:w-60 group">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none" />
+            <Search className="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none z-10" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search suite #..."
-              className="w-full pl-9 pr-3 py-1.5 luxury-input text-xs font-sans placeholder-white/40"
+              className="w-full !pl-10 pr-3 py-1.5 luxury-input text-xs font-sans placeholder-white/40"
             />
           </form>
 

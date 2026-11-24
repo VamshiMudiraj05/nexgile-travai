@@ -56,7 +56,7 @@ export default function TripDetail() {
 
   if (!trip) {
     return (
-      <div className="mx-auto max-w-3xl rounded-[4px] border border-[#DFB76C]/30 bg-[#FFFFFF] p-16 text-center shadow-sm">
+      <div className="mx-auto max-w-3xl rounded-[4px] border border-[#2C315E] bg-[#13152C] p-16 text-center shadow-md">
         <h3 className="font-editorial text-2xl font-bold text-white">Booking Not Found</h3>
         <p className="mt-1 font-sans text-xs text-white/60">
           We could not find this booking. It may have been removed or changed.

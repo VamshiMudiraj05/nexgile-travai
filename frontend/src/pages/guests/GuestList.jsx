@@ -87,13 +87,13 @@ export const GuestList = () => {
       {/* Search Bar */}
       <div className="bg-[#13152C] border border-[#2C315E] p-5 rounded-[4px] shadow-sm">
         <form onSubmit={handleSearchSubmit} className="relative max-w-md group">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none z-10" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, email, or telephone..."
-            className="w-full pl-10 pr-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
+            className="w-full !pl-10.5 pr-4 py-2.5 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] transition-all"
           />
         </form>
       </div>

@@ -222,13 +222,13 @@ export const FinanceOverview = () => {
 
           {/* Search Input */}
           <div className="relative group">
-            <Search className="w-3.5 h-3.5 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 z-10" />
             <input
               type="text"
               placeholder="Search reference, guest, suite..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-3 py-2 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] w-64"
+              className="!pl-9 pr-3 py-2 bg-[#1B1E3D] border border-[#2C315E] rounded-[3px] text-xs text-white placeholder-white/40 focus:outline-none focus:border-[#DFB76C] focus:bg-[#13152C] w-64"
             />
           </div>
         </div>

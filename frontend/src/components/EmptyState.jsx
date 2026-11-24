@@ -8,15 +8,16 @@ export const EmptyState = ({
   action = null,
 }) => {
   return (
-    <div className="bg-[#FFFFFF] border border-[#DFB76C]/25 rounded-[4px] p-10 md:p-12 text-center max-w-lg mx-auto my-8 shadow-[0_4px_24px_rgba(19,21,44,0.03)]">
-      <div className="w-12 h-12 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/30 flex items-center justify-center mx-auto mb-4 text-[#B88E43]">
-        <Icon className="w-6 h-6 stroke-[1.5]" />
+    <div className="relative overflow-hidden bg-[#13152C] border border-[#2C315E] rounded-[4px] p-10 md:p-14 text-center max-w-lg mx-auto my-8 shadow-xl">
+      <div className="absolute inset-0 bg-radial-vignette opacity-20 pointer-events-none" />
+      <div className="w-14 h-14 rounded-[2px] bg-[#1B1E3D] border border-[#DFB76C]/30 flex items-center justify-center mx-auto mb-5 text-[#DFB76C] shadow-inner relative z-10">
+        <Icon className="w-7 h-7 stroke-[1.5]" />
       </div>
-      <h3 className="font-editorial text-xl font-normal text-[#13152C] mb-1.5">{title}</h3>
-      <p className="text-xs text-[#13152C]/60 mb-6 leading-relaxed max-w-sm mx-auto font-sans">
+      <h3 className="font-editorial text-2xl font-normal text-white mb-2 relative z-10">{title}</h3>
+      <p className="text-xs text-white/60 mb-6 leading-relaxed max-w-sm mx-auto font-sans relative z-10">
         {description}
       </p>
-      {action && <div className="inline-flex">{action}</div>}
+      {action && <div className="inline-flex relative z-10">{action}</div>}
     </div>
   );
 };

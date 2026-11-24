@@ -7,9 +7,13 @@ from pydantic import BaseModel, Field, EmailStr, field_validator
 class PropertyType(str, Enum):
     HOTEL = "HOTEL"
     RESORT = "RESORT"
+    PALACE = "PALACE"
+    BOUTIQUE = "BOUTIQUE"
+    HERITAGE = "HERITAGE"
     HOSTEL = "HOSTEL"
     APARTMENT = "APARTMENT"
     VILLA = "VILLA"
+    ESTATE = "ESTATE"
     OTHER = "OTHER"
 
 

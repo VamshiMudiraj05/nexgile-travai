@@ -112,13 +112,13 @@ export const PropertyList = () => {
       {/* Filters & Search */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#13152C] border border-[#2C315E] p-4 rounded-[4px] shadow-sm">
         <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80 group">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#DFB76C]/80 stroke-[2.2] group-focus-within:text-[#DFB76C] transition-colors pointer-events-none z-10" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by hotel name, code, city..."
-            className="w-full pl-10 pr-4 py-2 luxury-input text-xs font-sans placeholder-white/40"
+            className="w-full !pl-10.5 pr-4 py-2 luxury-input text-xs font-sans placeholder-white/40"
           />
         </form>
 

@@ -137,16 +137,16 @@ export const FrontDeskDashboard = () => {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Editorial Header Banner */}
-      <div className="rounded-[4px] border border-[#DFB76C]/35 bg-[#FFFFFF] p-8 md:p-10 shadow-[0_4px_24px_rgba(19,21,44,0.03)]">
+      <div className="rounded-[4px] border border-[#2C315E] bg-[#13152C] p-8 md:p-10 shadow-md">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div>
-            <div className="flex items-center gap-2 mb-2 font-cinzel text-[10px] font-bold uppercase tracking-[0.26em] text-[#B88E43]">
+            <div className="flex items-center gap-2 mb-2 font-cinzel text-[10px] font-bold uppercase tracking-[0.26em] text-[#DFB76C]">
               <Building2 className="w-3.5 h-3.5 text-[#DFB76C]" /> 01 / OPERATIONS
             </div>
-            <h1 className="font-editorial text-3xl sm:text-4xl text-[#13152C] font-normal tracking-tight">
+            <h1 className="font-editorial text-3xl sm:text-4xl text-white font-normal tracking-tight">
               Front Desk Command
             </h1>
-            <p className="mt-2 font-sans text-xs sm:text-sm text-[#13152C]/65 max-w-xl leading-relaxed">
+            <p className="mt-2 font-sans text-xs sm:text-sm text-white/65 max-w-xl leading-relaxed">
               Real-time guest arrivals, concierge check-in verification, scheduled departures, and immediate key folios.
             </p>
           </div>
@@ -157,10 +157,10 @@ export const FrontDeskDashboard = () => {
               <select
                 value={selectedPropertyId}
                 onChange={(e) => setSelectedPropertyId(e.target.value)}
-                className="luxury-input text-xs font-semibold pr-8 bg-[#FAF6F0] cursor-pointer"
+                className="luxury-input text-xs font-semibold pr-8 bg-[#1B1E3D] text-white border-[#2C315E] cursor-pointer"
               >
                 {properties.map((p) => (
-                  <option key={p.id || p._id} value={p.id || p._id}>
+                  <option key={p.id || p._id} value={p.id || p._id} className="bg-[#13152C] text-white">
                     {p.name}
                   </option>
                 ))}
@@ -181,63 +181,63 @@ export const FrontDeskDashboard = () => {
 
       {/* Notification Toast */}
       {notification && (
-        <div className="p-4 rounded-[3px] bg-[#F2F8F4] border border-[#2D5A40]/30 flex items-center gap-3 text-xs font-sans text-[#2D5A40] shadow-sm animate-fadeIn">
-          <CheckCircle2 className="w-4 h-4 text-[#2D5A40] shrink-0" />
+        <div className="p-4 rounded-[3px] bg-[#1B1E3D] border border-emerald-500/40 flex items-center gap-3 text-xs font-sans text-emerald-300 shadow-md animate-fadeIn">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
           <span className="font-medium">{notification}</span>
         </div>
       )}
 
       {/* Fast Operational KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-5 shadow-sm">
-          <span className="font-cinzel text-[9px] uppercase tracking-[0.2em] font-bold text-[#13152C]/60 flex items-center gap-1.5">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm">
+          <span className="font-cinzel text-[9px] uppercase tracking-[0.2em] font-bold text-white/70 flex items-center gap-1.5">
             <LogInIcon className="w-3 h-3 text-[#DFB76C]" /> Expected Arrivals
           </span>
-          <p className="font-editorial text-3xl font-normal text-[#13152C] mt-2">{arrivalsToday.length}</p>
-          <span className="font-sans text-[11px] text-[#13152C]/50 mt-1 block">Scheduled for today</span>
+          <p className="font-editorial text-3xl font-normal text-white mt-2">{arrivalsToday.length}</p>
+          <span className="font-sans text-[11px] text-white/50 mt-1 block">Scheduled for today</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-5 shadow-sm">
-          <span className="font-cinzel text-[9px] uppercase tracking-[0.2em] font-bold text-[#B88E43] flex items-center gap-1.5">
-            <LogOutIcon className="w-3 h-3 text-[#B88E43]" /> Expected Departures
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm">
+          <span className="font-cinzel text-[9px] uppercase tracking-[0.2em] font-bold text-[#DFB76C] flex items-center gap-1.5">
+            <LogOutIcon className="w-3 h-3 text-[#DFB76C]" /> Expected Departures
           </span>
-          <p className="font-editorial text-3xl font-normal text-[#13152C] mt-2">{departuresToday.length}</p>
-          <span className="font-sans text-[11px] text-[#13152C]/50 mt-1 block">Departures pending check-out</span>
+          <p className="font-editorial text-3xl font-normal text-white mt-2">{departuresToday.length}</p>
+          <span className="font-sans text-[11px] text-white/50 mt-1 block">Departures pending check-out</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-5 shadow-sm">
-          <span className="font-cinzel text-[9px] uppercase tracking-[0.2em] font-bold text-[#13152C]/60 flex items-center gap-1.5">
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm">
+          <span className="font-cinzel text-[9px] uppercase tracking-[0.2em] font-bold text-white/70 flex items-center gap-1.5">
             <Users className="w-3 h-3 text-[#DFB76C]" /> In-House Guests
           </span>
-          <p className="font-editorial text-3xl font-normal text-[#13152C] mt-2">{inHouseGuests.length}</p>
-          <span className="font-sans text-[11px] text-[#13152C]/50 mt-1 block">Currently occupied suites</span>
+          <p className="font-editorial text-3xl font-normal text-white mt-2">{inHouseGuests.length}</p>
+          <span className="font-sans text-[11px] text-white/50 mt-1 block">Currently occupied suites</span>
         </div>
 
-        <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-5 shadow-sm">
-          <span className="font-cinzel text-[9px] uppercase tracking-[0.2em] font-bold text-[#2D5A40] flex items-center gap-1.5">
-            <BedDouble className="w-3 h-3 text-[#2D5A40]" /> Clean & Inspected
+        <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-5 shadow-sm">
+          <span className="font-cinzel text-[9px] uppercase tracking-[0.2em] font-bold text-emerald-400 flex items-center gap-1.5">
+            <BedDouble className="w-3 h-3 text-emerald-400" /> Clean & Inspected
           </span>
-          <p className="font-editorial text-3xl font-normal text-[#13152C] mt-2">
-            {availableCleanRooms} <span className="font-sans text-xs text-[#13152C]/40 font-normal">/ {totalRooms}</span>
+          <p className="font-editorial text-3xl font-normal text-white mt-2">
+            {availableCleanRooms} <span className="font-sans text-xs text-white/40 font-normal">/ {totalRooms}</span>
           </p>
-          <span className="font-sans text-[11px] text-[#A0702A] mt-1 block">{dirtyRooms} suites in turnaround</span>
+          <span className="font-sans text-[11px] text-[#DFB76C] mt-1 block">{dirtyRooms} suites in turnaround</span>
         </div>
       </div>
 
       {/* Luxury Search Bar */}
-      <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 p-3.5 rounded-[4px] shadow-sm flex items-center gap-3">
+      <div className="bg-[#13152C] border border-[#2C315E] p-3.5 rounded-[4px] shadow-sm flex items-center gap-3">
         <Search className="w-4 h-4 text-[#DFB76C] stroke-[2.2] shrink-0" />
         <input
           type="text"
           placeholder="Search guest folio, reservation reference #, or suite number..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-transparent text-xs text-[#13152C] placeholder-[#13152C]/40 focus:outline-none w-full font-sans"
+          className="bg-transparent text-xs text-white placeholder-white/40 focus:outline-none w-full font-sans"
         />
         {search && (
           <button
             onClick={() => setSearch('')}
-            className="font-cinzel text-[10px] text-[#13152C]/60 hover:text-[#13152C] uppercase tracking-wider cursor-pointer"
+            className="font-cinzel text-[10px] text-white/60 hover:text-white uppercase tracking-wider cursor-pointer"
           >
             Clear
           </button>
@@ -250,24 +250,24 @@ export const FrontDeskDashboard = () => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Arrivals Queue */}
-          <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#DFB76C]/20">
+          <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 shadow-sm space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#2C315E]">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/30 text-[#2D5A40] flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-[2px] bg-[#1B1E3D] border border-[#DFB76C]/30 text-emerald-400 flex items-center justify-center font-bold">
                   <LogInIcon className="w-4 h-4 stroke-[1.5]" />
                 </div>
                 <div>
-                  <h3 className="font-editorial text-lg text-[#13152C]">Arrivals Register</h3>
-                  <p className="font-sans text-[11px] text-[#13152C]/50">Guests arriving today</p>
+                  <h3 className="font-editorial text-lg text-white">Arrivals Register</h3>
+                  <p className="font-sans text-[11px] text-white/50">Guests arriving today</p>
                 </div>
               </div>
-              <span className="px-2.5 py-0.5 rounded-[2px] bg-[#F2F8F4] text-[#2D5A40] text-[10px] font-cinzel font-bold border border-[#2D5A40]/25 uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-[2px] bg-[#1B1E3D] text-emerald-300 text-[10px] font-cinzel font-bold border border-emerald-500/30 uppercase tracking-wider">
                 {filteredArrivals.length} Arrivals
               </span>
             </div>
 
             {filteredArrivals.length === 0 ? (
-              <div className="text-center py-10 text-[#13152C]/40 text-xs font-sans">
+              <div className="text-center py-10 text-white/40 text-xs font-sans">
                 No pending arrivals matching criteria for today.
               </div>
             ) : (
@@ -277,21 +277,21 @@ export const FrontDeskDashboard = () => {
                   return (
                     <div
                       key={res.id || res._id}
-                      className="p-3.5 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/20 hover:border-[#DFB76C] transition-all flex items-center justify-between gap-3"
+                      className="p-3.5 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] hover:border-[#DFB76C]/60 transition-all flex items-center justify-between gap-3"
                     >
                       <div className="min-w-0 flex-1 pr-2">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-bold text-[#13152C] truncate">{res.guest_name || 'Valued Guest'}</span>
-                          <span className="font-cinzel text-[9px] text-[#B88E43] bg-[#FFFFFF] px-1.5 py-0.5 rounded-[2px] border border-[#DFB76C]/30 tracking-wider">
+                          <span className="font-sans text-xs font-bold text-white truncate">{res.guest_name || 'Valued Guest'}</span>
+                          <span className="font-cinzel text-[9px] text-[#DFB76C] bg-[#13152C] px-1.5 py-0.5 rounded-[2px] border border-[#2C315E] tracking-wider">
                             #{res.booking_reference || (res.id || res._id).substring(0, 6)}
                           </span>
                         </div>
-                        <div className="font-sans text-[11px] text-[#13152C]/60 mt-1 flex items-center gap-2 flex-wrap">
+                        <div className="font-sans text-[11px] text-white/60 mt-1 flex items-center gap-2 flex-wrap">
                           <span>Room #{res.room_number || 'Auto-assign'}</span>
                           <span>•</span>
                           <span>{res.room_type_name || 'Standard'}</span>
                           <span>•</span>
-                          <span className="font-semibold text-[#13152C]">₹{res.total_amount?.toLocaleString() || 0}</span>
+                          <span className="font-semibold text-white">₹{res.total_amount?.toLocaleString() || 0}</span>
                         </div>
                       </div>
 
@@ -301,7 +301,7 @@ export const FrontDeskDashboard = () => {
                           className="btn-luxury-secondary text-[10px] py-1.5 px-2.5 flex items-center gap-1 cursor-pointer"
                           title="View Guest Billing & Folio"
                         >
-                          <Receipt className="w-3 h-3 text-[#B88E43]" />
+                          <Receipt className="w-3 h-3 text-[#DFB76C]" />
                           <span>Folio</span>
                         </button>
 
@@ -322,24 +322,24 @@ export const FrontDeskDashboard = () => {
           </div>
 
           {/* Departures Queue */}
-          <div className="bg-[#FFFFFF] border border-[#DFB76C]/30 rounded-[4px] p-6 shadow-sm space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#DFB76C]/20">
+          <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 shadow-sm space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#2C315E]">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/30 text-[#B88E43] flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-[2px] bg-[#1B1E3D] border border-[#DFB76C]/30 text-[#DFB76C] flex items-center justify-center font-bold">
                   <LogOutIcon className="w-4 h-4 stroke-[1.5]" />
                 </div>
                 <div>
-                  <h3 className="font-editorial text-lg text-[#13152C]">Departures Register</h3>
-                  <p className="font-sans text-[11px] text-[#13152C]/50">Guests scheduled for check-out</p>
+                  <h3 className="font-editorial text-lg text-white">Departures Register</h3>
+                  <p className="font-sans text-[11px] text-white/50">Guests scheduled for check-out</p>
                 </div>
               </div>
-              <span className="px-2.5 py-0.5 rounded-[2px] bg-[#FBF6ED] text-[#A0702A] text-[10px] font-cinzel font-bold border border-[#DFB76C]/30 uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-[2px] bg-[#1B1E3D] text-[#DFB76C] text-[10px] font-cinzel font-bold border border-[#DFB76C]/30 uppercase tracking-wider">
                 {filteredDepartures.length} Departures
               </span>
             </div>
 
             {filteredDepartures.length === 0 ? (
-              <div className="text-center py-10 text-[#13152C]/40 text-xs font-sans">
+              <div className="text-center py-10 text-white/40 text-xs font-sans">
                 No scheduled departures for today.
               </div>
             ) : (
@@ -349,16 +349,16 @@ export const FrontDeskDashboard = () => {
                   return (
                     <div
                       key={res.id || res._id}
-                      className="p-3.5 rounded-[2px] bg-[#FAF6F0] border border-[#DFB76C]/20 hover:border-[#DFB76C] transition-all flex items-center justify-between gap-3"
+                      className="p-3.5 rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] hover:border-[#DFB76C]/60 transition-all flex items-center justify-between gap-3"
                     >
                       <div className="min-w-0 flex-1 pr-2">
                         <div className="flex items-center gap-2">
-                          <span className="font-sans text-xs font-bold text-[#13152C] truncate">{res.guest_name || 'Valued Guest'}</span>
-                          <span className="font-cinzel text-[9px] text-[#B88E43] bg-[#FFFFFF] px-1.5 py-0.5 rounded-[2px] border border-[#DFB76C]/30 tracking-wider">
+                          <span className="font-sans text-xs font-bold text-white truncate">{res.guest_name || 'Valued Guest'}</span>
+                          <span className="font-cinzel text-[9px] text-[#DFB76C] bg-[#13152C] px-1.5 py-0.5 rounded-[2px] border border-[#2C315E] tracking-wider">
                             #{res.booking_reference || (res.id || res._id).substring(0, 6)}
                           </span>
                         </div>
-                        <div className="font-sans text-[11px] text-[#13152C]/60 mt-1 flex items-center gap-2 flex-wrap">
+                        <div className="font-sans text-[11px] text-white/60 mt-1 flex items-center gap-2 flex-wrap">
                           <span>Room #{res.room_number || 'N/A'}</span>
                           <span>•</span>
                           <span>{res.room_type_name || 'Standard'}</span>
@@ -371,14 +371,14 @@ export const FrontDeskDashboard = () => {
                           className="btn-luxury-secondary text-[10px] py-1.5 px-2.5 flex items-center gap-1 cursor-pointer"
                           title="View Guest Billing & Folio"
                         >
-                          <Receipt className="w-3 h-3 text-[#B88E43]" />
+                          <Receipt className="w-3 h-3 text-[#DFB76C]" />
                           <span>Folio</span>
                         </button>
 
                         <button
                           onClick={() => handleCheckOut(res.id || res._id, res.guest_name)}
                           disabled={isActionLoading}
-                          className="btn-luxury-secondary text-[10px] py-1.5 px-3 flex-shrink-0"
+                          className="btn-luxury-secondary text-[10px] py-1.5 px-3 flex-shrink-0 text-[#DFB76C] border-[#DFB76C]/40 hover:bg-[#DFB76C]/10"
                         >
                           <LogOutIcon className="w-3 h-3" />
                           <span>{isActionLoading ? 'Processing...' : 'Check Out'}</span>
