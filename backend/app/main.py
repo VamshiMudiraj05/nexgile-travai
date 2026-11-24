@@ -129,11 +129,14 @@ app.include_router(superapp_router, prefix=settings.API_V1_STR)
 
 
 @app.get("/")
+@app.get("/api/v1")
+@app.get("/api/v1/")
 async def root():
     return {
+        "status": "healthy",
+        "service": "nexgile-travai-backend",
         "platform": "Nexgile-TravAI",
         "phases": "Phase 1 (Foundation) | Phase 2 (PMS) | Phase 4 (BI) | Phase 5 (Traveler)",
-        "status": "online",
         "health_check": f"{settings.API_V1_STR}/health",
         "documentation": "/api/docs"
     }
