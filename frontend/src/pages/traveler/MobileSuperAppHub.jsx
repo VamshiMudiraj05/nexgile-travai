@@ -29,6 +29,7 @@ import {
 import { superappService } from '../../services/superappService';
 import { paymentService } from '../../services/paymentService';
 import { useAuth } from '../../hooks/useAuth';
+import { WalletBalance, RazorpayMark, NexgileMark, WiseMark } from '@/components/ui/wallet-balance';
 
 export default function MobileSuperAppHub() {
   const [activeTab, setActiveTab] = useState('wallet');
@@ -47,6 +48,34 @@ export default function MobileSuperAppHub() {
   const [convertPointsInput, setConvertPointsInput] = useState(5000);
   const [convertLoading, setConvertLoading] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+
+  // Memoized cards for EasyUI WalletBalance interactive pouch
+  const walletAccounts = React.useMemo(() => [
+    {
+      id: "razorpay_credits",
+      name: "Razorpay Credits",
+      balance: Math.round(wallet?.cash_balance ?? 3500),
+      logo: <RazorpayMark />,
+      background: "#0c2340",
+      amountColor: "#528FF0"
+    },
+    {
+      id: "nexgile_reserve",
+      name: "Nexgile Reserve",
+      balance: Math.round((wallet?.cash_balance ?? 3500) + 10000),
+      logo: <NexgileMark />,
+      background: "#1c2237",
+      amountColor: "#DFB76C"
+    },
+    {
+      id: "loyalty_bank",
+      name: "Loyalty Bank",
+      balance: Math.round(wallet?.points_cash_value ?? 154),
+      logo: <WiseMark />,
+      background: "#163300",
+      amountColor: "#a0d67b"
+    }
+  ], [wallet]);
 
   // Vault states
   const [vaultDocs, setVaultDocs] = useState([]);
@@ -380,55 +409,90 @@ export default function MobileSuperAppHub() {
       {/* --- TAB 1: DIGITAL CASH WALLET --- */}
       {activeTab === 'wallet' && (
         <div className="space-y-6">
-          {/* Wallet Balance Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-gradient-to-br from-[#13152C] to-[#1B1E3D] border border-[#DFB76C]/30 p-5 rounded-[4px] relative overflow-hidden">
-              <span className="text-xs text-[#DFB76C] font-semibold uppercase tracking-wider">Stored Cash Balance</span>
-              <div className="text-3xl font-extrabold text-white font-mono mt-1">
-                ₹{wallet?.cash_balance ? wallet.cash_balance.toFixed(2) : '350.00'}
-              </div>
-              <span className="text-xs text-white/70">Available across all hotels & airlines</span>
-            </div>
-
-            <div className="bg-[#13152C] border border-[#2C315E] p-5 rounded-[4px]">
-              <span className="text-xs text-white/70 font-semibold uppercase tracking-wider">Loyalty Points Bank</span>
-              <div className="text-3xl font-extrabold text-amber-400 font-mono mt-1">
-                {wallet?.loyalty_points ? wallet.loyalty_points.toLocaleString() : '15,400'}
-              </div>
-              <span className="text-xs text-emerald-400 font-semibold">
-                Cash Value: ₹{(wallet?.points_cash_value || 154).toFixed(2)}
+          {/* EasyUI Interactive Leather Pouch & Wallet Balance */}
+          <div className="bg-[#13152C] border border-[#2C315E] rounded-[4px] p-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-lg">
+            <div className="lg:col-span-5 flex flex-col items-center justify-center p-2 border-b lg:border-b-0 lg:border-r border-[#2C315E] pb-6 lg:pb-0 lg:pr-6">
+              <span className="text-[10px] font-cinzel uppercase tracking-[0.2em] text-[#DFB76C] mb-2 font-bold flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#DFB76C]" /> Motion Leather Pouch
               </span>
+              <WalletBalance
+                accounts={walletAccounts}
+                currency="INR"
+                locale="en-IN"
+                totalLabel="Total Travel Liquidity"
+                className="max-w-[320px]"
+              />
+              <p className="text-[11px] text-white/50 text-center mt-2 font-sans">
+                Tap the center eye to mask or reveal balances with spring physics
+              </p>
             </div>
 
-            <div className="bg-[#13152C] border border-[#2C315E] p-5 rounded-[4px]">
-              <span className="text-xs text-white/70 font-semibold uppercase tracking-wider">Referral Code & Earnings</span>
-              <div className="text-2xl font-bold text-white font-mono mt-1 flex items-center justify-between">
-                <span>{wallet?.referral_code || 'TRAV-VIP99'}</span>
-                <button
-                  onClick={handleCopyReferral}
-                  className="p-1 text-white/70 hover:text-white"
-                  title="Copy Code"
-                >
-                  {copiedCode ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                </button>
-              </div>
-              <span className="text-xs text-emerald-400">+₹{wallet?.referral_earnings || 75}.00 earned to date</span>
-            </div>
-
-            <div className="bg-[#13152C] border border-[#2C315E] p-5 rounded-[4px] flex flex-col justify-between">
+            <div className="lg:col-span-7 space-y-4">
               <div>
-                <span className="text-xs text-white/70 font-semibold uppercase tracking-wider">Convert Points to Cash</span>
-                <div className="text-xs text-white/80 mt-1">
-                  1,000 pts = ₹10.00 instant spendable credit
+                <span className="text-xs text-[#DFB76C] font-semibold uppercase tracking-wider font-cinzel">
+                  Executive Traveler Portfolio
+                </span>
+                <h3 className="text-2xl font-editorial font-bold text-white mt-1">
+                  Tactile Stored Wallet & Reserves
+                </h3>
+                <p className="text-xs text-white/70 mt-1 leading-relaxed font-sans">
+                  Your biometric travel pouch tucks branded liquidity cards into an embossed leather pouch with organic spring physics. Use your Stored Razorpay Credits, Nexgile VIP Reserve, and Loyalty Points across all partner properties and flight charters.
+                </p>
+              </div>
+
+              {/* Quick stats cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <div className="bg-[#1B1E3D] border border-[#DFB76C]/30 p-3.5 rounded-[3px]">
+                  <span className="text-[10px] text-[#DFB76C] font-semibold uppercase tracking-wider">Razorpay Credits</span>
+                  <div className="text-xl font-extrabold text-white font-mono mt-1">
+                    ₹{wallet?.cash_balance ? wallet.cash_balance.toFixed(2) : '350.00'}
+                  </div>
+                  <span className="text-[10px] text-white/60">Live spendable</span>
+                </div>
+
+                <div className="bg-[#1B1E3D] border border-[#2C315E] p-3.5 rounded-[3px]">
+                  <span className="text-[10px] text-white/70 font-semibold uppercase tracking-wider">Loyalty Points</span>
+                  <div className="text-xl font-extrabold text-amber-400 font-mono mt-1">
+                    {wallet?.loyalty_points ? wallet.loyalty_points.toLocaleString() : '15,400'}
+                  </div>
+                  <span className="text-[10px] text-emerald-400 font-semibold">
+                    ≈ ₹{(wallet?.points_cash_value || 154).toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="bg-[#1B1E3D] border border-[#2C315E] p-3.5 rounded-[3px]">
+                  <span className="text-[10px] text-white/70 font-semibold uppercase tracking-wider">Referral Code</span>
+                  <div className="text-base font-bold text-white font-mono mt-1 flex items-center justify-between">
+                    <span>{wallet?.referral_code || 'TRAV-VIP99'}</span>
+                    <button
+                      onClick={handleCopyReferral}
+                      className="p-1 text-white/70 hover:text-white"
+                      title="Copy Code"
+                    >
+                      {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                  <span className="text-[10px] text-emerald-400">+₹{wallet?.referral_earnings || 75}.00 earned</span>
                 </div>
               </div>
-              <button
-                onClick={handleConvertPoints}
-                disabled={convertLoading}
-                className="w-full mt-2 py-2 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold rounded-[2px] text-xs transition"
-              >
-                {convertLoading ? 'Converting...' : 'Convert 5,000 Pts -> ₹50'}
-              </button>
+
+              {/* Primary action buttons */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <button
+                  onClick={() => setTopUpOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-[#DFB76C] hover:bg-[#F2D59B] text-[#0B0C1E] font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] shadow-sm transition"
+                >
+                  <Plus className="w-4 h-4" /> Top Up via Razorpay
+                </button>
+                <button
+                  onClick={handleConvertPoints}
+                  disabled={convertLoading}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-[#1B1E3D] hover:bg-[#2C315E] border border-[#2C315E] text-white font-cinzel text-xs font-bold tracking-wider uppercase rounded-[2px] transition disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${convertLoading ? 'animate-spin' : ''}`} />
+                  {convertLoading ? 'Converting...' : 'Convert 5,000 Pts → ₹50'}
+                </button>
+              </div>
             </div>
           </div>
 

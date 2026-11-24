@@ -16,6 +16,7 @@ import { paymentService } from '../../services/paymentService';
 import { useAuth } from '../../hooks/useAuth';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Calendar } from '@/components/ui/calendar';
+import { WalletBalance, RazorpayMark, NexgileMark, WiseMark } from '@/components/ui/wallet-balance';
 
 export default function BookingFlow() {
   const [searchParams] = useSearchParams();
@@ -42,6 +43,34 @@ export default function BookingFlow() {
 
   // Payment method selection: "RAZORPAY" or "DEMO_CARD"
   const [paymentMethod, setPaymentMethod] = useState('RAZORPAY');
+  const [showWalletPouch, setShowWalletPouch] = useState(false);
+
+  const checkoutWalletAccounts = React.useMemo(() => [
+    {
+      id: "razorpay_pay",
+      name: "Razorpay Express",
+      balance: 45000,
+      logo: <RazorpayMark />,
+      background: "#0c2340",
+      amountColor: "#528FF0"
+    },
+    {
+      id: "nexgile_reserve",
+      name: "Nexgile Reserve",
+      balance: 125000,
+      logo: <NexgileMark />,
+      background: "#1c2237",
+      amountColor: "#DFB76C"
+    },
+    {
+      id: "loyalty_bank",
+      name: "Travel Loyalty",
+      balance: 15400,
+      logo: <WiseMark />,
+      background: "#163300",
+      amountColor: "#a0d67b"
+    }
+  ], []);
 
   // Form fields
   const [firstName, setFirstName] = useState(user?.name?.split(' ')[0] || '');
@@ -441,6 +470,43 @@ export default function BookingFlow() {
               <span className="rounded-[2px] bg-[#1B1E3D] border border-[#2C315E] px-2 py-0.5 text-[10px] font-cinzel font-bold text-[#DFB76C]">
                 SSL 256-bit Encrypted
               </span>
+            </div>
+
+            {/* EasyUI Wallet Balance Pouch preview */}
+            <div className="rounded-[4px] border border-[#2C315E] bg-[#181B38] p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-[2px] bg-[#0B0C1E] text-[#DFB76C] border border-[#DFB76C]/30">
+                    <CreditCard size={14} />
+                  </span>
+                  <div>
+                    <p className="text-xs font-bold text-white">Stored Travel Wallet & Card Pouch</p>
+                    <p className="text-[10px] text-white/60">Tuck and reveal linked payment cards with spring physics</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowWalletPouch(!showWalletPouch)}
+                  className="px-3 py-1.5 bg-[#1B1E3D] hover:bg-[#2C315E] border border-[#2C315E] text-[#DFB76C] text-[11px] font-cinzel font-bold rounded-[2px] transition cursor-pointer"
+                >
+                  {showWalletPouch ? "Hide Wallet Pouch ▲" : "View Wallet Pouch ▼"}
+                </button>
+              </div>
+
+              {showWalletPouch && (
+                <div className="mt-4 pt-4 border-t border-[#2C315E] flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
+                  <WalletBalance
+                    accounts={checkoutWalletAccounts}
+                    currency="INR"
+                    locale="en-IN"
+                    totalLabel="Combined Travel Liquidity"
+                    className="max-w-[300px]"
+                  />
+                  <p className="text-[10px] text-white/50 text-center mt-2">
+                    Click the center eye icon to toggle balance privacy
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
