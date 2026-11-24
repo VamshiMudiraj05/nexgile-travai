@@ -195,7 +195,7 @@ export default function MobileSuperAppHub() {
 
       if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
         setPaymentStatusMsg('Awaiting Razorpay Checkout completion...');
-        const cleanPhone = (user?.phone || '9876543210').replace(/\D/g, '').slice(-10) || '9876543210';
+        const cleanPhone = (user?.phone || '9812345678').replace(/\D/g, '').slice(-10) || '9812345678';
         const options = {
           key: orderData.key_id,
           amount: orderData.amount,

@@ -76,7 +76,7 @@ export default function BookingFlow() {
   const [firstName, setFirstName] = useState(user?.name?.split(' ')[0] || '');
   const [lastName, setLastName] = useState(user?.name?.split(' ').slice(1).join(' ') || 'Resident');
   const [email, setEmail] = useState(user?.email || '');
-  const [phone, setPhone] = useState('+91 98765 43210');
+  const [phone, setPhone] = useState('+91 98123 45678');
   const [specialRequests, setSpecialRequests] = useState('');
 
   useEffect(() => {
@@ -181,7 +181,7 @@ export default function BookingFlow() {
         const scriptLoaded = await paymentService.loadRazorpayScript();
 
         if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
-          const cleanPhone = (phone || '9876543210').replace(/\D/g, '').slice(-10) || '9876543210';
+          const cleanPhone = (phone || '9812345678').replace(/\D/g, '').slice(-10) || '9812345678';
           const options = {
             key: orderData.key_id,
             amount: orderData.amount,
