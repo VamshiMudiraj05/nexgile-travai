@@ -302,15 +302,13 @@ export const ReservationList = () => {
                 </table>
               </div>
 
-              <div className="px-4 bg-[#1B1E3D]">
-                <Pagination
-                  page={page}
-                  totalPages={totalPages}
-                  total={total}
-                  limit={15}
-                  onPageChange={(p) => setPage(p)}
-                />
-              </div>
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                total={total}
+                limit={15}
+                onPageChange={(p) => setPage(p)}
+              />
             </div>
           )}
         </>

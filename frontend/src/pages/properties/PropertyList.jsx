@@ -277,15 +277,13 @@ export const PropertyList = () => {
             </table>
           </div>
 
-          <div className="px-6 bg-[#1B1E3D]">
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              total={total}
-              limit={10}
-              onPageChange={(newPage) => setPage(newPage)}
-            />
-          </div>
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            limit={10}
+            onPageChange={(newPage) => setPage(newPage)}
+          />
         </div>
       )}
 

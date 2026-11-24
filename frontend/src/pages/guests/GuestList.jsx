@@ -211,15 +211,13 @@ export const GuestList = () => {
             </table>
           </div>
 
-          <div className="px-6 border-t border-[#2C315E] bg-[#1B1E3D]/40">
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              total={total}
-              limit={15}
-              onPageChange={(p) => setPage(p)}
-            />
-          </div>
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            limit={15}
+            onPageChange={(p) => setPage(p)}
+          />
         </div>
       )}
 
