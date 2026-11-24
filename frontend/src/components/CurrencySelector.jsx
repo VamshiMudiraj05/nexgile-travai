@@ -34,7 +34,7 @@ export const CurrencySelector = ({ compact = false, className = '' }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1.5 w-48 rounded-[2px] bg-[#0E1024] border border-[#2C315E] shadow-2xl z-50 py-1 divide-y divide-[#2C315E]/40 animate-in fade-in-50 zoom-in-95 duration-100">
+        <div className="absolute right-0 mt-1.5 w-52 rounded-[2px] bg-[#0E1024] border border-[#2C315E] shadow-[0_10px_35px_rgba(0,0,0,0.8)] z-[100] py-1 divide-y divide-[#2C315E]/40 animate-in fade-in-50 zoom-in-95 duration-100">
           <div className="px-3 py-1.5 text-[9px] font-cinzel font-bold tracking-[0.2em] text-[#DFB76C]/70 uppercase">
             Display Currency
           </div>

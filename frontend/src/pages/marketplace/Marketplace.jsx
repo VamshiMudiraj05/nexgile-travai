@@ -124,7 +124,7 @@ export default function Marketplace() {
   return (
     <div className="space-y-10 max-w-7xl mx-auto pb-16">
       {/* Editorial Hero Banner */}
-      <div className="relative z-30 overflow-visible rounded-[4px] border border-[#2C315E] bg-[#13152C] p-6 md:p-10 shadow-md">
+      <div className="relative z-10 overflow-visible rounded-[4px] border border-[#2C315E] bg-[#13152C] p-6 md:p-10 shadow-md">
         <div className="relative z-10 max-w-3xl">
           <span className="font-cinzel text-[10px] tracking-[0.25em] text-[#DFB76C] uppercase font-semibold block mb-2">
             CURATED LUXURY HOSPITALITY &middot; HOTEL SUITES

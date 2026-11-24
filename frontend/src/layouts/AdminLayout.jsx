@@ -382,7 +382,7 @@ export const AdminLayout = () => {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[#0B0C1E] text-[#FAF6F0]">
         {/* Top Header */}
-        <header className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-[#2C315E] bg-[#0B0C1E]/95 backdrop-blur-md sticky top-0 z-30">
+        <header className="hidden md:flex items-center justify-between px-8 py-3.5 border-b border-[#2C315E] bg-[#0B0C1E]/95 backdrop-blur-md sticky top-0 z-[60]">
           <div className="flex items-center gap-2">
             <span className="font-cinzel text-[10px] font-bold tracking-[0.24em] text-[#DFB76C] uppercase">
               {breadcrumbSection}
