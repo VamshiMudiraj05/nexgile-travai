@@ -21,6 +21,7 @@ import { roomService } from '../../services/roomService';
 import { StatusBadge } from '../../components/StatusBadge';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { EmptyState } from '../../components/EmptyState';
+import { useHotelWebSocket } from '../../hooks/useHotelWebSocket';
 
 export const HousekeepingBoard = () => {
   const [properties, setProperties] = useState([]);
@@ -32,6 +33,21 @@ export const HousekeepingBoard = () => {
   const [search, setSearch] = useState('');
   const [updatingId, setUpdatingId] = useState(null);
   const [notification, setNotification] = useState(null);
+
+  const handleWsEvent = React.useCallback((event) => {
+    if (event.type === 'ROOM_STATUS_CHANGED') {
+      const { room_id, new_status, room_number } = event.data;
+      setRooms((prev) =>
+        prev.map((r) =>
+          (r.id === room_id || r._id === room_id) ? { ...r, status: new_status } : r
+        )
+      );
+      setNotification(`Live sync: Suite #${room_number} status updated to ${new_status}`);
+      setTimeout(() => setNotification(null), 4000);
+    }
+  }, []);
+
+  const { isConnected: wsConnected } = useHotelWebSocket({ onEvent: handleWsEvent });
 
   useEffect(() => {
     loadProperties();
@@ -126,13 +142,29 @@ export const HousekeepingBoard = () => {
           </p>
         </div>
 
-        <button
-          onClick={fetchRooms}
-          className="btn-luxury-secondary text-xs inline-flex items-center gap-2 self-start cursor-pointer"
-        >
-          <RefreshCw className="w-3.5 h-3.5 text-[#DFB76C]" />
-          <span>Refresh Operations</span>
-        </button>
+        <div className="flex items-center gap-3 self-start">
+          <span
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] text-[10px] font-mono border ${
+              wsConnected
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+            }`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                wsConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
+              }`}
+            />
+            {wsConnected ? 'WebSocket Live' : 'Connecting...'}
+          </span>
+          <button
+            onClick={fetchRooms}
+            className="btn-luxury-secondary text-xs inline-flex items-center gap-2 cursor-pointer"
+          >
+            <RefreshCw className="w-3.5 h-3.5 text-[#DFB76C]" />
+            <span>Refresh</span>
+          </button>
+        </div>
       </div>
 
       {/* KPI Stats Strip */}

@@ -20,6 +20,7 @@ import { propertyService } from '../../services/propertyService';
 import { StatusBadge } from '../../components/StatusBadge';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { FolioModal } from '../../components/FolioModal';
+import { useHotelWebSocket } from '../../hooks/useHotelWebSocket';
 import { Receipt } from 'lucide-react';
 
 export const FrontDeskDashboard = () => {
@@ -32,6 +33,21 @@ export const FrontDeskDashboard = () => {
   const [notification, setNotification] = useState(null);
   const [search, setSearch] = useState('');
   const [folioReservationId, setFolioReservationId] = useState(null);
+
+  const handleWsEvent = React.useCallback((event) => {
+    if (event.type === 'ROOM_STATUS_CHANGED') {
+      const { room_id, new_status, room_number } = event.data;
+      setRooms((prev) =>
+        prev.map((r) =>
+          (r.id === room_id || r._id === room_id) ? { ...r, status: new_status } : r
+        )
+      );
+      setNotification(`Live sync: Suite #${room_number} is now ${new_status}`);
+      setTimeout(() => setNotification(null), 4000);
+    }
+  }, []);
+
+  const { isConnected: wsConnected } = useHotelWebSocket({ onEvent: handleWsEvent });
 
   const todayStr = new Date().toISOString().split('T')[0];
 
@@ -152,6 +168,20 @@ export const FrontDeskDashboard = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            <span
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-[2px] text-[10px] font-mono border ${
+                wsConnected
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                  : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+              }`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  wsConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
+                }`}
+              />
+              {wsConnected ? 'WebSocket Live' : 'Connecting...'}
+            </span>
             {/* Property Selector */}
             <div className="relative">
               <select

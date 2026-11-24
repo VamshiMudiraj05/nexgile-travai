@@ -130,22 +130,70 @@ export default function Concierge() {
         content: m.text,
       }));
 
-      const res = await conciergeService.chat(
-        text,
-        initialReservationId || welcomeData?.active_stay?.reservation_id,
-        historyPayload
-      );
+      const botMsgId = `bot-${Date.now()}`;
+      let streamedText = '';
 
-      const botMsg = {
-        id: `bot-${Date.now()}`,
-        sender: 'concierge',
-        text: res.message,
-        action: res.suggested_action,
-        poweredBy: res.powered_by,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      };
+      // Create streaming placeholder
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: botMsgId,
+          sender: 'concierge',
+          text: '',
+          isStreaming: true,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
 
-      setMessages((prev) => [...prev, botMsg]);
+      try {
+        await conciergeService.chatStream(
+          text,
+          initialReservationId || welcomeData?.active_stay?.reservation_id,
+          historyPayload,
+          (chunk) => {
+            streamedText += chunk;
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg.id === botMsgId ? { ...msg, text: streamedText } : msg
+              )
+            );
+          },
+          (doneData) => {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg.id === botMsgId
+                  ? {
+                      ...msg,
+                      text: doneData.full_message || streamedText,
+                      action: doneData.suggested_action,
+                      isStreaming: false,
+                    }
+                  : msg
+              )
+            );
+          }
+        );
+      } catch (streamErr) {
+        console.warn('SSE Streaming unavailable, executing REST fallback:', streamErr);
+        const res = await conciergeService.chat(
+          text,
+          initialReservationId || welcomeData?.active_stay?.reservation_id,
+          historyPayload
+        );
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === botMsgId
+              ? {
+                  ...msg,
+                  text: res.message,
+                  action: res.suggested_action,
+                  poweredBy: res.powered_by,
+                  isStreaming: false,
+                }
+              : msg
+          )
+        );
+      }
     } catch (err) {
       console.error('Concierge chat error:', err);
       setMessages((prev) => [

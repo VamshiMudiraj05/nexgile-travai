@@ -251,6 +251,25 @@ class RoomService:
         )
 
         logger.info(f"Room {room.get('room_number')} status changed: {current_status.value} -> {new_status.value} by {user_id}")
+
+        # Broadcast real-time WebSocket event to all staff dashboards
+        try:
+            from app.api.websockets import hotel_ws_manager
+            await hotel_ws_manager.broadcast(
+                event_type="ROOM_STATUS_CHANGED",
+                data={
+                    "room_id": room_id,
+                    "room_number": room.get("room_number"),
+                    "property_id": str(room.get("property_id", "")),
+                    "previous_status": current_status.value,
+                    "new_status": new_status.value,
+                    "changed_by": user_id,
+                    "reason": status_in.reason or f"Status changed to {new_status.value}",
+                }
+            )
+        except Exception as ws_err:
+            logger.debug(f"Non-blocking WebSocket broadcast notice: {ws_err}")
+
         return await RoomService.get_room_by_id(room_id)
 
     @staticmethod

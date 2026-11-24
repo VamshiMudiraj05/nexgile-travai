@@ -28,6 +28,7 @@ from app.api.channels import router as channels_router
 from app.api.multimodal import router as multimodal_router
 from app.api.omnichannel import router as omnichannel_router
 from app.api.superapp import router as superapp_router
+from app.api.websockets import router as websockets_router
 from app.core.config import settings
 from app.core.logging import logger
 from app.database.mongodb import connect_to_mongo, close_mongo_connection
@@ -125,6 +126,7 @@ app.include_router(channels_router, prefix=settings.API_V1_STR)
 app.include_router(multimodal_router, prefix=settings.API_V1_STR)
 app.include_router(omnichannel_router, prefix=settings.API_V1_STR)
 app.include_router(superapp_router, prefix=settings.API_V1_STR)
+app.include_router(websockets_router)
 
 
 
