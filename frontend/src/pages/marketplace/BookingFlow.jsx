@@ -16,7 +16,7 @@ import { paymentService } from '../../services/paymentService';
 import { useAuth } from '../../hooks/useAuth';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { Calendar } from '@/components/ui/calendar';
-import { WalletBalance, RazorpayMark, NexgileMark, WiseMark } from '@/components/ui/wallet-balance';
+import { WalletBalance, RazorpayMark, RazorpayIcon, NexgileMark, WiseMark } from '@/components/ui/wallet-balance';
 
 export default function BookingFlow() {
   const [searchParams] = useSearchParams();
@@ -535,11 +535,13 @@ export default function BookingFlow() {
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[3px] bg-[#0B0C1E] text-[#DFB76C] font-editorial font-bold text-lg">
-                    R
+                  <div className="flex h-10 w-10 items-center justify-center rounded-[3px] bg-[#0C2340] border border-[#0C83FD]/40 shadow-inner shrink-0">
+                    <RazorpayIcon className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">Razorpay (Test Mode)</p>
+                    <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                      Razorpay <span className="text-[10px] text-amber-400 font-mono font-normal">(Test Mode)</span>
+                    </p>
                     <p className="text-[10px] text-white/60 font-cinzel">UPI &bull; NetBanking &bull; Cards</p>
                   </div>
                 </div>

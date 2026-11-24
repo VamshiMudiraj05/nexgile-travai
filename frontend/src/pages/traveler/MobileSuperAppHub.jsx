@@ -29,7 +29,7 @@ import {
 import { superappService } from '../../services/superappService';
 import { paymentService } from '../../services/paymentService';
 import { useAuth } from '../../hooks/useAuth';
-import { WalletBalance, RazorpayMark, NexgileMark, WiseMark } from '@/components/ui/wallet-balance';
+import { WalletBalance, RazorpayMark, RazorpayIcon, NexgileMark, WiseMark } from '@/components/ui/wallet-balance';
 
 export default function MobileSuperAppHub() {
   const [activeTab, setActiveTab] = useState('wallet');
@@ -793,9 +793,9 @@ export default function MobileSuperAppHub() {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center gap-2 mb-1">
-              <span className="flex h-6 w-6 items-center justify-center rounded-[2px] bg-[#1B1E3D] text-[#DFB76C] font-editorial font-bold text-xs border border-[#DFB76C]/40">
-                R
+            <div className="flex items-center gap-2.5 mb-1">
+              <span className="flex h-7 w-7 items-center justify-center rounded-[3px] bg-[#0C2340] border border-[#0C83FD]/40 shadow-inner shrink-0">
+                <RazorpayIcon className="w-4 h-4" />
               </span>
               <h3 className="text-lg font-editorial font-bold text-white">Purchase Travel Credits</h3>
             </div>

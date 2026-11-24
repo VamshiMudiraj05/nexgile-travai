@@ -57,13 +57,26 @@ export function WiseMark() {
   );
 }
 
+export function RazorpayIcon({ className = "h-[18px] w-[18px]" }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path
+        d="M22.436 0l-11.91 7.773-1.174 4.276 6.625-4.297L11.65 24h4.391l6.395-24z"
+        fill="#0C83FD"
+      />
+      <path
+        d="M14.26 10.098L3.389 17.166 1.564 24h9.008l3.688-13.902z"
+        fill="#38A5FF"
+      />
+    </svg>
+  );
+}
+
 export function RazorpayMark() {
   return (
-    <span className="flex items-center gap-[5px] text-white">
-      <svg viewBox="0 0 24 24" className="h-[16px] w-[16px]" fill="currentColor" aria-hidden="true">
-        <path d="M22.436 0l-11.91 7.773-3.714 6.643 4.417-2.88 2.213-3.957 4.298-2.805-4.484 8.016-5.748 3.75-7.508 4.9L3.58 15.65l6.574-4.288 3.714-6.643L0 13.568l3.153 10.432h6.14l13.143-8.577L24 0h-1.564z" />
-      </svg>
-      <span className="text-[17px] font-bold tracking-tight text-[#528FF0]">
+    <span className="flex items-center gap-[6px] text-white">
+      <RazorpayIcon className="h-[18px] w-[18px]" />
+      <span className="text-[17px] font-bold tracking-tight text-[#0C83FD]">
         Razorpay
       </span>
     </span>
