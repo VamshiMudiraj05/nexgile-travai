@@ -9,6 +9,8 @@ import {
   CheckCircle2,
   Clock,
   ArrowRight,
+  ArrowLeft,
+  X,
   ShieldCheck,
   Crown,
   AlertCircle,
@@ -44,6 +46,41 @@ export default function Concierge() {
   const inputRef = useRef(null);
 
   const userRole = (welcomeData?.role || user?.role || 'TRAVELER').toUpperCase();
+
+  const roleHome = useMemo(() => {
+    switch (userRole) {
+      case 'FRONT_DESK':
+        return { path: '/frontdesk/dashboard', label: 'Front Desk Hub' };
+      case 'ADMIN':
+        return { path: '/dashboard', label: 'Executive Dashboard' };
+      case 'REVENUE_MANAGER':
+        return { path: '/revenue/recommendations', label: 'Revenue Hub' };
+      case 'FINANCE':
+        return { path: '/finance', label: 'Finance Hub' };
+      case 'HOUSEKEEPING':
+        return { path: '/housekeeping', label: 'Housekeeping Board' };
+      default:
+        return { path: '/traveler/dashboard', label: 'Traveler Dashboard' };
+    }
+  }, [userRole]);
+
+  const handleClose = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate(roleHome.path);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [roleHome]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -286,6 +323,23 @@ export default function Concierge() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-5rem)] max-w-5xl mx-auto pb-4 text-[#FAF6F0]">
+      {/* Top Navigation & Return Action */}
+      <div className="flex items-center justify-between mb-2.5 px-1 shrink-0">
+        <button
+          onClick={handleClose}
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[2px] bg-[#13152C] hover:bg-[#1B1E3D] border border-[#2C315E] hover:border-[#DFB76C]/60 text-xs text-white/90 hover:text-white font-cinzel uppercase tracking-wider transition-all cursor-pointer shadow-sm group"
+        >
+          <ArrowLeft size={13} className="text-[#DFB76C] transition-transform group-hover:-translate-x-1" />
+          <span>Back to {roleHome.label}</span>
+        </button>
+
+        <span className="text-[10px] font-sans text-white/40 hidden sm:flex items-center gap-1.5">
+          <span>Press</span>
+          <kbd className="px-1.5 py-0.5 rounded bg-[#1B1E3D] border border-[#2C315E] text-white/70 font-mono text-[9px]">Esc</kbd>
+          <span>to return</span>
+        </span>
+      </div>
+
       {/* Toast Notification */}
       {serviceNotification && (
         <div className="mb-3 p-4 rounded-[4px] bg-[#13152C] border border-[#DFB76C] text-white flex items-center justify-between shadow-lg animate-in fade-in slide-in-from-top-2">
@@ -343,6 +397,14 @@ export default function Concierge() {
               className="p-1.5 rounded-[2px] bg-[#1B1E3D] text-[#DFB76C]/80 hover:text-[#DFB76C] border border-[#2C315E] transition-colors cursor-pointer"
             >
               <RefreshCw size={13} />
+            </button>
+            <button
+              onClick={handleClose}
+              title={`Close Ask Nexgile and return to ${roleHome.label}`}
+              className="px-2.5 py-1.5 rounded-[2px] bg-[#1B1E3D] hover:bg-rose-950/60 text-white/70 hover:text-rose-300 border border-[#2C315E] hover:border-rose-500/40 transition-colors cursor-pointer flex items-center gap-1.5"
+            >
+              <X size={14} />
+              <span className="text-[10px] font-cinzel font-semibold uppercase hidden sm:inline">Close</span>
             </button>
           </div>
         </div>
