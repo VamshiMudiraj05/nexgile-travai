@@ -12,12 +12,12 @@ def property_helper(prop: Dict[str, Any], total_rooms: int = 0, total_room_types
     
     return {
         "id": str(prop.get("_id")),
-        "name": prop.get("name"),
-        "property_code": prop.get("property_code"),
+        "name": prop.get("name") or "Unnamed Property",
+        "property_code": prop.get("property_code") or "PROP-000",
         "property_type": safe_type,
         "description": prop.get("description"),
-        "address": prop.get("address"),
-        "city": prop.get("city"),
+        "address": prop.get("address") or "Address Not Specified",
+        "city": prop.get("city") or "City Not Specified",
         "state": prop.get("state"),
         "country": prop.get("country", "India"),
         "postal_code": prop.get("postal_code"),

@@ -33,8 +33,8 @@ class PropertyBase(BaseModel):
     property_code: str = Field(..., min_length=2, max_length=30)
     property_type: PropertyType = PropertyType.HOTEL
     description: Optional[str] = None
-    address: str = Field(..., min_length=3)
-    city: str = Field(..., min_length=2)
+    address: Optional[str] = Field(default="Address Not Specified")
+    city: Optional[str] = Field(default="City Not Specified")
     state: Optional[str] = None
     country: str = Field(default="India")
     postal_code: Optional[str] = None
