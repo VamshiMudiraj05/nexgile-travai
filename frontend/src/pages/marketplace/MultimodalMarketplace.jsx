@@ -231,10 +231,13 @@ export default function MultimodalMarketplace() {
         });
 
         const scriptLoaded = await paymentService.loadRazorpayScript();
+        const activeKeyId = (orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder'))
+          ? orderData.key_id
+          : (import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_U3uGDG8G6pVswQ');
 
-        if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
+        if ((scriptLoaded || window.Razorpay) && window.Razorpay && activeKeyId) {
           const options = {
-            key: orderData.key_id,
+            key: activeKeyId,
             amount: orderData.amount,
             currency: 'INR',
             name: 'Nexgile TravAI Multimodal',
@@ -275,7 +278,7 @@ export default function MultimodalMarketplace() {
             modal: {
               ondismiss: function () {
                 setCheckoutLoading(false);
-                setCheckoutError('Razorpay payment was dismissed.');
+                setCheckoutError('Razorpay payment checkout was dismissed.');
               },
             },
           };
@@ -283,25 +286,8 @@ export default function MultimodalMarketplace() {
           rzp.open();
           return;
         } else {
-          // Razorpay Sandbox Simulator
-          const mockPaymentId = `pay_test_${Math.random().toString(36).substring(2, 12)}`;
-          await paymentService.verifyRazorpayPayment({
-            razorpay_order_id: orderData.order_id,
-            razorpay_payment_id: mockPaymentId,
-            razorpay_signature: 'rzp_test_sig_ok',
-          });
-          const res = await multimodalService.checkout({
-            traveler_name: travelerName,
-            traveler_email: travelerEmail,
-            payment_method: 'RAZORPAY',
-            payment_details: {
-              razorpay_order_id: orderData.order_id,
-              razorpay_payment_id: mockPaymentId,
-            },
-          });
-          setCheckoutSuccess(res);
-          setCheckoutModalOpen(false);
-          fetchCart();
+          setCheckoutError('Unable to initialize Razorpay checkout. Please check that script blockers are disabled.');
+          setCheckoutLoading(false);
           return;
         }
       } else if (paymentMethod === 'PAYPAL') {

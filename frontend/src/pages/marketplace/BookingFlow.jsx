@@ -231,11 +231,14 @@ export default function BookingFlow() {
         });
 
         const scriptLoaded = await paymentService.loadRazorpayScript();
+        const activeKeyId = (orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder'))
+          ? orderData.key_id
+          : (import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_U3uGDG8G6pVswQ');
 
-        if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
-          const cleanPhone = (phone || '9812345678').replace(/\D/g, '').slice(-10) || '9812345678';
+        if ((scriptLoaded || window.Razorpay) && window.Razorpay && activeKeyId) {
+          const cleanPhone = (phone || '9876543210').replace(/\D/g, '').slice(-10) || '9876543210';
           const options = {
-            key: orderData.key_id,
+            key: activeKeyId,
             amount: orderData.amount,
             currency: 'INR',
             name: 'Nexgile TravAI',
@@ -277,15 +280,9 @@ export default function BookingFlow() {
                 setBookingLoading(false);
               }
             },
-            prefill: {
-              name: `${firstName} ${lastName}`.trim(),
-              email,
-              contact: phone,
-            },
-            theme: { color: '#DFB76C' },
             modal: {
               ondismiss: function () {
-                setErrorMessage('Razorpay payment was cancelled. Room reservation has been released.');
+                setErrorMessage('Razorpay checkout was dismissed. Room reservation has been released.');
                 setBookingLoading(false);
                 travelerService.cancelBooking(reservationId, 'Checkout dismissed before payment').catch(() => {});
               },
@@ -300,14 +297,9 @@ export default function BookingFlow() {
           rzp.open();
           return;
         } else {
-          // Razorpay Test Mode Simulator (active before live test key is added)
-          const mockPaymentId = `pay_test_${Math.random().toString(36).substring(2, 12)}`;
-          await paymentService.verifyRazorpayPayment({
-            razorpay_order_id: orderData.order_id,
-            razorpay_payment_id: mockPaymentId,
-            razorpay_signature: 'rzp_test_sig_ok',
-            reservation_id: reservationId,
-          });
+          setErrorMessage('Unable to initialize Razorpay payment popup. Please check your network connection or disable script blockers.');
+          setBookingLoading(false);
+          return;
         }
       } else if (paymentMethod === 'PAYPAL') {
         const orderRes = await paymentService.createPayPalOrder({

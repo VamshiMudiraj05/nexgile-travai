@@ -224,12 +224,15 @@ export default function MobileSuperAppHub() {
 
       // 2. Load Razorpay Checkout Script
       const scriptLoaded = await paymentService.loadRazorpayScript();
+      const activeKeyId = (orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder'))
+        ? orderData.key_id
+        : (import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_U3uGDG8G6pVswQ');
 
-      if (scriptLoaded && window.Razorpay && orderData?.key_id && !orderData.key_id.startsWith('rzp_test_placeholder')) {
+      if ((scriptLoaded || window.Razorpay) && window.Razorpay && activeKeyId) {
         setPaymentStatusMsg('Awaiting Razorpay Checkout completion...');
         const cleanPhone = (user?.phone || '9812345678').replace(/\D/g, '').slice(-10) || '9812345678';
         const options = {
-          key: orderData.key_id,
+          key: activeKeyId,
           amount: orderData.amount,
           currency: 'INR',
           name: 'Nexgile TravAI',
@@ -264,12 +267,6 @@ export default function MobileSuperAppHub() {
               setIsProcessingPayment(false);
             }
           },
-          prefill: {
-            name: user?.name || 'Traveler',
-            email: user?.email || '',
-            contact: '+919876543210',
-          },
-          theme: { color: '#DFB76C' },
           modal: {
             ondismiss: function () {
               setPaymentError('Razorpay checkout was cancelled. No credits were added.');
@@ -284,21 +281,7 @@ export default function MobileSuperAppHub() {
         });
         rzp.open();
       } else {
-        // Razorpay Test Mode Simulator (active when test keys are placeholders)
-        setPaymentStatusMsg('Executing Test Mode simulation & signature verification...');
-        const mockPaymentId = `pay_test_${Math.random().toString(36).substring(2, 12)}`;
-        const verifyRes = await paymentService.verifyRazorpayPayment({
-          razorpay_order_id: orderData.order_id,
-          razorpay_payment_id: mockPaymentId,
-          razorpay_signature: 'rzp_test_sig_ok',
-          package_id: chosenPkg.id,
-        });
-        setPaymentStatusMsg(`Test payment verified! +${verifyRes.credits_added} credits added to wallet.`);
-        await fetchWallet();
-        setTimeout(() => {
-          setTopUpOpen(false);
-          setPaymentStatusMsg(null);
-        }, 1600);
+        setPaymentError('Unable to load Razorpay payment window. Please check your browser popup/script permissions.');
         setIsProcessingPayment(false);
       }
     } catch (err) {

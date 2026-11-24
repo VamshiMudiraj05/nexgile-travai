@@ -24,8 +24,8 @@ class Settings(BaseSettings):
     ]
 
     # Razorpay Configuration (Test Mode Only)
-    RAZORPAY_KEY_ID: str = ""
-    RAZORPAY_KEY_SECRET: str = ""
+    RAZORPAY_KEY_ID: str = "rzp_test_U3uGDG8G6pVswQ"
+    RAZORPAY_KEY_SECRET: str = "3anJDKlX6pe2lwtLONJ9lKyC"
     RAZORPAY_BASE_URL: str = "https://api.razorpay.com/v1"
 
     # PayPal Configuration (Sandbox Mode)
