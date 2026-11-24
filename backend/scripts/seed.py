@@ -71,6 +71,16 @@ async def seed_database():
                     "url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
                     "public_id": "pgmadeeazy/properties/grand_nexgile_pool",
                     "resource_type": "image"
+                },
+                {
+                    "url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80",
+                    "public_id": "pgmadeeazy/properties/grand_nexgile_beach",
+                    "resource_type": "image"
+                },
+                {
+                    "url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80",
+                    "public_id": "pgmadeeazy/properties/grand_nexgile_sunset",
+                    "resource_type": "image"
                 }
             ],
             "check_in_time": "14:00",

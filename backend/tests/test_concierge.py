@@ -79,21 +79,17 @@ async def test_concierge_complete_scenarios():
             })
             room_type = await db.room_types.find_one({"_id": rt_res.inserted_id})
 
-        room = await db.rooms.find_one({
-            "property_id": {"$in": [prop["_id"], str(prop["_id"])]},
-            "room_type_id": {"$in": [room_type["_id"], str(room_type["_id"])]},
+        # Always ensure a dedicated available room for this test booking
+        unique_room_num = f"CONC-{int(time.time() * 1000) % 90000 + 1000}"
+        await db.rooms.insert_one({
+            "property_id": str(prop["_id"]),
+            "room_type_id": str(room_type["_id"]),
+            "room_number": unique_room_num,
+            "floor": 4,
             "status": "AVAILABLE"
         })
-        if not room:
-            await db.rooms.insert_one({
-                "property_id": str(prop["_id"]),
-                "room_type_id": str(room_type["_id"]),
-                "room_number": f"ROOM-{int(time.time() * 10) % 9000 + 100}",
-                "floor": 3,
-                "status": "AVAILABLE"
-            })
 
-        days_offset = (int(time.time() * 10) % 500) + 40
+        days_offset = (int(time.time() * 10) % 300) + 700
         today_str = (date.today() + timedelta(days=days_offset)).isoformat()
         future_str = (date.today() + timedelta(days=days_offset + 3)).isoformat()
 

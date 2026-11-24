@@ -29,8 +29,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Lake View", "Private Plunge Pool", "Ayurvedic Spa", "Royal Boat Arrival", "Mewar Fine Dining", "Butler Service", "Valet Parking", "Free High-Speed WiFi"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "udaivilas_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "udaivilas_pool", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-udr-001_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-udr-001_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-udr-001_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-udr-001_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -83,8 +85,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Peacock Gardens", "Jiva Grand Spa", "Heritage Polo Lounge", "Suvarna Mahal Thali", "Indoor & Outdoor Pools", "Vintage Car Transfers", "Valet Parking"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?auto=format&fit=crop&w=1200&q=80", "public_id": "rambagh_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "rambagh_garden", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jai-002_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jai-002_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jai-002_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jai-002_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -137,8 +141,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Beachfront Access", "Mediterranean Dining", "Ayurvedic Wellness Sanctuary", "Golf Course", "Infinity Ocean Pool", "Sunset Cocktail Bar", "Water Sports"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "exotica_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", "public_id": "exotica_pool", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-goa-003_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-goa-003_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-goa-003_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-goa-003_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -191,8 +197,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Harbor View", "Sea Lounge Afternoon Tea", "Wasabi Japanese Dining", "Heritage Wing Butler", "Luxury Yacht Charter", "Spa & Salon", "Valet Parking"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "taj_mumbai_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "taj_mumbai_lobby", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-mum-004_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-mum-004_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-mum-004_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-mum-004_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -245,8 +253,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Colonial Art Gallery", "1911 Royal Verandah", "The Spice Route Dining", "Holistic Wellness Spa", "Heated Swimming Pool", "Diplomatic Concierge", "High-Speed WiFi"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "imperial_del_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "imperial_del_verandah", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-del-005_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-del-005_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-del-005_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-del-005_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -299,8 +309,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Royal Club Privileges", "Lush Tropical Gardens", "Jamavar Royal Indian Dining", "The Library Bar", "Outdoor Lagoon Pool", "Espresso Lounge", "Helipad Access"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "leela_blr_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "leela_blr_pool", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-blr-006_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-blr-006_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-blr-006_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-blr-006_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -353,8 +365,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Meandering Pool Villas", "Traditional Houseboat Cruises", "Ayurmana Ancient Healing", "Seafood Bar on Lake", "Kalaripayattu Demonstrations", "Sunset Canoe Safari"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80", "public_id": "klr_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "klr_lake", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-ker-007_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-ker-007_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-ker-007_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-ker-007_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -407,8 +421,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Ganges Ghat View", "Bajra Boat Ganga Aarti Access", "Live Classical Sitar Evenings", "Pure Vegetarian Royal Thali", "Riverfront Rooftop Dining", "Private Yoga Sessions"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "brijrama_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "brijrama_ghat", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-vns-008_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-vns-008_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-vns-008_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-vns-008_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -461,8 +477,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Unobstructed Taj Mahal Views", "Private Golf Buggy to Monument", "Mughal Terraced Lawns", "Esphahan Tandoor Dining", "Colonnaded Swimming Pool", "Royal Hammam"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "amarvilas_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", "public_id": "amarvilas_taj", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-agr-009_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-agr-009_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-agr-009_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-agr-009_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -515,8 +533,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Himalayan Peak Vistas", "Open-Air Heated Whirlpool", "Pine Forest Nature Walks", "Cedar Wood Fireplaces", "Archery & Mountain Biking", "Alpine Spa Treatments"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", "public_id": "wfh_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "wfh_jacuzzi", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1502784444187-359ac186c5bb?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-sml-010_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-sml-010_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-sml-010_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-sml-010_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -569,8 +589,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Ayurvedic Detox Programs", "Vedanta Philosophy Sessions", "Hydrotherapy Sanctuary", "Mountain Golf Course", "Ganga Valley Meditation", "Organic Wellness Cuisine"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "ananda_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "ananda_spa", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-rsk-011_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-rsk-011_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-rsk-011_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-rsk-011_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -623,8 +645,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Horse-Drawn Carriage Arrival", "Nizami 101-Seater Dining Hall", "Heritage Jade Room Tour", "Hookah Lounge", "Private Palace Historian", "Bespoke Royal Feasts"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "falak_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "falak_terrace", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-hyd-012_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-hyd-012_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-hyd-012_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-hyd-012_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -677,8 +701,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Art Deco Royal Architecture", "Subterranean Zodiac Pool", "Pillared Marble Verandahs", "Vintage Car Museum", "Risala Marwar Dining", "Royal Falconry Shows"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?auto=format&fit=crop&w=1200&q=80", "public_id": "umaid_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "umaid_lawn", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jdh-013_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jdh-013_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jdh-013_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jdh-013_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -731,8 +757,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Desert Camel Expeditions", "Chudail Trail Night Walks", "Dunes Gala Dinner under Stars", "Thar Salt Spa Therapy", "Courtyard Halwai Breakfast", "Folk Manganiyar Music"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "surya_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "surya_pool", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jsl-014_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jsl-014_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jsl-014_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-jsl-014_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -785,8 +813,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Private Tiger Safari Jeeps", "Luxury Canvas Tents", "Campfire Jungle Feasts", "Resident Naturalist Guides", "Wilderness Spa Pavilions", "Stargazing Deck"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "sher_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "sher_camp", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-rnt-015_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-rnt-015_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-rnt-015_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-rnt-015_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -839,8 +869,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Grande Dame Colonial Verandah", "Baan Thai Authentic Cuisine", "Palm Tree Quadrangle Pool", "High Tea with Darjeeling First Flush", "Chowringhee Ballroom"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "og_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "og_quad", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-ccu-016_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-ccu-016_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-ccu-016_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-ccu-016_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -893,8 +925,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Bay of Bengal Ocean Panorama", "Chettinad Heritage Architecture", "China XO Dining", "Infinity Oceanfront Pool", "ESPA Thermal Lounges", "24/7 Butler Service"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "leela_chn_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "leela_chn_pool", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-maa-017_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-maa-017_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-maa-017_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-maa-017_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -947,8 +981,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["300-Acre Coffee Plantation", "Private Plantation Pool Villas", "Treehouse Canopy Dining", "Vaidyasala Ayurvedic Care", "Bird Watching Trails", "Coffee Tasting Studio"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80", "public_id": "ebc_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "ebc_pool", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-crg-018_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-crg-018_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-crg-018_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-crg-018_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -1001,8 +1037,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["Centuries-Old Royal Chinar Trees", "Dal Lake Shikara Private Transfers", "Authentic Wazwan Feasts", "Indoor Heated Cedar Pool", "Maharajah Billiards Room", "Kashmiri Kahwa Lounge"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "lalit_sgr_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80", "public_id": "lalit_sgr_lawn", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-sxr-019_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-sxr-019_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-sxr-019_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-sxr-019_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -1055,8 +1093,10 @@ HOTELS_DATA = [
         "star_rating": 5,
         "amenities": ["French Colonial Arches", "Central Courtyard Swimming Pool", "Les Alizés Rooftop Dining", "Boutique Ayurvedic Treatments", "Heritage Promenade Bicycles", "Café de Paris Cocktails"],
         "images": [
-            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "pdm_front", "resource_type": "image"},
-            {"url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80", "public_id": "pdm_pool", "resource_type": "image"}
+            {"url": "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-pdy-020_0", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-pdy-020_1", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-pdy-020_2", "resource_type": "image"},
+            {"url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80", "public_id": "ind-pdy-020_3", "resource_type": "image"},
         ],
         "room_types": [
             {
@@ -1166,11 +1206,10 @@ async def seed_20_hotels():
 
     for h in HOTELS_DATA:
         # 1. Upsert Property
-        p_code = h.get("property_code") or h.get("code")
-        existing_prop = await db.properties.find_one({"property_code": p_code})
+        existing_prop = await db.properties.find_one({"property_code": h["property_code"]})
         prop_doc = {
             "name": h["name"],
-            "property_code": p_code,
+            "property_code": h["property_code"],
             "property_type": h["property_type"],
             "description": h["description"],
             "address": h["address"],
@@ -1358,3 +1397,4 @@ async def seed_20_hotels():
 
 if __name__ == "__main__":
     asyncio.run(seed_20_hotels())
+

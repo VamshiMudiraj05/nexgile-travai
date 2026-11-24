@@ -260,6 +260,23 @@ class MarketplaceService:
         starting_price = min((rt["base_rate"] for rt in room_type_items), default=0.0)
         photos = MarketplaceService._extract_photos(prop, is_room=False)
 
+        # Ensure editorial gallery has at least 3 high-quality photos
+        if len(photos) < 3:
+            for rt in room_type_items:
+                for rp in rt.get("photos", []):
+                    if rp and rp not in photos:
+                        photos.append(rp)
+                    if len(photos) >= 3:
+                        break
+                if len(photos) >= 3:
+                    break
+        if len(photos) < 3:
+            for fallback_photo in VARIED_PROPERTY_GALLERY:
+                if fallback_photo not in photos:
+                    photos.append(fallback_photo)
+                if len(photos) >= 3:
+                    break
+
         return {
             "id": str(prop["_id"]),
             "property_code": prop.get("property_code", "PROP"),

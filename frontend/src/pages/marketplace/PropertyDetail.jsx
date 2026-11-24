@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
 import {
   MapPin,
@@ -63,6 +63,31 @@ export default function PropertyDetail() {
   useEffect(() => {
     fetchPropertyDetail();
   }, [property_id, checkIn, checkOut]);
+
+  // Assemble full photo gallery: property photos, room photos, then curated fallbacks
+  const galleryPhotos = useMemo(() => {
+    const list = [...(property?.photos || [])];
+    if (property?.room_types) {
+      for (const rt of property.room_types) {
+        if (rt.photos && Array.isArray(rt.photos)) {
+          for (const p of rt.photos) {
+            if (p && !list.includes(p)) list.push(p);
+          }
+        }
+      }
+    }
+    const fallbacks = [
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80",
+    ];
+    for (const fb of fallbacks) {
+      if (list.length >= 3) break;
+      if (!list.includes(fb)) list.push(fb);
+    }
+    return list;
+  }, [property]);
 
   const fetchPropertyDetail = async () => {
     try {
@@ -161,9 +186,9 @@ export default function PropertyDetail() {
       {/* Large Editorial Photo Gallery */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="sm:col-span-2 h-96 overflow-hidden rounded-[4px] bg-[#13152C] border border-[#2C315E]">
-          {property.photos && property.photos.length > 0 ? (
+          {galleryPhotos && galleryPhotos.length > 0 && galleryPhotos[0] ? (
             <img
-              src={property.photos[0]}
+              src={galleryPhotos[0]}
               alt={property.name}
               className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
             />
@@ -175,9 +200,9 @@ export default function PropertyDetail() {
         </div>
         <div className="grid grid-cols-1 gap-4">
           <div className="h-[11.5rem] overflow-hidden rounded-[4px] bg-[#13152C] border border-[#2C315E]">
-            {property.photos && property.photos[1] ? (
+            {galleryPhotos && galleryPhotos[1] ? (
               <img
-                src={property.photos[1]}
+                src={galleryPhotos[1]}
                 alt="Estate Detail"
                 className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
               />
@@ -188,9 +213,9 @@ export default function PropertyDetail() {
             )}
           </div>
           <div className="h-[11.5rem] overflow-hidden rounded-[4px] bg-[#13152C] border border-[#2C315E]">
-            {property.photos && property.photos[2] ? (
+            {galleryPhotos && galleryPhotos[2] ? (
               <img
-                src={property.photos[2]}
+                src={galleryPhotos[2]}
                 alt="Suite View"
                 className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
               />

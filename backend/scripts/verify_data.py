@@ -30,7 +30,13 @@ async def verify():
     search_results = search_data.get("properties", [])
     print(f"Marketplace Search Result Count: {len(search_results)}")
     for i, p in enumerate(search_results, 1):
-        print(f" {i}. {p['name']} ({p['city']}) - Starting at INR {p['starting_price']} ({p.get('available_room_types_count', 0)} room types)")
+        print(f" {i}. {p['name']} ({p['city']}) - Starting at INR {p['starting_price']} ({len(p.get('photos', []))} photos)")
+
+    # Test detail endpoint for the first 3 properties (e.g. Rambagh, Udaivilas)
+    print("\n=== MARKETPLACE DETAIL PHOTOS VERIFICATION ===")
+    for p in search_results[:3]:
+        det = await MarketplaceService.get_property_marketplace_details(p['id'])
+        print(f" -> {det['name']}: {len(det['photos'])} photos (Photos: {[x[:40] + '...' for x in det['photos']]})")
 
     await close_mongo_connection()
 
