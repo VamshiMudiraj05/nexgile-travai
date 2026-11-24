@@ -214,7 +214,7 @@ export const AdminLayout = () => {
       group: 'GUEST SERVICES',
       items: [
         { name: 'Guest Dashboard', path: '/traveler/dashboard', icon: LayoutDashboard },
-        { name: 'AI Concierge', path: '/concierge', icon: Sparkles },
+        { name: 'Ask Nexgile', path: '/concierge', icon: Sparkles },
         { name: 'Book Hotels', path: '/marketplace', icon: ShoppingBag },
         { name: 'Flights & Taxis', path: '/marketplace/multimodal', icon: Compass },
         { name: 'Support & Chat', path: '/operations/omnichannel', icon: MessageSquare },
@@ -446,17 +446,17 @@ export const AdminLayout = () => {
               navigate('/concierge');
             }}
             className="fixed bottom-6 right-6 z-50 cursor-grab active:cursor-grabbing touch-none select-none group"
-            title="Drag to move anywhere across screen · Click to open AI Concierge"
+            title="Drag to move anywhere across screen · Click to open Ask Nexgile"
           >
             <RainbowButton
               asChild={true}
               glow={true}
               speed={3}
-              size="default"
-              className="rounded-full shadow-2xl pointer-events-none transition-none active:scale-100"
+              size="sm"
+              className="rounded-full shadow-lg pointer-events-none transition-none active:scale-100 py-1 px-3 text-[10px] tracking-wider"
             >
-              <Sparkles className="w-4 h-4 text-[#DFB76C] animate-pulse" />
-              <span>AI CONCIERGE</span>
+              <Sparkles className="w-3.5 h-3.5 text-[#DFB76C] animate-pulse" />
+              <span>ASK NEXGILE</span>
             </RainbowButton>
           </motion.div>
         )}

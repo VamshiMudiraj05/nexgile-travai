@@ -200,7 +200,7 @@ export default function Concierge() {
             <div className="flex items-center gap-2">
               <Sparkles size={16} className="text-[#DFB76C]" />
               <h1 className="font-cinzel text-sm sm:text-base font-bold uppercase tracking-[0.25em] text-white">
-                NEXGILE CONCIERGE
+                ASK NEXGILE
               </h1>
             </div>
             <p className="font-editorial text-xs sm:text-sm text-[#DFB76C]/80 mt-0.5 tracking-wide">
