@@ -103,6 +103,7 @@ async def seed_database():
             "bed_type": "KING",
             "bed_count": 1,
             "base_price": 7500.0,
+            "base_rate": 7500.0,
             "amenities": ["Ocean View", "Private Balcony", "Smart TV", "Mini Bar", "Espresso Machine", "Rain Shower"],
             "size": "450 sq ft",
             "images": [
@@ -135,6 +136,7 @@ async def seed_database():
             "bed_type": "KING",
             "bed_count": 2,
             "base_price": 14500.0,
+            "base_rate": 14500.0,
             "amenities": ["Plunge Pool", "Terrace", "Butler Service", "Living Room", "Walk-in Wardrobe", "Jacuzzi"],
             "size": "850 sq ft",
             "images": [
@@ -293,8 +295,15 @@ async def seed_database():
             await res_col.insert_one(r)
             print(f"Created Reservation: {r['booking_reference']} (Status: {r['status']})")
 
-    print("\nDatabase seeding completed successfully!")
+    print("\nDatabase initial seeding completed!")
     client.close()
+
+    # Seed 20 authentic Indian luxury properties, room inventory, guests, and folios
+    try:
+        from scripts.seed_20_indian_hotels import seed_20_hotels
+    except ImportError:
+        from backend.scripts.seed_20_indian_hotels import seed_20_hotels
+    await seed_20_hotels()
 
 
 if __name__ == "__main__":

@@ -60,7 +60,7 @@ async def test_concierge_complete_scenarios():
 
         # 3. Create a real reservation for this traveler to test real stay context
         db = get_database()
-        prop = await db.properties.find_one({})
+        prop = await db.properties.find_one({"status": "ACTIVE"})
         if not prop:
             prop_res = await db.properties.insert_one({
                 "property_code": "HOTEL-TEST-01",
@@ -69,21 +69,25 @@ async def test_concierge_complete_scenarios():
                 "status": "ACTIVE"
             })
             prop = await db.properties.find_one({"_id": prop_res.inserted_id})
-        room_type = await db.room_types.find_one({"property_id": prop["_id"]})
+        room_type = await db.room_types.find_one({"property_id": {"$in": [prop["_id"], str(prop["_id"])]}})
         if not room_type:
             rt_res = await db.room_types.insert_one({
-                "property_id": prop["_id"],
+                "property_id": str(prop["_id"]),
                 "name": "Deluxe King",
                 "code": "DLX-TEST",
                 "base_rate": 180.0
             })
             room_type = await db.room_types.find_one({"_id": rt_res.inserted_id})
 
-        room = await db.rooms.find_one({"room_type_id": room_type["_id"], "status": "AVAILABLE"})
+        room = await db.rooms.find_one({
+            "property_id": {"$in": [prop["_id"], str(prop["_id"])]},
+            "room_type_id": {"$in": [room_type["_id"], str(room_type["_id"])]},
+            "status": "AVAILABLE"
+        })
         if not room:
             await db.rooms.insert_one({
-                "property_id": prop["_id"],
-                "room_type_id": room_type["_id"],
+                "property_id": str(prop["_id"]),
+                "room_type_id": str(room_type["_id"]),
                 "room_number": f"ROOM-{int(time.time() * 10) % 9000 + 100}",
                 "floor": 3,
                 "status": "AVAILABLE"
