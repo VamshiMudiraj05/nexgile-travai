@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 class ReservationStatus(str, Enum):
     PENDING = "PENDING"
+    PENDING_PAYMENT = "PENDING_PAYMENT"
     CONFIRMED = "CONFIRMED"
     CHECKED_IN = "CHECKED_IN"
     CHECKED_OUT = "CHECKED_OUT"
