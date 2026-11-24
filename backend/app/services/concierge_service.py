@@ -237,45 +237,59 @@ Action types:
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         }
-        payload = {
-            "model": model,
-            "messages": messages,
-            "temperature": 0.4,
-            "max_tokens": 800,
-        }
+        
+        candidate_models = [model]
+        if "gemini" in model.lower():
+            for alt in ["gemini-3.1-flash-lite", "gemini-3.8-flash", "gemini-3.5-flash-lite"]:
+                if alt not in candidate_models:
+                    candidate_models.append(alt)
 
-        async with httpx.AsyncClient(timeout=12.0) as client:
-            resp = await client.post(f"{base_url}/chat/completions", headers=headers, json=payload)
-            if resp.status_code == 200:
-                data = resp.json()
-                content = data["choices"][0]["message"]["content"]
-                
-                # Check for ACTION: block
-                suggested_action = None
-                action_match = re.search(r"ACTION:\s*(\{.*\})", content, re.DOTALL)
-                if action_match:
-                    try:
-                        action_json = json.loads(action_match.group(1))
-                        suggested_action = {
-                            "action_type": action_json.get("action_type", "CREATE_SERVICE_REQUEST"),
-                            "action_label": action_json.get("action_label", "CONFIRM REQUEST"),
-                            "payload": action_json.get("payload", {})
-                        }
-                        # If service request, attach stay details
-                        if stay and suggested_action["action_type"] == "CREATE_SERVICE_REQUEST":
-                            suggested_action["payload"]["reservation_id"] = stay["reservation_id"]
-                            suggested_action["payload"]["property_id"] = stay["property_id"]
-                            suggested_action["payload"]["room_number"] = stay["room_number"]
-                        # Strip ACTION: from visible message
-                        content = re.sub(r"ACTION:\s*\{.*\}", "", content, flags=re.DOTALL).strip()
-                    except Exception:
-                        pass
-
-                return {
-                    "message": content,
-                    "suggested_action": suggested_action,
-                    "quick_replies": ["My Reservation", "Show Requests", "Hotel Amenities", "Plan Trip"]
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            for cur_model in candidate_models:
+                payload = {
+                    "model": cur_model,
+                    "messages": messages,
+                    "temperature": 0.5,
+                    "max_tokens": 800,
                 }
+                try:
+                    resp = await client.post(f"{base_url}/chat/completions", headers=headers, json=payload)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        content = data["choices"][0]["message"]["content"]
+                        
+                        # Check for ACTION: block
+                        suggested_action = None
+                        action_match = re.search(r"ACTION:\s*(\{.*\})", content, re.DOTALL)
+                        if action_match:
+                            try:
+                                action_json = json.loads(action_match.group(1))
+                                suggested_action = {
+                                    "action_type": action_json.get("action_type", "CREATE_SERVICE_REQUEST"),
+                                    "action_label": action_json.get("action_label", "CONFIRM REQUEST"),
+                                    "payload": action_json.get("payload", {})
+                                }
+                                # If service request, attach stay details
+                                if stay and suggested_action["action_type"] == "CREATE_SERVICE_REQUEST":
+                                    suggested_action["payload"]["reservation_id"] = stay["reservation_id"]
+                                    suggested_action["payload"]["property_id"] = stay["property_id"]
+                                    suggested_action["payload"]["room_number"] = stay["room_number"]
+                                # Strip ACTION: from visible message
+                                content = re.sub(r"ACTION:\s*\{.*\}", "", content, flags=re.DOTALL).strip()
+                            except Exception:
+                                pass
+
+                        return {
+                            "message": content,
+                            "suggested_action": suggested_action,
+                            "quick_replies": ["My Reservation", "Show Requests", "Hotel Amenities", "Plan Trip"],
+                            "powered_by": f"Gemini ({cur_model})"
+                        }
+                    else:
+                        logger.warning(f"Model {cur_model} returned {resp.status_code}: {resp.text[:100]}")
+                except Exception as e:
+                    logger.debug(f"Attempt with {cur_model} failed: {e}")
+                    continue
         return None
 
     @staticmethod
