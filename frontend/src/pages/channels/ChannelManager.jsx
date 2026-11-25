@@ -191,6 +191,14 @@ export const ChannelManager = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex min-h-[500px] flex-col items-center justify-center space-y-4">
+        <LoadingSpinner message="Synchronizing global channel distribution..." />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 pb-16 font-sans">
       {/* Top Header */}

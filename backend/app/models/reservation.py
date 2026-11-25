@@ -14,6 +14,22 @@ def reservation_helper(
     if not res:
         return {}
     
+    raw_source = res.get("source", "DIRECT")
+    source_map = {
+        "Direct Website": "WEBSITE",
+        "Nexgile Marketplace": "DIRECT",
+        "Corporate & Groups": "CORPORATE",
+        "Global OTAs / GDS": "OTA",
+    }
+    valid_source = source_map.get(raw_source, raw_source)
+    if valid_source not in ["DIRECT", "WALK_IN", "PHONE", "WEBSITE", "AGENCY", "OTA", "CORPORATE"]:
+        valid_source = "DIRECT"
+
+    raw_status = res.get("status", "CONFIRMED")
+    valid_statuses = ["PENDING", "PENDING_PAYMENT", "CONFIRMED", "CHECKED_IN", "CHECKED_OUT", "CANCELLED", "NO_SHOW"]
+    if raw_status not in valid_statuses:
+        raw_status = "CONFIRMED"
+
     return {
         "id": str(res.get("_id")),
         "booking_reference": res.get("booking_reference"),
@@ -33,8 +49,8 @@ def reservation_helper(
         "discounts": float(res.get("discounts", 0.0)),
         "total_amount": float(res.get("total_amount", 0.0)),
         "special_requests": res.get("special_requests"),
-        "source": res.get("source", "DIRECT"),
-        "status": res.get("status", "CONFIRMED"),
+        "source": valid_source,
+        "status": raw_status,
         "guest_name": guest_name,
         "guest_email": guest_email,
         "guest_phone": guest_phone,
